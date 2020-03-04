@@ -408,9 +408,16 @@ namespace xPort5.Controls.Reporting
         /// <param name="e">The <see cref="Gizmox.WebGUI.Forms.TreeViewCancelEventArgs"/> instance containing the event data.</param>
         void tvList_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
-            if (e.Node != null)
+            /*
+             * 2020.03.05 paulus: Avoid deadloop
+             * https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.treeview.beforecheck?view=netframework-4.8
+             */
+            if (e.Action != TreeViewAction.Unknown)
             {
-                SetTreeNodeSelection(e.Node);
+                if (e.Node != null)
+                {
+                    SetTreeNodeSelection(e.Node);
+                }
             }
         }
     }

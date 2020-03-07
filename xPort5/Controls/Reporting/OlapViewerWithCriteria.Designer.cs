@@ -210,7 +210,7 @@ namespace xPort5.Controls.Reporting
             this.cboCurrency.BorderStyle = Gizmox.WebGUI.Forms.BorderStyle.Fixed3D;
             this.cboCurrency.Location = new System.Drawing.Point(66, 52);
             this.cboCurrency.Name = "cboCurrency";
-            this.cboCurrency.Size = new System.Drawing.Size(95, 21);
+            this.cboCurrency.Size = new System.Drawing.Size(95, 20);
             this.cboCurrency.TabIndex = 1;
             this.cboCurrency.Visible = false;
             // 
@@ -225,22 +225,22 @@ namespace xPort5.Controls.Reporting
             // 
             // lblCurrency
             // 
-            this.lblCurrency.AutoSize = true;
-            this.lblCurrency.Location = new System.Drawing.Point(19, 55);
+            this.lblCurrency.Location = new System.Drawing.Point(10, 52);
             this.lblCurrency.Name = "lblCurrency";
-            this.lblCurrency.Size = new System.Drawing.Size(33, 13);
+            this.lblCurrency.Size = new System.Drawing.Size(52, 20);
             this.lblCurrency.TabIndex = 0;
             this.lblCurrency.Text = "Cny: ";
+            this.lblCurrency.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.lblCurrency.Visible = false;
             // 
             // lblTo
             // 
-            this.lblTo.AutoSize = true;
-            this.lblTo.Location = new System.Drawing.Point(26, 59);
+            this.lblTo.Location = new System.Drawing.Point(10, 52);
             this.lblTo.Name = "lblTo";
-            this.lblTo.Size = new System.Drawing.Size(26, 13);
+            this.lblTo.Size = new System.Drawing.Size(52, 20);
             this.lblTo.TabIndex = 2;
             this.lblTo.Text = "To: ";
+            this.lblTo.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // dtpFrom
             // 
@@ -253,12 +253,12 @@ namespace xPort5.Controls.Reporting
             // 
             // lblFrom
             // 
-            this.lblFrom.AutoSize = true;
-            this.lblFrom.Location = new System.Drawing.Point(14, 32);
+            this.lblFrom.Location = new System.Drawing.Point(10, 26);
             this.lblFrom.Name = "lblFrom";
-            this.lblFrom.Size = new System.Drawing.Size(38, 13);
+            this.lblFrom.Size = new System.Drawing.Size(52, 20);
             this.lblFrom.TabIndex = 1;
             this.lblFrom.Text = "From: ";
+            this.lblFrom.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // btnSelectionAll
             // 

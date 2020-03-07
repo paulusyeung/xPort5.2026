@@ -18,7 +18,7 @@ using xPort5.DAL;
 
 namespace xPort5.Admin.Olap
 {
-    public partial class SalesTurnover_v5 : System.Web.UI.Page
+    public partial class Top10Suppliers_v5 : System.Web.UI.Page
     {
         private DataSet dataSource = null;
 
@@ -43,10 +43,6 @@ namespace xPort5.Admin.Olap
             }
         }
 
-        /// <summary>
-        /// 去 Visual Web GUI 攞 parameters: CustomerList, FromDate, ToDate
-        /// 再去 SQL 攞 data
-        /// </summary>
         private void InitialValues()
         {
             string[] period = xPort5.Controls.Utility.OlapAdmin.DatePeriod.Split(',');
@@ -79,7 +75,7 @@ namespace xPort5.Admin.Olap
                     #region 攞 SQL data
                     SqlParameter[] param = new SqlParameter[3];
 
-                    param[0] = new SqlParameter("@CustomerId_Array", SqlDbType.NVarChar);
+                    param[0] = new SqlParameter("@SupplierId_Array", SqlDbType.NVarChar);
                     param[0].Direction = ParameterDirection.Input;
                     param[0].Value = custList.ToString();
 
@@ -91,7 +87,7 @@ namespace xPort5.Admin.Olap
                     param[2].Direction = ParameterDirection.Input;
                     param[2].Value = period[1] + " 23:59:59";
 
-                    dataSource = SqlHelper.Default.ExecuteDataSet("olap_SalesTurnover", param);
+                    dataSource = SqlHelper.Default.ExecuteDataSet("olap_Top10Supplier", param);
                     #endregion
                 }
             }
@@ -117,14 +113,14 @@ namespace xPort5.Admin.Olap
             ansOlap.Items[0].Text = oDict.GetWord("export_excel");
 
             #region Row Area
-            pvgOlap.Fields["CustName"].Area = PivotArea.RowArea;
-            pvgOlap.Fields["CustName"].Caption = oDict.GetWord("customer_name");
-            pvgOlap.Fields["INNumber"].Area = PivotArea.RowArea;
-            pvgOlap.Fields["INNumber"].Caption = oDict.GetWord("invoice_no");
+            pvgOlap.Fields["SuppName"].Area = PivotArea.RowArea;
+            pvgOlap.Fields["SuppName"].Caption = oDict.GetWord("supplier_name");
+            pvgOlap.Fields["PCNumber"].Area = PivotArea.RowArea;
+            pvgOlap.Fields["PCNumber"].Caption = oDict.GetWord("contract_num");
             #endregion
 
             #region Column Area
-            var year = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.ColumnArea);
+            var year = new DevExpress.Web.ASPxPivotGrid.PivotGridField("PCDate", PivotArea.ColumnArea);
             year.GroupInterval = PivotGroupInterval.DateYear;
             year.Caption = oDict.GetWord("year");
             year.AreaIndex = 0;
@@ -147,24 +143,34 @@ namespace xPort5.Admin.Olap
             pvgOlap.Fields["Region"].Caption = oDict.GetWord("region");
             pvgOlap.Fields["PricingTerms"].Area = PivotArea.FilterArea;
             pvgOlap.Fields["PricingTerms"].Caption = oDict.GetWord("payment_terms"); ;
-            pvgOlap.Fields["Currency"].Area = PivotArea.FilterArea;
-            pvgOlap.Fields["Currency"].Caption = oDict.GetWord("currency");
-            pvgOlap.Fields["INDate"].Area = PivotArea.FilterArea;
-            pvgOlap.Fields["INDate"].Caption = oDict.GetWord("invoice_date");
-            pvgOlap.Fields["INDate"].ValueFormat.FormatType = FormatType.DateTime;
-            pvgOlap.Fields["INDate"].ValueFormat.FormatString = "yyyy-MM-dd";
+            pvgOlap.Fields["CurrencyCode"].Area = PivotArea.FilterArea;
+            pvgOlap.Fields["CurrencyCode"].Caption = oDict.GetWord("currency");
+            pvgOlap.Fields["PCDate"].Area = PivotArea.FilterArea;
+            pvgOlap.Fields["PCDate"].Caption = oDict.GetWord("invoice_date");
+            pvgOlap.Fields["PCDate"].ValueFormat.FormatType = FormatType.DateTime;
+            pvgOlap.Fields["PCDate"].ValueFormat.FormatString = "yyyy-MM-dd";
 
-            var quarter = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.FilterArea);
+            var quarter = new DevExpress.Web.ASPxPivotGrid.PivotGridField("PCDate", PivotArea.FilterArea);
             quarter.GroupInterval = PivotGroupInterval.DateQuarter;
             quarter.Caption = oDict.GetWord("Quarter");
             pvgOlap.Fields.Add(quarter);
 
-            var month = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.FilterArea);
+            var month = new DevExpress.Web.ASPxPivotGrid.PivotGridField("PCDate", PivotArea.FilterArea);
             month.GroupInterval = PivotGroupInterval.DateMonth;
             month.Caption = oDict.GetWord("month");
             month.ValueFormat.FormatType = FormatType.DateTime;
             month.ValueFormat.FormatString = "MM";
             pvgOlap.Fields.Add(month);
+            #endregion
+
+            #region Ignore these fields
+            pvgOlap.Fields["PricingTerms"].Visible = false;
+            pvgOlap.Fields["LocalCurrency"].Visible = false;
+            pvgOlap.Fields["ExchangeRate"].Visible = false;
+            pvgOlap.Fields["Qty"].Visible = false;
+            pvgOlap.Fields["OrderedUnit"].Visible = false;
+            pvgOlap.Fields["FactoryCost"].Visible = false;
+            pvgOlap.Fields["FactoryUnit"].Visible = false;
             #endregion
 
             pvgOlap.CollapseAllColumns();
@@ -175,7 +181,7 @@ namespace xPort5.Admin.Olap
 
         public void ExportToExcel()
         {
-            String filename = String.Format("SalesTurnover_{0}", DateTime.Now.ToString("yyyyMMddhhmm"));
+            String filename = String.Format("Top10Supplier_{0}", DateTime.Now.ToString("yyyyMMddhhmm"));
 
             DevExpress.XtraPrinting.XlsxExportOptions options = new DevExpress.XtraPrinting.XlsxExportOptions();
             options.ShowGridLines = true;

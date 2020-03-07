@@ -47,28 +47,28 @@ namespace xPort5.NavPane
                 {
                     #region Olap
                     case "Olap.SalesTurnover":
-                        AddOlapPage(ref wspPane, "Admin/Olap/SalesTurnover.aspx", "Customer", true, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/SalesTurnover_v5.aspx", "Customer", true, false);
                         break;
                     case "Olap.Top10Supplier":
-                        AddOlapPage(ref wspPane, "Admin/Olap/Top10Suppliers.aspx", "Supplier", true, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/Top10Suppliers_v5.aspx", "Supplier", true, false);
                         break;
                     case "Olap.OutstandingOrder":
-                        AddOlapPage(ref wspPane, "Admin/Olap/OutstandingOrderSummary.aspx", "Customer", false, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/OutstandingOrderSummary_v5.aspx", "Customer", false, false);
                         break;
                     case "Olap.InvoiceSummary":
-                        AddOlapPage(ref wspPane, "Admin/Olap/InvoiceSummary.aspx", "Customer", false, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/InvoiceSummary_v5.aspx", "Customer", false, false);
                         break;
                     case "Olap.InvoiceByMonth":
-                        AddOlapPage(ref wspPane, "Admin/Olap/InvoiceSummaryByMonth.aspx", "Customer", true, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/InvoiceSummaryByMonth_v5.aspx", "Customer", true, false);
                         break;
                     case "Olap_SalesContract":
-                        AddOlapPage(ref wspPane, "Admin/Olap/SalesContract.aspx", "Customer", true, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/SalesContract_v5.aspx", "Customer", true, false);
                         break;
                     case "Olap.OutstandingProfit":
-                        AddOlapPage(ref wspPane, "Admin/Olap/OutstandingProfitSummary.aspx", "Customer", false, false);
+                        AddOlapPage(ref wspPane, "Admin/Olap/OutstandingProfitSummary_v5.aspx", "Customer", false, false);
                         break;
                     case "Olap.ShipmentSummary":
-                        AddOlapPage(ref wspPane, "Admin/Olap/ShipmentSummary.aspx", "Customer", true, true);
+                        AddOlapPage(ref wspPane, "Admin/Olap/ShipmentSummary_v5.aspx", "Customer", true, true);
                         break;
                     #endregion
 

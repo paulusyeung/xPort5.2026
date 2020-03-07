@@ -18,7 +18,7 @@ using xPort5.DAL;
 
 namespace xPort5.Admin.Olap
 {
-    public partial class SalesTurnover_v5 : System.Web.UI.Page
+    public partial class InvoiceSummary_v5 : System.Web.UI.Page
     {
         private DataSet dataSource = null;
 
@@ -43,10 +43,6 @@ namespace xPort5.Admin.Olap
             }
         }
 
-        /// <summary>
-        /// 去 Visual Web GUI 攞 parameters: CustomerList, FromDate, ToDate
-        /// 再去 SQL 攞 data
-        /// </summary>
         private void InitialValues()
         {
             string[] period = xPort5.Controls.Utility.OlapAdmin.DatePeriod.Split(',');
@@ -77,21 +73,13 @@ namespace xPort5.Admin.Olap
                 if (custList.Length > 0)
                 {
                     #region 攞 SQL data
-                    SqlParameter[] param = new SqlParameter[3];
+                    SqlParameter[] param = new SqlParameter[1];
 
                     param[0] = new SqlParameter("@CustomerId_Array", SqlDbType.NVarChar);
                     param[0].Direction = ParameterDirection.Input;
                     param[0].Value = custList.ToString();
 
-                    param[1] = new SqlParameter("@FromDate", SqlDbType.DateTime);
-                    param[1].Direction = ParameterDirection.Input;
-                    param[1].Value = period[0] + " 00:00:00";
-
-                    param[2] = new SqlParameter("@ToDate", SqlDbType.DateTime);
-                    param[2].Direction = ParameterDirection.Input;
-                    param[2].Value = period[1] + " 23:59:59";
-
-                    dataSource = SqlHelper.Default.ExecuteDataSet("olap_SalesTurnover", param);
+                    dataSource = SqlHelper.Default.ExecuteDataSet("olap_InvoiceSummary", param);
                     #endregion
                 }
             }
@@ -124,7 +112,7 @@ namespace xPort5.Admin.Olap
             #endregion
 
             #region Column Area
-            var year = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.ColumnArea);
+            var year = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.FilterArea);
             year.GroupInterval = PivotGroupInterval.DateYear;
             year.Caption = oDict.GetWord("year");
             year.AreaIndex = 0;
@@ -133,38 +121,46 @@ namespace xPort5.Admin.Olap
             #endregion
 
             #region Data Area
-            pvgOlap.Fields["ExtAmount"].Area = PivotArea.DataArea;
-            pvgOlap.Fields["ExtAmount"].Caption = oDict.GetWord("amount");
-            pvgOlap.Fields["ExtAmount"].ValueFormat.FormatString = "{0:n2}";
+            pvgOlap.Fields["BackLogAmt"].Area = PivotArea.DataArea;
+            pvgOlap.Fields["BackLogAmt"].Caption = "Back Log";
+            pvgOlap.Fields["BackLogAmt"].AreaIndex = 0;
+            pvgOlap.Fields["BackLogAmt"].ValueFormat.FormatString = "{0:n2}";
+            pvgOlap.Fields["BackLogAmt"].ValueFormat.FormatType = FormatType.Numeric;
+            pvgOlap.Fields["BackLogAmt"].ExportBestFit = false;
+            pvgOlap.Fields["BackLogAmt"].Width = 120;
 
-            pvgOlap.Fields["ExtHKDAmount"].Area = PivotArea.DataArea;
-            pvgOlap.Fields["ExtHKDAmount"].Caption = "HKD " + oDict.GetWord("amount");
-            pvgOlap.Fields["ExtHKDAmount"].ValueFormat.FormatString = "{0:n2}";
+            for (int i = 1; i <= 12; i++)
+            {
+                var tag = "Amt" + i.ToString();
+
+                pvgOlap.Fields[tag].Area = PivotArea.DataArea;
+                pvgOlap.Fields[tag].Caption = DateTime.Now.AddMonths(i - 1).ToString("MMM yyyy");
+                pvgOlap.Fields[tag].ValueFormat.FormatString = "{0:n2}";
+                pvgOlap.Fields[tag].ValueFormat.FormatType = FormatType.Numeric;
+                pvgOlap.Fields[tag].AreaIndex = i;
+                pvgOlap.Fields[tag].ExportBestFit = false;
+                pvgOlap.Fields[tag].Width = 120;
+            }
+
+            pvgOlap.Fields["Total"].Area = PivotArea.DataArea;
+            pvgOlap.Fields["Total"].AreaIndex = 13;
+            pvgOlap.Fields["Total"].ValueFormat.FormatString = "{0:n2}";
+            pvgOlap.Fields["Total"].ValueFormat.FormatType = FormatType.Numeric;
+            pvgOlap.Fields["Total"].ExportBestFit = false;
+            pvgOlap.Fields["Total"].Width = 120;
             #endregion
 
             #region Filter Area
             pvgOlap.Fields["Region"].Area = PivotArea.FilterArea;
             pvgOlap.Fields["Region"].Caption = oDict.GetWord("region");
-            pvgOlap.Fields["PricingTerms"].Area = PivotArea.FilterArea;
-            pvgOlap.Fields["PricingTerms"].Caption = oDict.GetWord("payment_terms"); ;
-            pvgOlap.Fields["Currency"].Area = PivotArea.FilterArea;
-            pvgOlap.Fields["Currency"].Caption = oDict.GetWord("currency");
-            pvgOlap.Fields["INDate"].Area = PivotArea.FilterArea;
-            pvgOlap.Fields["INDate"].Caption = oDict.GetWord("invoice_date");
-            pvgOlap.Fields["INDate"].ValueFormat.FormatType = FormatType.DateTime;
-            pvgOlap.Fields["INDate"].ValueFormat.FormatString = "yyyy-MM-dd";
+            #endregion
 
-            var quarter = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.FilterArea);
-            quarter.GroupInterval = PivotGroupInterval.DateQuarter;
-            quarter.Caption = oDict.GetWord("Quarter");
-            pvgOlap.Fields.Add(quarter);
-
-            var month = new DevExpress.Web.ASPxPivotGrid.PivotGridField("INDate", PivotArea.FilterArea);
-            month.GroupInterval = PivotGroupInterval.DateMonth;
-            month.Caption = oDict.GetWord("month");
-            month.ValueFormat.FormatType = FormatType.DateTime;
-            month.ValueFormat.FormatString = "MM";
-            pvgOlap.Fields.Add(month);
+            #region Ignore these fields
+            pvgOlap.Fields["INQty"].Visible = false;
+            pvgOlap.Fields["UnitAmount"].Visible = false;
+            pvgOlap.Fields["ExtAmount"].Visible = false;
+            pvgOlap.Fields["ExtHKDAmount"].Visible = false;
+            pvgOlap.Fields["ExchangeRate"].Visible = false;
             #endregion
 
             pvgOlap.CollapseAllColumns();

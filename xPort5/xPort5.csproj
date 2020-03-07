@@ -384,40 +384,40 @@
     <Compile Include="Admin\Coding\Uom\UomRecord.designer.cs">
       <DependentUpon>UomRecord.cs</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\InvoiceSummary.aspx.cs">
-      <DependentUpon>InvoiceSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\InvoiceSummaryByMonth_v5.aspx.cs">
+      <DependentUpon>InvoiceSummaryByMonth_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\InvoiceSummary.aspx.designer.cs">
-      <DependentUpon>InvoiceSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\InvoiceSummaryByMonth_v5.aspx.designer.cs">
+      <DependentUpon>InvoiceSummaryByMonth_v5.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\InvoiceSummaryByMonth.aspx.cs">
-      <DependentUpon>InvoiceSummaryByMonth.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\InvoiceSummary_v5.aspx.cs">
+      <DependentUpon>InvoiceSummary_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\InvoiceSummaryByMonth.aspx.designer.cs">
-      <DependentUpon>InvoiceSummaryByMonth.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\InvoiceSummary_v5.aspx.designer.cs">
+      <DependentUpon>InvoiceSummary_v5.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\OutstandingOrderSummary.aspx.cs">
-      <DependentUpon>OutstandingOrderSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\OutstandingOrderSummary_v5.aspx.cs">
+      <DependentUpon>OutstandingOrderSummary_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\OutstandingOrderSummary.aspx.designer.cs">
-      <DependentUpon>OutstandingOrderSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\OutstandingOrderSummary_v5.aspx.designer.cs">
+      <DependentUpon>OutstandingOrderSummary_v5.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\OutstandingProfitSummary.aspx.cs">
-      <DependentUpon>OutstandingProfitSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\OutstandingProfitSummary_v5.aspx.cs">
+      <DependentUpon>OutstandingProfitSummary_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\OutstandingProfitSummary.aspx.designer.cs">
-      <DependentUpon>OutstandingProfitSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\OutstandingProfitSummary_v5.aspx.designer.cs">
+      <DependentUpon>OutstandingProfitSummary_v5.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\SalesContract.aspx.cs">
-      <DependentUpon>SalesContract.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\SalesContract_v5.aspx.cs">
+      <DependentUpon>SalesContract_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\SalesContract.aspx.designer.cs">
-      <DependentUpon>SalesContract.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\SalesContract_v5.aspx.designer.cs">
+      <DependentUpon>SalesContract_v5.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Olap\SalesTurnover_v5.aspx.cs">
       <DependentUpon>SalesTurnover_v5.aspx</DependentUpon>
@@ -426,26 +426,19 @@
     <Compile Include="Admin\Olap\SalesTurnover_v5.aspx.designer.cs">
       <DependentUpon>SalesTurnover_v5.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\SalesTurnover.aspx.cs">
-      <DependentUpon>SalesTurnover.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\ShipmentSummary_v5.aspx.cs">
+      <DependentUpon>ShipmentSummary_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\SalesTurnover.aspx.designer.cs">
-      <DependentUpon>SalesTurnover.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\ShipmentSummary_v5.aspx.designer.cs">
+      <DependentUpon>ShipmentSummary_v5.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Olap\ShipmentSummary.aspx.cs">
-      <DependentUpon>ShipmentSummary.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\Top10Suppliers_v5.aspx.cs">
+      <DependentUpon>Top10Suppliers_v5.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Olap\ShipmentSummary.aspx.designer.cs">
-      <DependentUpon>ShipmentSummary.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\Olap\Top10Suppliers.aspx.cs">
-      <DependentUpon>Top10Suppliers.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Olap\Top10Suppliers.aspx.designer.cs">
-      <DependentUpon>Top10Suppliers.aspx</DependentUpon>
+    <Compile Include="Admin\Olap\Top10Suppliers_v5.aspx.designer.cs">
+      <DependentUpon>Top10Suppliers_v5.aspx</DependentUpon>
     </Compile>
     <Compile Include="AtsPane\OrderAts.cs">
       <SubType>UserControl</SubType>
@@ -1409,7 +1402,14 @@
     <Compile Include="Settings\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\Olap\InvoiceSummaryByMonth_v5.aspx" />
+    <Content Include="Admin\Olap\InvoiceSummary_v5.aspx" />
+    <Content Include="Admin\Olap\OutstandingOrderSummary_v5.aspx" />
+    <Content Include="Admin\Olap\OutstandingProfitSummary_v5.aspx" />
+    <Content Include="Admin\Olap\SalesContract_v5.aspx" />
     <Content Include="Admin\Olap\SalesTurnover_v5.aspx" />
+    <Content Include="Admin\Olap\ShipmentSummary_v5.aspx" />
+    <Content Include="Admin\Olap\Top10Suppliers_v5.aspx" />
     <Content Include="App_Themes\Glass\ASPxPivotGrid.skin" />
     <None Include="Controls\Reporting\RS\DataSource.xsc">
       <DependentUpon>DataSource.xsd</DependentUpon>
@@ -2084,14 +2084,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\Olap\InvoiceSummary.aspx" />
-    <Content Include="Admin\Olap\InvoiceSummaryByMonth.aspx" />
-    <Content Include="Admin\Olap\OutstandingOrderSummary.aspx" />
-    <Content Include="Admin\Olap\OutstandingProfitSummary.aspx" />
-    <Content Include="Admin\Olap\SalesContract.aspx" />
-    <Content Include="Admin\Olap\SalesTurnover.aspx" />
-    <Content Include="Admin\Olap\ShipmentSummary.aspx" />
-    <Content Include="Admin\Olap\Top10Suppliers.aspx" />
     <Content Include="App_Themes\Glass\Glass.css" />
     <Content Include="App_Themes\Glass\GridView\gvCollapsedButton.gif" />
     <Content Include="App_Themes\Glass\GridView\gvDetailCollapsedButton.gif" />
@@ -2243,6 +2235,7 @@
     <Content Include="Resources\Icons\FileType\16_xls.gif" />
     <Content Include="Resources\Icons\FileType\sechead.gif" />
     <Content Include="Resources\Images\ContractHeader.jpg" />
+    <Content Include="Resources\Images\loading.gif" />
     <Content Include="Resources\Images\logo_company.jpg" />
     <Content Include="Resources\Images\logo_companydetail.jpg" />
     <Content Include="Resources\Icons\16x16\16_activate.gif" />

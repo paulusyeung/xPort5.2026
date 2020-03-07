@@ -1123,8 +1123,8 @@
     <chs>打印</chs>
     <cht>列印</cht>
   </keyword>
-  <keyword key="exprot_excel">
-    <en>Exprot Excel</en>
+  <keyword key="export_excel">
+    <en>Export to Excel</en>
     <chs>導出 Excel</chs>
     <cht>導出 Excel</cht>
   </keyword>
@@ -1586,7 +1586,7 @@
   <keyword key="to">
     <en>To</en>
     <chs>到</chs>
-    <cht>到</cht>
+    <cht>至</cht>
   </keyword>
   <keyword key="cc">
     <en>C.C.</en>
@@ -1831,7 +1831,7 @@
   <keyword key="from">
     <en>From</en>
     <chs>从</chs>
-    <cht>从</cht>
+    <cht>由</cht>
   </keyword>
   <keyword key="processing">
     <en>Processing...</en>
@@ -2917,5 +2917,15 @@
     <en>Popup</en>
     <chs>弹窗</chs>
     <cht>彈窗</cht>
+  </keyword>
+  <keyword key="quarter">
+    <en>Quarter</en>
+    <chs>季度</chs>
+    <cht>季度</cht>
+  </keyword>
+  <keyword key="grand_total">
+    <en>Grand Total</en>
+    <chs>总计</chs>
+    <cht>總計</cht>
   </keyword>
 </root>

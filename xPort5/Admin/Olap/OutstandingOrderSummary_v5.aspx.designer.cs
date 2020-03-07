@@ -10,7 +10,7 @@
 namespace xPort5.Admin.Olap {
     
     
-    public partial class SalesTurnover_v5 {
+    public partial class OutstandingOrderSummary_v5 {
         
         /// <summary>
         /// form1 control.

@@ -1,4 +1,4 @@
-#region Using
+﻿#region Using
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Text;
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
 using Gizmox.WebGUI.Forms.Hosts;
+using Gizmox.WebGUI.Common.Resources;
 
 #endregion
 
@@ -24,6 +25,9 @@ namespace xPort5.Controls.Reporting
             InitializeComponent();
 
             objOlapViewerBox.Dock = DockStyle.Fill;
+            objOlapViewerBox.BackgroundImage = new ImageResourceHandle("loading.gif");
+            objOlapViewerBox.BackgroundImageLayout = ImageLayout.None;      // 唔可以居中，有機會穿崩
+
             this.Controls.Add(objOlapViewerBox);
         }
 

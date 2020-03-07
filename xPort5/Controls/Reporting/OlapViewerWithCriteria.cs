@@ -12,6 +12,7 @@ using Gizmox.WebGUI.Forms;
 using xPort5.DAL;
 using System.Web;
 using System.Configuration;
+using Gizmox.WebGUI.Common.Resources;
 
 #endregion
 
@@ -127,9 +128,9 @@ namespace xPort5.Controls.Reporting
             rbtnName.Text = oDict.GetWord("customer_name");
             this.tpPeriod.Text = oDict.GetWord("date_range");
             gbReportingPeriod.Text = oDict.GetWord("date_range");
-            this.lblFrom.Text = oDict.GetWord("from");
-            this.lblTo.Text = oDict.GetWord("to");
-            this.lblCurrency.Text = oDict.GetWord("currency");
+            this.lblFrom.Text = oDict.GetWordWithColon("from");
+            this.lblTo.Text = oDict.GetWordWithColon("to");
+            this.lblCurrency.Text = oDict.GetWordWithColon("currency");
             this.btnSelectionAll.Text = oDict.GetWord("all");
             this.btnClearSelection.Text = oDict.GetWord("clear");
         }

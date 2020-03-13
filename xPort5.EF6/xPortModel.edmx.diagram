@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="62325b58a83c4e4ca82a9254823b9d11" Name="Diagram1">
+        <EntityTypeShape EntityType="xPort5Model.Article" Width="1.5" PointX="3" PointY="64.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.ArticleCustomer" Width="1.5" PointX="11.25" PointY="66" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.ArticleKeyPicture" Width="1.5" PointX="8.25" PointY="67.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.ArticlePackage" Width="1.5" PointX="8.25" PointY="59.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.ArticlePrice" Width="1.5" PointX="8.25" PointY="70.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.ArticleSupplier" Width="1.5" PointX="11.25" PointY="60.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Customer" Width="1.5" PointX="6" PointY="64.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.CustomerAddress" Width="1.5" PointX="14.25" PointY="65.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.CustomerContact" Width="1.5" PointX="14.25" PointY="57.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderIN" Width="1.5" PointX="14.25" PointY="72.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderINCharges" Width="1.5" PointX="19.5" PointY="77.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderINItems" Width="1.5" PointX="21.75" PointY="75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderINShipment" Width="1.5" PointX="24" PointY="75.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderPC" Width="1.5" PointX="20.5" PointY="80.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderPCItems" Width="1.5" PointX="22.75" PointY="71.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderPK" Width="1.5" PointX="17.25" PointY="65.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderPKItems" Width="1.5" PointX="11.25" PointY="72.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderPL" Width="1.5" PointX="17.25" PointY="57.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderPLItems" Width="1.5" PointX="19.5" PointY="58.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderQT" Width="1.5" PointX="17.25" PointY="73" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderQTCustShipping" Width="1.5" PointX="7.5" PointY="56" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderQTItems" Width="1.5" PointX="5.25" PointY="55.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderQTPackage" Width="1.5" PointX="7.5" PointY="50.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderQTSupplier" Width="1.5" PointX="10.5" PointY="55.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderQTSuppShipping" Width="1.5" PointX="7.5" PointY="85.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderSC" Width="1.5" PointX="8.25" PointY="75.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderSCItems" Width="1.5" PointX="19.5" PointY="73.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderSP" Width="1.5" PointX="20.25" PointY="65.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.OrderSPItems" Width="1.5" PointX="22.5" PointY="62.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Resources" Width="1.5" PointX="6" PointY="77" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Staff" Width="1.5" PointX="15" PointY="82.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.StaffAddress" Width="1.5" PointX="23.25" PointY="80.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Supplier" Width="1.5" PointX="3" PointY="47" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.SupplierAddress" Width="1.5" PointX="22.25" PointY="55" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.SupplierContact" Width="1.5" PointX="14.25" PointY="47.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.SystemInfo" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_AgeGrading" Width="1.5" PointX="0.75" PointY="60.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_BarCode" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Category" Width="1.5" PointX="0.75" PointY="72.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Charge" Width="1.5" PointX="17.25" PointY="83" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_City" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Class" Width="1.5" PointX="1.5" PointY="78" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Color" Width="1.5" PointX="0.75" PointY="56.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Country" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Currency" Width="1.5" PointX="0.75" PointY="66.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Dept" Width="1.5" PointX="1.5" PointY="80.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Division" Width="1.5" PointX="12.75" PointY="82.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Group" Width="1.5" PointX="12.75" PointY="85.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Origin" Width="1.5" PointX="0.75" PointY="84.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Package" Width="1.5" PointX="3" PointY="53.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_PaymentTerms" Width="1.5" PointX="3.75" PointY="73.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Port" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Province" Width="1.5" PointX="0.75" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Region" Width="1.5" PointX="3.75" PointY="78.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_Remarks" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_ShippingMark" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.T_UnitOfMeasures" Width="1.5" PointX="6" PointY="73.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.UserPreference" Width="1.5" PointX="8" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.UserProfile" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.X_AppPath" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.X_Counter" Width="1.5" PointX="4.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.X_ErrorLog" Width="1.5" PointX="6.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.X_EventLog" Width="1.5" PointX="8.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Z_Address" Width="1.5" PointX="12" PointY="78.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Z_Email" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Z_JobTitle" Width="1.5" PointX="12" PointY="51.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Z_Phone" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.Z_Salutation" Width="1.5" PointX="12" PointY="48" IsExpanded="true" />
+        <AssociationConnector Association="xPort5Model.FK_Article_ArticleCustomer" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Article_ArticleKeyPicture" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Article_ArticlePackage" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Article_ArticlePrice" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Article_ArticleSupplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Article_OrderPKItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Article_OrderQTItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_AgeGrading_Article" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Category_Article" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Color_Article" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_Article" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Origin_Article" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_ArticleCustomer" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_ArticleCustomer" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Resources_ArticleKeyPicture" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Package_ArticlePackage" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_UnitOfMeasures_ArticlePackage" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_ArticlePrice" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Supplier_ArticleSupplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_ArticleSupplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_CustomerAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_CustomerContact" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_OrderIN" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_OrderPK" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_OrderPL" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_OrderQT" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_OrderSC" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Customer_OrderSP" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_PaymentTerms_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Region_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_Address_CustomerAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_JobTitle_CustomerContact" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_Salutation_CustomerContact" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderIN_OrderINCharges" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderIN_OrderINItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderIN" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Origin_OrderIN" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Charge_OrderINCharges" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderINItems_OrderINShipment" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderSCItems_OrderINItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderPC_OrderPCItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderPC" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Supplier_OrderPC" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Origin_OrderPC" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderSCItems_OrderPCItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderPK_OrderPKItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderPK" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_OrderPK" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Package_OrderPKItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderPL_OrderPLItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderPL" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderPLItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQT_OrderQTItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderQT" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_OrderQT" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_PaymentTerms_OrderQT" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderQTCustShipping" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderQTPackage" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderQTSupplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderQTSuppShipping" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderSCItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderQTItems_OrderSPItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Supplier_OrderQTItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Package_OrderQTItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Currency_OrderQTSupplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderSC_OrderSCItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderSC" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Origin_OrderSC" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_OrderSP_OrderSPItems" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_OrderSP" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Staff_StaffAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Division_Staff" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Group_Staff" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_Address_StaffAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Supplier_SupplierAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Supplier_SupplierContact" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_PaymentTerms_Supplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Region_Supplier" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_Address_SupplierAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_JobTitle_SupplierContact" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_Z_Salutation_SupplierContact" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_AgeGrading_T_AgeGrading" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Class_T_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Dept_T_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Charge_T_Charge" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Country_T_City" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Province_T_City" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Color_T_Color" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Division_T_Division" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Group_T_Group" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Origin_T_Origin" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Package_T_Package" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_PaymentTerms_T_PaymentTerms" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Port_T_Port" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Region_T_Region" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_Remarks_T_Remarks" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_T_ShippingMark_T_ShippingMark" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_UserProfile_UserPreference" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

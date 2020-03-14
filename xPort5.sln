@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xPort5", "xPort5\xPort5.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xPort5.EF6", "xPort5.EF6\xPort5.EF6.csproj", "{573EA8D8-E09D-49FB-8CC2-1DCF78B3CF4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xPort5.Bot", "xPort5.Bot\xPort5.Bot.csproj", "{90D7A32F-663C-4D12-8D08-E6BE209743B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,12 @@ Global
 		{573EA8D8-E09D-49FB-8CC2-1DCF78B3CF4E}.Development|Any CPU.Build.0 = Debug|Any CPU
 		{573EA8D8-E09D-49FB-8CC2-1DCF78B3CF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{573EA8D8-E09D-49FB-8CC2-1DCF78B3CF4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90D7A32F-663C-4D12-8D08-E6BE209743B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90D7A32F-663C-4D12-8D08-E6BE209743B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90D7A32F-663C-4D12-8D08-E6BE209743B8}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{90D7A32F-663C-4D12-8D08-E6BE209743B8}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{90D7A32F-663C-4D12-8D08-E6BE209743B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90D7A32F-663C-4D12-8D08-E6BE209743B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

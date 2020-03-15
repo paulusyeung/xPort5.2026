@@ -55,253 +55,251 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Article.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ArticleCustomer.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ArticleKeyPicture.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ArticlePackage.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ArticlePrice.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ArticleSupplier.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Customer.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="CustomerAddress.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="CustomerContact.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderIN.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderINCharges.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderINItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderINShipment.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderPC.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderPCItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderPK.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderPKItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderPL.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderPLItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderQT.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderQTCustShipping.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderQTItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderQTPackage.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderQTSupplier.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderQTSuppShipping.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderSC.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderSCItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderSP.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="OrderSPItems.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Staff.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="StaffAddress.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Supplier.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="SupplierAddress.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="SupplierContact.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="SystemInfo.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_AgeGrading.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_BarCode.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Category.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Charge.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_City.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Class.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Color.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Country.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Currency.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Dept.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Division.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Group.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Origin.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Package.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_PaymentTerms.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Port.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Province.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Region.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_Remarks.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_ShippingMark.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="T_UnitOfMeasures.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="UserPreference.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+    <Compile Include="UserDisplayPreference.cs">
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="UserProfile.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="xPortModel.Context.cs">
+    <Compile Include="xPort5Model.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>xPortModel.Context.tt</DependentUpon>
+      <DependentUpon>xPort5Model.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="xPortModel.cs">
+    <Compile Include="xPort5Model.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="xPortModel.Designer.cs">
+    <Compile Include="xPort5Model.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>xPortModel.edmx</DependentUpon>
+      <DependentUpon>xPort5Model.edmx</DependentUpon>
     </Compile>
     <Compile Include="X_AppPath.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="X_Counter.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="X_ErrorLog.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="X_EventLog.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Z_Address.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Z_Email.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Z_JobTitle.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Z_Phone.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Z_Salutation.cs">
-      <DependentUpon>xPortModel.tt</DependentUpon>
+      <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="xPortModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>xPortModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
     <None Include="packages.config" />
-    <None Include="xPortModel.edmx.diagram">
-      <DependentUpon>xPortModel.edmx</DependentUpon>
+    <EntityDeploy Include="xPort5Model.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>xPort5Model.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="xPort5Model.edmx.diagram">
+      <DependentUpon>xPort5Model.edmx</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="xPortModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>xPortModel.Context.cs</LastGenOutput>
-      <DependentUpon>xPortModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="xPortModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>xPortModel.edmx</DependentUpon>
-      <LastGenOutput>xPortModel.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Content Include="xPort5Model.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>xPort5Model.edmx</DependentUpon>
+      <LastGenOutput>xPort5Model.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="xPort5Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>xPort5Model.edmx</DependentUpon>
+      <LastGenOutput>xPort5Model.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

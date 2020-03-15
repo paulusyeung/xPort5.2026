@@ -1047,7 +1047,7 @@
           <Property Name="UomName_Chs" Type="nvarchar" MaxLength="64" />
           <Property Name="UomName_Cht" Type="nvarchar" MaxLength="64" />
         </EntityType>
-        <EntityType Name="UserPreference">
+        <EntityType Name="UserDisplayPreference">
           <Key>
             <PropertyRef Name="PreferenceId" />
           </Key>
@@ -2255,14 +2255,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserProfile_UserPreference">
+        <Association Name="FK_UserProfile_UserDisplayPreference">
           <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="UserPreference" Type="Self.UserPreference" Multiplicity="*" />
+          <End Role="UserDisplayPreference" Type="Self.UserDisplayPreference" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="UserPreference">
+            <Dependent Role="UserDisplayPreference">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2409,7 +2409,7 @@
           <EntitySet Name="T_Remarks" EntityType="Self.T_Remarks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_ShippingMark" EntityType="Self.T_ShippingMark" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_UnitOfMeasures" EntityType="Self.T_UnitOfMeasures" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserPreference" EntityType="Self.UserPreference" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDisplayPreference" EntityType="Self.UserDisplayPreference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="X_AppPath" EntityType="Self.X_AppPath" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="X_Counter" EntityType="Self.X_Counter" Schema="dbo" store:Type="Tables" />
@@ -2784,9 +2784,9 @@
             <End Role="T_UnitOfMeasures" EntitySet="T_UnitOfMeasures" />
             <End Role="ArticlePackage" EntitySet="ArticlePackage" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserProfile_UserPreference" Association="Self.FK_UserProfile_UserPreference">
+          <AssociationSet Name="FK_UserProfile_UserDisplayPreference" Association="Self.FK_UserProfile_UserDisplayPreference">
             <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="UserPreference" EntitySet="UserPreference" />
+            <End Role="UserDisplayPreference" EntitySet="UserDisplayPreference" />
           </AssociationSet>
           <AssociationSet Name="FK_Z_Address_CustomerAddress" Association="Self.FK_Z_Address_CustomerAddress">
             <End Role="Z_Address" EntitySet="Z_Address" />
@@ -4053,7 +4053,7 @@
           <Property Name="UomName_Cht" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ArticlePackage" Relationship="Self.FK_T_UnitOfMeasures_ArticlePackage" FromRole="T_UnitOfMeasures" ToRole="ArticlePackage" />
         </EntityType>
-        <EntityType Name="UserPreference">
+        <EntityType Name="UserDisplayPreference">
           <Key>
             <PropertyRef Name="PreferenceId" />
           </Key>
@@ -4061,7 +4061,7 @@
           <Property Name="UserId" Type="Guid" Nullable="false" />
           <Property Name="PreferenceObjectId" Type="Guid" />
           <Property Name="MetadataXml" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="UserProfile" Relationship="Self.FK_UserProfile_UserPreference" FromRole="UserPreference" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile" Relationship="Self.FK_UserProfile_UserDisplayPreference" FromRole="UserDisplayPreference" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -4073,7 +4073,7 @@
           <Property Name="LoginName" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
           <Property Name="LoginPassword" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
           <Property Name="Alias" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="UserPreference" Relationship="Self.FK_UserProfile_UserPreference" FromRole="UserProfile" ToRole="UserPreference" />
+          <NavigationProperty Name="UserDisplayPreference" Relationship="Self.FK_UserProfile_UserDisplayPreference" FromRole="UserProfile" ToRole="UserDisplayPreference" />
         </EntityType>
         <EntityType Name="X_AppPath">
           <Key>
@@ -5354,14 +5354,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserProfile_UserPreference">
+        <Association Name="FK_UserProfile_UserDisplayPreference">
           <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
-          <End Role="UserPreference" Type="Self.UserPreference" Multiplicity="*" />
+          <End Role="UserDisplayPreference" Type="Self.UserDisplayPreference" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfile">
               <PropertyRef Name="UserId" />
             </Principal>
-            <Dependent Role="UserPreference">
+            <Dependent Role="UserDisplayPreference">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -5424,7 +5424,7 @@
           <EntitySet Name="T_Remarks" EntityType="Self.T_Remarks" />
           <EntitySet Name="T_ShippingMark" EntityType="Self.T_ShippingMark" />
           <EntitySet Name="T_UnitOfMeasures" EntityType="Self.T_UnitOfMeasures" />
-          <EntitySet Name="UserPreference" EntityType="Self.UserPreference" />
+          <EntitySet Name="UserDisplayPreference" EntityType="Self.UserDisplayPreference" />
           <EntitySet Name="UserProfile" EntityType="Self.UserProfile" />
           <EntitySet Name="X_AppPath" EntityType="Self.X_AppPath" />
           <EntitySet Name="X_Counter" EntityType="Self.X_Counter" />
@@ -5827,9 +5827,9 @@
             <End Role="T_ShippingMark" EntitySet="T_ShippingMark" />
             <End Role="T_ShippingMark1" EntitySet="T_ShippingMark" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserProfile_UserPreference" Association="Self.FK_UserProfile_UserPreference">
+          <AssociationSet Name="FK_UserProfile_UserDisplayPreference" Association="Self.FK_UserProfile_UserDisplayPreference">
             <End Role="UserProfile" EntitySet="UserProfile" />
-            <End Role="UserPreference" EntitySet="UserPreference" />
+            <End Role="UserDisplayPreference" EntitySet="UserDisplayPreference" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -6937,9 +6937,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserPreference">
-            <EntityTypeMapping TypeName="xPort5Model.UserPreference">
-              <MappingFragment StoreEntitySet="UserPreference">
+          <EntitySetMapping Name="UserDisplayPreference">
+            <EntityTypeMapping TypeName="xPort5Model.UserDisplayPreference">
+              <MappingFragment StoreEntitySet="UserDisplayPreference">
                 <ScalarProperty Name="PreferenceId" ColumnName="PreferenceId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PreferenceObjectId" ColumnName="PreferenceObjectId" />

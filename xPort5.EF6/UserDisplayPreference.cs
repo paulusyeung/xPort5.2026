@@ -12,7 +12,7 @@ namespace xPort5.EF6
     using System;
     using System.Collections.Generic;
     
-    public partial class UserPreference
+    public partial class UserDisplayPreference
     {
         public System.Guid PreferenceId { get; set; }
         public System.Guid UserId { get; set; }

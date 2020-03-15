@@ -82,7 +82,7 @@ namespace xPort5.EF6
         public virtual DbSet<T_Remarks> T_Remarks { get; set; }
         public virtual DbSet<T_ShippingMark> T_ShippingMark { get; set; }
         public virtual DbSet<T_UnitOfMeasures> T_UnitOfMeasures { get; set; }
-        public virtual DbSet<UserPreference> UserPreference { get; set; }
+        public virtual DbSet<UserDisplayPreference> UserDisplayPreference { get; set; }
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<X_AppPath> X_AppPath { get; set; }
         public virtual DbSet<X_Counter> X_Counter { get; set; }

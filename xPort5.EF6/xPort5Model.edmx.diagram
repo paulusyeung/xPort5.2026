@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="62325b58a83c4e4ca82a9254823b9d11" Name="Diagram1">
+      <Diagram DiagramId="e220ec0085254e9b9238fbeec83262f9" Name="Diagram1">
         <EntityTypeShape EntityType="xPort5Model.Article" Width="1.5" PointX="3" PointY="64.75" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.ArticleCustomer" Width="1.5" PointX="11.25" PointY="66" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.ArticleKeyPicture" Width="1.5" PointX="8.25" PointY="67.625" IsExpanded="true" />
@@ -62,7 +62,7 @@
         <EntityTypeShape EntityType="xPort5Model.T_Remarks" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.T_ShippingMark" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.T_UnitOfMeasures" Width="1.5" PointX="6" PointY="73.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="xPort5Model.UserPreference" Width="1.5" PointX="8" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="xPort5Model.UserDisplayPreference" Width="1.5" PointX="8" PointY="5.125" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.UserProfile" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.X_AppPath" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="xPort5Model.X_Counter" Width="1.5" PointX="4.75" PointY="8.75" IsExpanded="true" />
@@ -171,7 +171,7 @@
         <AssociationConnector Association="xPort5Model.FK_T_Region_T_Region" ManuallyRouted="false" />
         <AssociationConnector Association="xPort5Model.FK_T_Remarks_T_Remarks" ManuallyRouted="false" />
         <AssociationConnector Association="xPort5Model.FK_T_ShippingMark_T_ShippingMark" ManuallyRouted="false" />
-        <AssociationConnector Association="xPort5Model.FK_UserProfile_UserPreference" ManuallyRouted="false" />
+        <AssociationConnector Association="xPort5Model.FK_UserProfile_UserDisplayPreference" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

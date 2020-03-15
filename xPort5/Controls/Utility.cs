@@ -1314,9 +1314,9 @@ ORDER BY [ColorName]
             public static void Currency(ref Gizmox.WebGUI.Forms.ComboBox target)
             {
                 string defaultValue = "USD";
-                if (ConfigurationSettings.AppSettings["Currency"] != null)
+                if (ConfigurationManager.AppSettings["Currency"] != null)
                 {
-                    defaultValue = ConfigurationSettings.AppSettings["Currency"];
+                    defaultValue = ConfigurationManager.AppSettings["Currency"];
                 }
                 int index = target.FindString(defaultValue, 0);
                 if (index >= 0 && index < target.Items.Count)
@@ -1328,9 +1328,9 @@ ORDER BY [ColorName]
             public static void UoM(ref Gizmox.WebGUI.Forms.ComboBox target)
             {
                 string defaultValue = "PC";
-                if (ConfigurationSettings.AppSettings["UoM"] != null)
+                if (ConfigurationManager.AppSettings["UoM"] != null)
                 {
-                    defaultValue = ConfigurationSettings.AppSettings["UoM"];
+                    defaultValue = ConfigurationManager.AppSettings["UoM"];
                 }
                 int index = target.FindString(defaultValue, 0);
                 if (index >= 0 && index < target.Items.Count)
@@ -1342,9 +1342,9 @@ ORDER BY [ColorName]
             public static void Salesperson(ref Gizmox.WebGUI.Forms.ComboBox target)
             {
                 string defaultValue = "Clara";
-                if (ConfigurationSettings.AppSettings["Salesperson"] != null)
+                if (ConfigurationManager.AppSettings["Salesperson"] != null)
                 {
-                    defaultValue = ConfigurationSettings.AppSettings["Salesperson"];
+                    defaultValue = ConfigurationManager.AppSettings["Salesperson"];
                 }
                 int index = target.FindString(defaultValue, 0);
                 if (index >= 0 && index < target.Items.Count)
@@ -1356,9 +1356,9 @@ ORDER BY [ColorName]
             public static void Origin(ref Gizmox.WebGUI.Forms.ComboBox target)
             {
                 string defaultValue = "CHINA";
-                if (ConfigurationSettings.AppSettings["Origin"] != null)
+                if (ConfigurationManager.AppSettings["Origin"] != null)
                 {
-                    defaultValue = ConfigurationSettings.AppSettings["Origin"];
+                    defaultValue = ConfigurationManager.AppSettings["Origin"];
                 }
                 int index = target.FindString(defaultValue, 0);
                 if (index >= 0 && index < target.Items.Count)
@@ -1370,9 +1370,9 @@ ORDER BY [ColorName]
             public static int InputMask()
             {
                 int defaultValue = 5;
-                if (ConfigurationSettings.AppSettings["InputMask"] != null)
+                if (ConfigurationManager.AppSettings["InputMask"] != null)
                 {
-                    defaultValue = Convert.ToInt32(ConfigurationSettings.AppSettings["InputMask"]);
+                    defaultValue = Convert.ToInt32(ConfigurationManager.AppSettings["InputMask"]);
                 }
                 return defaultValue;
             }
@@ -1382,9 +1382,9 @@ ORDER BY [ColorName]
                 string[] result = new string[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4User"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4User"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4User"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4User"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1405,9 +1405,9 @@ ORDER BY [ColorName]
                 Guid[] result = new Guid[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4User"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4User"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4User"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4User"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1428,9 +1428,9 @@ ORDER BY [ColorName]
                 string[] result = new string[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4Contact"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4Contact"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4Contact"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4Contact"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1451,9 +1451,9 @@ ORDER BY [ColorName]
                 Guid[] result = new Guid[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4Contact"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4Contact"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4Contact"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4Contact"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1474,9 +1474,9 @@ ORDER BY [ColorName]
                 string[] result = new string[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4Customer"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4Customer"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4Customer"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4Customer"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1497,9 +1497,9 @@ ORDER BY [ColorName]
                 Guid[] result = new Guid[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4Customer"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4Customer"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4Customer"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4Customer"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1520,9 +1520,9 @@ ORDER BY [ColorName]
                 string[] result = new string[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4Supplier"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4Supplier"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4Supplier"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4Supplier"];
                 }
                 string[] labels = label.Split(',');
 
@@ -1543,9 +1543,9 @@ ORDER BY [ColorName]
                 Guid[] result = new Guid[5];
 
                 string label = "1,2,3,4,5";
-                if (ConfigurationSettings.AppSettings["PhoneLabels4Supplier"] != null)
+                if (ConfigurationManager.AppSettings["PhoneLabels4Supplier"] != null)
                 {
-                    label = ConfigurationSettings.AppSettings["PhoneLabels4Supplier"];
+                    label = ConfigurationManager.AppSettings["PhoneLabels4Supplier"];
                 }
                 string[] labels = label.Split(',');
 
@@ -3493,7 +3493,7 @@ ORDER BY [ColorName]
                 {
                     string cmd = @"
 DELETE
-FROM [dbo].[UserPreference]
+FROM [dbo].[UserDisplayPreference]
 WHERE [UserId] = '" + user.UserId.ToString() + @"'
 ";
                     SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, cmd);
@@ -3661,7 +3661,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
             }
         }
 
-        public class Preference
+        public class DisplayPreference
         {
             public static void Save(ListView lvwList)
             {
@@ -3672,32 +3672,32 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
                 {
                     sql = String.Format("UserId = '{0}' AND PreferenceObjectId = '{1}'", user.UserId.ToString(), ((Guid)lvwList.Tag).ToString());
 
-                    UserPreference userPref = UserPreference.LoadWhere(sql);
+                    UserDisplayPreference userPref = UserDisplayPreference.LoadWhere(sql);
 
                     if (userPref == null)
                     {
-                        userPref = new UserPreference();
+                        userPref = new UserDisplayPreference();
                         userPref.UserId = user.UserId;
                         userPref.PreferenceObjectId = (Guid)lvwList.Tag;
                     }
 
-                    userPref.MetadataXml = new Dictionary<string, UserPreference.MetadataAttributes>();     // 首先清空舊的 Metadata.
+                    userPref.MetadataXml = new Dictionary<string, UserDisplayPreference.MetadataAttributes>();     // 首先清空舊的 Metadata.
 
                     foreach (ColumnHeader col in lvwList.Columns)
                     {
-                        UserPreference.MetadataAttributes attrs = new UserPreference.MetadataAttributes();
+                        UserDisplayPreference.MetadataAttributes attrs = new UserDisplayPreference.MetadataAttributes();
 
-                        attrs.Add(new UserPreference.MetadataAttribute("Name", col.Name));
-                        //attrs.Add(new UserPreference.MetadataAttribute("Position", col.Position.ToString()));
-                        attrs.Add(new UserPreference.MetadataAttribute("SortOrder", col.SortOrder.ToString()));
-                        attrs.Add(new UserPreference.MetadataAttribute("SortPosition", col.SortPosition.ToString()));
-                        attrs.Add(new UserPreference.MetadataAttribute("Text", col.Text));                  // 為咗方便睇 SQL 紀錄，Text 會 save 不過不需要 load
-                        attrs.Add(new UserPreference.MetadataAttribute("Visible", col.Visible.ToString()));
-                        attrs.Add(new UserPreference.MetadataAttribute("Width", col.Width.ToString()));
+                        attrs.Add(new UserDisplayPreference.MetadataAttribute("Name", col.Name));
+                        //attrs.Add(new UserDisplayPreference.MetadataAttribute("Position", col.Position.ToString()));
+                        attrs.Add(new UserDisplayPreference.MetadataAttribute("SortOrder", col.SortOrder.ToString()));
+                        attrs.Add(new UserDisplayPreference.MetadataAttribute("SortPosition", col.SortPosition.ToString()));
+                        attrs.Add(new UserDisplayPreference.MetadataAttribute("Text", col.Text));                  // 為咗方便睇 SQL 紀錄，Text 會 save 不過不需要 load
+                        attrs.Add(new UserDisplayPreference.MetadataAttribute("Visible", col.Visible.ToString()));
+                        attrs.Add(new UserDisplayPreference.MetadataAttribute("Width", col.Width.ToString()));
                         if (col.Image != null)
-                            attrs.Add(new UserPreference.MetadataAttribute("ImageFile", col.Image.File));
+                            attrs.Add(new UserDisplayPreference.MetadataAttribute("ImageFile", col.Image.File));
                         else
-                            attrs.Add(new UserPreference.MetadataAttribute("ImageFile", String.Empty));
+                            attrs.Add(new UserDisplayPreference.MetadataAttribute("ImageFile", String.Empty));
 
                         userPref.SetMetadata(col.Index.ToString(), attrs);                                  // 採用 ColumnHeader.Index 作為 key
                     }
@@ -3714,7 +3714,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
                 {
                     sql = String.Format("UserId = '{0}' AND PreferenceObjectId = '{1}'", user.UserId.ToString(), ((Guid)lvwList.Tag).ToString());
 
-                    UserPreference userPref = UserPreference.LoadWhere(sql);
+                    UserDisplayPreference userPref = UserDisplayPreference.LoadWhere(sql);
 
                     if (userPref != null)
                     {
@@ -3732,22 +3732,22 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
                     // 2012.04.18 paulus:
                     // 首先用 SuperUser 個 Id 試下，搵唔到才用自己個 Id，於是 SuperUser 可以設定 ListView 的 Layout 給所有用戶
                     sql = String.Format("UserId = '{0}' AND PreferenceObjectId = '{1}'", xPort5.Controls.Utility.Staff.GetSuperUserId().ToString(), ((Guid)lvwList.Tag).ToString());
-                    UserPreference userPref = UserPreference.LoadWhere(sql);
+                    UserDisplayPreference userPref = UserDisplayPreference.LoadWhere(sql);
                     if (userPref == null)
                     {
                         sql = String.Format("UserId = '{0}' AND PreferenceObjectId = '{1}'", user.UserId.ToString(), ((Guid)lvwList.Tag).ToString());
-                        userPref = UserPreference.LoadWhere(sql);
+                        userPref = UserDisplayPreference.LoadWhere(sql);
                     }
 
-                    #region 搵到就根據 UserPreference 的資料更改 ColumnHeader
+                    #region 搵到就根據 UserDisplayPreference 的資料更改 ColumnHeader
                     if (userPref != null)
                     {
-                        Dictionary<string, xPort5.DAL.UserPreference.MetadataAttributes> metadata = userPref.MetadataXml;
-                        foreach (KeyValuePair<string, xPort5.DAL.UserPreference.MetadataAttributes> col in metadata)
+                        Dictionary<string, xPort5.DAL.UserDisplayPreference.MetadataAttributes> metadata = userPref.MetadataXml;
+                        foreach (KeyValuePair<string, xPort5.DAL.UserDisplayPreference.MetadataAttributes> col in metadata)
                         {
                             int colIndex = int.Parse(col.Key);      // col.Key 等於 ColumnHeader.Index
 
-                            foreach (xPort5.DAL.UserPreference.MetadataAttribute item in col.Value)
+                            foreach (xPort5.DAL.UserDisplayPreference.MetadataAttribute item in col.Value)
                             {
                                 int position = 0, sortPosition = 0, width = 0;
                                 bool visible = false;

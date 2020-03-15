@@ -93,7 +93,7 @@ namespace xPort5.Factory.Product.Supplier
             //�ṩһ���̶��� Guid tag�� �� UserPreference �������@�� ListView �� unique key
             lvwSupplier.Tag = new Guid("AB6094F9-37CA-4e9f-98F0-420F9CF24B06");
 
-            xPort5.Controls.Utility.Preference.Load(ref lvwSupplier);
+            xPort5.Controls.Utility.DisplayPreference.Load(ref lvwSupplier);
         }
 
         private void SetAttribute()
@@ -267,10 +267,10 @@ ORDER BY [SupplierName]
             switch (e.MenuItem.Tag.ToString())
             {
                 case "Save":
-                    xPort5.Controls.Utility.Preference.Save(lvwSupplier);
+                    xPort5.Controls.Utility.DisplayPreference.Save(lvwSupplier);
                     break;
                 case "Reset":
-                    xPort5.Controls.Utility.Preference.Delete(lvwSupplier);
+                    xPort5.Controls.Utility.DisplayPreference.Delete(lvwSupplier);
                     break;
             }
             MessageBox.Show(oDict.GetWord("finish"));

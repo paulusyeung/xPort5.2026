@@ -94,7 +94,7 @@ namespace xPort5.Order.Coding.Supplier.Contact
             //提供一個固定的 Guid tag， 在 UserPreference 中用作這個 ListView 的 unique key
             lvwAddress.Tag = new Guid("3E706F6D-87C7-418f-8451-9919D4241ACA");
 
-            xPort5.Controls.Utility.Preference.Load(ref lvwAddress);
+            xPort5.Controls.Utility.DisplayPreference.Load(ref lvwAddress);
         }
 
         private void SetAttribute()
@@ -315,10 +315,10 @@ ORDER BY [FullName]
             switch (e.MenuItem.Tag.ToString())
             {
                 case "Save":
-                    xPort5.Controls.Utility.Preference.Save(lvwAddress);
+                    xPort5.Controls.Utility.DisplayPreference.Save(lvwAddress);
                     break;
                 case "Reset":
-                    xPort5.Controls.Utility.Preference.Delete(lvwAddress);
+                    xPort5.Controls.Utility.DisplayPreference.Delete(lvwAddress);
                     break;
             }
             MessageBox.Show(oDict.GetWord("finish"));

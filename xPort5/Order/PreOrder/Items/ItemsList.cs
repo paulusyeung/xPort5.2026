@@ -111,7 +111,7 @@ namespace xPort5.Order.PreOrder.Items
             //提供一個固定的 Guid tag， 在 UserPreference 中用作這個 ListView 的 unique key
             lvwItems.Tag = new Guid("8F9BB42A-05B5-49c5-B91A-D26EFFB551E1");
 
-            xPort5.Controls.Utility.Preference.Load(ref lvwItems);
+            xPort5.Controls.Utility.DisplayPreference.Load(ref lvwItems);
         }
 
         private void SetListAns()
@@ -461,10 +461,10 @@ ORDER BY [LineNumber]
             switch (e.MenuItem.Tag.ToString())
             {
                 case "Save":
-                    xPort5.Controls.Utility.Preference.Save(lvwItems);
+                    xPort5.Controls.Utility.DisplayPreference.Save(lvwItems);
                     break;
                 case "Reset":
-                    xPort5.Controls.Utility.Preference.Delete(lvwItems);
+                    xPort5.Controls.Utility.DisplayPreference.Delete(lvwItems);
                     break;
             }
             MessageBox.Show(oDict.GetWord("finish"));

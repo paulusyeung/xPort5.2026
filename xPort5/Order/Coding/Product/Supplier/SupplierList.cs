@@ -95,7 +95,7 @@ namespace xPort5.Order.Coding.Product.Supplier
             //提供一個固定的 Guid tag， 在 UserPreference 中用作這個 ListView 的 unique key
             lvwSupplier.Tag = new Guid("529C001B-1BCB-44cc-9480-30F990CA1CEC");
 
-            xPort5.Controls.Utility.Preference.Load(ref lvwSupplier);
+            xPort5.Controls.Utility.DisplayPreference.Load(ref lvwSupplier);
         }
 
         private void SetAttribute()
@@ -277,10 +277,10 @@ ORDER BY [SupplierName]
             switch (e.MenuItem.Tag.ToString())
             {
                 case "Save":
-                    xPort5.Controls.Utility.Preference.Save(lvwSupplier);
+                    xPort5.Controls.Utility.DisplayPreference.Save(lvwSupplier);
                     break;
                 case "Reset":
-                    xPort5.Controls.Utility.Preference.Delete(lvwSupplier);
+                    xPort5.Controls.Utility.DisplayPreference.Delete(lvwSupplier);
                     break;
             }
             MessageBox.Show(oDict.GetWord("finish"));

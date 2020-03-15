@@ -153,7 +153,7 @@
     <Compile Include="T_Remarks.cs" />
     <Compile Include="T_ShippingMark.cs" />
     <Compile Include="T_UnitOfMeasures.cs" />
-    <Compile Include="UserPreference.cs" />
+    <Compile Include="UserDisplayPreference.cs" />
     <Compile Include="UserProfile.cs" />
     <Compile Include="X_AppPath.cs" />
     <Compile Include="X_Counter.cs" />
@@ -195,7 +195,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Reset="1" AssemblyVersion="0" AssemblyFileVersion="0" StartDate="20091224" />
+      <UserProperties StartDate="20091224" AssemblyFileVersion="0" AssemblyVersion="0" Reset="1" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

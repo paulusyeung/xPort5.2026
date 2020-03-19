@@ -28,18 +28,18 @@ namespace xPort5
         /// </summary>
         private void InitializeComponent()
         {
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle33 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle34 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle35 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle36 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle37 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle38 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle39 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
-            Gizmox.WebGUI.Common.Resources.IconResourceHandle iconResourceHandle40 = new Gizmox.WebGUI.Common.Resources.IconResourceHandle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Desktop));
             this.amsMain = new Gizmox.WebGUI.Forms.MainMenu();
             this.amsFile = new Gizmox.WebGUI.Forms.MenuItem();
             this.amsFileExit = new Gizmox.WebGUI.Forms.MenuItem();
             this.amsView = new Gizmox.WebGUI.Forms.MenuItem();
+            this.amsViewEn = new Gizmox.WebGUI.Forms.MenuItem();
+            this.amsViewChs = new Gizmox.WebGUI.Forms.MenuItem();
+            this.amsViewCht = new Gizmox.WebGUI.Forms.MenuItem();
+            this.menuItem1 = new Gizmox.WebGUI.Forms.MenuItem();
+            this.amsViewVista = new Gizmox.WebGUI.Forms.MenuItem();
+            this.amsViewBlack = new Gizmox.WebGUI.Forms.MenuItem();
+            this.amsViewWinXP = new Gizmox.WebGUI.Forms.MenuItem();
             this.amsHelp = new Gizmox.WebGUI.Forms.MenuItem();
             this.amsHelpAbout = new Gizmox.WebGUI.Forms.MenuItem();
             this.atsPane = new Gizmox.WebGUI.Forms.Panel();
@@ -52,18 +52,15 @@ namespace xPort5
             this.splitter1 = new Gizmox.WebGUI.Forms.Splitter();
             this.wspPane = new Gizmox.WebGUI.Forms.Panel();
             this.picBgImage = new Gizmox.WebGUI.Forms.PictureBox();
-            this.amsViewEn = new Gizmox.WebGUI.Forms.MenuItem();
-            this.amsViewCht = new Gizmox.WebGUI.Forms.MenuItem();
-            this.amsViewChs = new Gizmox.WebGUI.Forms.MenuItem();
-            this.menuItem1 = new Gizmox.WebGUI.Forms.MenuItem();
-            this.amsViewVista = new Gizmox.WebGUI.Forms.MenuItem();
-            this.amsViewBlack = new Gizmox.WebGUI.Forms.MenuItem();
-            this.amsViewWinXP = new Gizmox.WebGUI.Forms.MenuItem();
+            this.navPane.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.navTabs)).BeginInit();
+            this.navTabs.SuspendLayout();
+            this.wspPane.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBgImage)).BeginInit();
             this.SuspendLayout();
             // 
             // amsMain
             // 
-            this.amsMain.Anchor = Gizmox.WebGUI.Forms.AnchorStyles.None;
             this.amsMain.Dock = Gizmox.WebGUI.Forms.DockStyle.Top;
             this.amsMain.Location = new System.Drawing.Point(0, 0);
             this.amsMain.MenuItems.AddRange(new Gizmox.WebGUI.Forms.MenuItem[] {
@@ -76,6 +73,7 @@ namespace xPort5
             // 
             // amsFile
             // 
+            this.amsFile.Index = 0;
             this.amsFile.MenuItems.AddRange(new Gizmox.WebGUI.Forms.MenuItem[] {
             this.amsFileExit});
             this.amsFile.Tag = "amsFile";
@@ -83,6 +81,7 @@ namespace xPort5
             // 
             // amsFileExit
             // 
+            this.amsFileExit.Index = 0;
             this.amsFileExit.Tag = "amsFileExit";
             this.amsFileExit.Text = "Exit";
             // 
@@ -100,8 +99,53 @@ namespace xPort5
             this.amsView.Tag = "amsView";
             this.amsView.Text = "View";
             // 
+            // amsViewEn
+            // 
+            this.amsViewEn.Icon = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("amsViewEn.Icon"));
+            this.amsViewEn.Index = 0;
+            this.amsViewEn.Tag = "amsViewEn";
+            this.amsViewEn.Text = "English";
+            // 
+            // amsViewChs
+            // 
+            this.amsViewChs.Icon = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("amsViewChs.Icon"));
+            this.amsViewChs.Index = 1;
+            this.amsViewChs.Tag = "amsViewChs";
+            this.amsViewChs.Text = "Simplified Chinese";
+            // 
+            // amsViewCht
+            // 
+            this.amsViewCht.Icon = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("amsViewCht.Icon"));
+            this.amsViewCht.Index = 2;
+            this.amsViewCht.Tag = "amsViewCht";
+            this.amsViewCht.Text = "Traditional Chinese";
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 3;
+            this.menuItem1.Text = "-";
+            // 
+            // amsViewVista
+            // 
+            this.amsViewVista.Index = 4;
+            this.amsViewVista.Tag = "amsViewVista";
+            this.amsViewVista.Text = "Vista Theme";
+            // 
+            // amsViewBlack
+            // 
+            this.amsViewBlack.Index = 5;
+            this.amsViewBlack.Tag = "amsViewBlack";
+            this.amsViewBlack.Text = "Black Theme";
+            // 
+            // amsViewWinXP
+            // 
+            this.amsViewWinXP.Index = 6;
+            this.amsViewWinXP.Tag = "amsViewWinXP";
+            this.amsViewWinXP.Text = "WinXP Theme";
+            // 
             // amsHelp
             // 
+            this.amsHelp.Index = 2;
             this.amsHelp.MenuItems.AddRange(new Gizmox.WebGUI.Forms.MenuItem[] {
             this.amsHelpAbout});
             this.amsHelp.Tag = "amsHelp";
@@ -109,14 +153,13 @@ namespace xPort5
             // 
             // amsHelpAbout
             // 
-            iconResourceHandle33.File = "16x16.16_info.gif";
-            this.amsHelpAbout.Icon = iconResourceHandle33;
+            this.amsHelpAbout.Icon = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("amsHelpAbout.Icon"));
+            this.amsHelpAbout.Index = 0;
             this.amsHelpAbout.Tag = "amsHelpAbout";
             this.amsHelpAbout.Text = "About";
             // 
             // atsPane
             // 
-            this.atsPane.Anchor = Gizmox.WebGUI.Forms.AnchorStyles.None;
             this.atsPane.Dock = Gizmox.WebGUI.Forms.DockStyle.Top;
             this.atsPane.Location = new System.Drawing.Point(0, 0);
             this.atsPane.Name = "atsPane";
@@ -125,7 +168,6 @@ namespace xPort5
             // 
             // navPane
             // 
-            this.navPane.Anchor = Gizmox.WebGUI.Forms.AnchorStyles.None;
             this.navPane.Controls.Add(this.navTabs);
             this.navPane.Dock = Gizmox.WebGUI.Forms.DockStyle.Left;
             this.navPane.Location = new System.Drawing.Point(0, 28);
@@ -135,7 +177,6 @@ namespace xPort5
             // 
             // navTabs
             // 
-            this.navTabs.Anchor = Gizmox.WebGUI.Forms.AnchorStyles.None;
             this.navTabs.Controls.Add(this.tabCoding);
             this.navTabs.Controls.Add(this.tabOrder);
             this.navTabs.Controls.Add(this.tabAdmin);
@@ -143,7 +184,6 @@ namespace xPort5
             this.navTabs.CustomStyle = "Navigation";
             this.navTabs.Dock = Gizmox.WebGUI.Forms.DockStyle.Fill;
             this.navTabs.Location = new System.Drawing.Point(0, 0);
-            this.navTabs.Multiline = false;
             this.navTabs.Name = "navTabs";
             this.navTabs.SelectedIndex = 0;
             this.navTabs.Size = new System.Drawing.Size(150, 342);
@@ -152,61 +192,62 @@ namespace xPort5
             // 
             // tabCoding
             // 
-            iconResourceHandle34.File = "24x24.settings_24x24.gif";
-            this.tabCoding.Image = iconResourceHandle34;
+            this.tabCoding.Dock = Gizmox.WebGUI.Forms.DockStyle.Fill;
+            this.tabCoding.Extra = false;
+            this.tabCoding.Image = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("tabCoding.Image"));
             this.tabCoding.Location = new System.Drawing.Point(4, 22);
             this.tabCoding.Name = "tabCoding";
-            this.tabCoding.Size = new System.Drawing.Size(142, 316);
+            this.tabCoding.Size = new System.Drawing.Size(142, 312);
             this.tabCoding.TabIndex = 0;
-            this.tabCoding.Text = "Coding";
             this.tabCoding.Tag = "Coding";
+            this.tabCoding.Text = "Coding";
             // 
             // tabOrder
             // 
-            iconResourceHandle35.File = "24x24.sales_24x24.gif";
-            this.tabOrder.Image = iconResourceHandle35;
+            this.tabOrder.Dock = Gizmox.WebGUI.Forms.DockStyle.Fill;
+            this.tabOrder.Extra = false;
+            this.tabOrder.Image = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("tabOrder.Image"));
             this.tabOrder.Location = new System.Drawing.Point(4, 22);
             this.tabOrder.Name = "tabOrder";
             this.tabOrder.Size = new System.Drawing.Size(142, 316);
             this.tabOrder.TabIndex = 1;
-            this.tabOrder.Text = "Order";
             this.tabOrder.Tag = "Order";
+            this.tabOrder.Text = "Order";
             // 
             // tabAdmin
             // 
-            iconResourceHandle36.File = "24x24.services_24x24.gif";
-            this.tabAdmin.Image = iconResourceHandle36;
+            this.tabAdmin.Dock = Gizmox.WebGUI.Forms.DockStyle.Fill;
+            this.tabAdmin.Extra = false;
+            this.tabAdmin.Image = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("tabAdmin.Image"));
             this.tabAdmin.Location = new System.Drawing.Point(4, 22);
             this.tabAdmin.Name = "tabAdmin";
             this.tabAdmin.Size = new System.Drawing.Size(142, 316);
             this.tabAdmin.TabIndex = 2;
-            this.tabAdmin.Text = "Admin";
             this.tabAdmin.Tag = "Admin";
+            this.tabAdmin.Text = "Admin";
             // 
             // tabSettings
             // 
-            iconResourceHandle37.File = "24x24.24_settings.gif";
-            this.tabSettings.Image = iconResourceHandle37;
+            this.tabSettings.Dock = Gizmox.WebGUI.Forms.DockStyle.Fill;
+            this.tabSettings.Extra = false;
+            this.tabSettings.Image = new Gizmox.WebGUI.Common.Resources.IconResourceHandle(resources.GetString("tabSettings.Image"));
             this.tabSettings.Location = new System.Drawing.Point(4, 22);
             this.tabSettings.Name = "tabSettings";
-            this.tabSettings.Size = new System.Drawing.Size(142, 316);
+            this.tabSettings.Size = new System.Drawing.Size(142, 313);
             this.tabSettings.TabIndex = 3;
-            this.tabSettings.Text = "Settings";
             this.tabSettings.Tag = "Settings";
+            this.tabSettings.Text = "Settings";
             // 
             // splitter1
             // 
-            this.splitter1.Anchor = Gizmox.WebGUI.Forms.AnchorStyles.None;
-            this.splitter1.Dock = Gizmox.WebGUI.Forms.DockStyle.Left;
             this.splitter1.Location = new System.Drawing.Point(150, 28);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(1, 342);
             this.splitter1.TabIndex = 2;
+            this.splitter1.TabStop = false;
             // 
             // wspPane
             // 
-            this.wspPane.Anchor = Gizmox.WebGUI.Forms.AnchorStyles.None;
-            this.wspPane.BackColor = System.Drawing.Color.Empty;
             this.wspPane.Controls.Add(this.picBgImage);
             this.wspPane.CustomStyle = "HeaderedPanel";
             this.wspPane.Dock = Gizmox.WebGUI.Forms.DockStyle.Fill;
@@ -219,52 +260,12 @@ namespace xPort5
             // picBgImage
             // 
             this.picBgImage.Anchor = ((Gizmox.WebGUI.Forms.AnchorStyles)((Gizmox.WebGUI.Forms.AnchorStyles.Bottom | Gizmox.WebGUI.Forms.AnchorStyles.Right)));
-            this.picBgImage.Image = null;
-            this.picBgImage.Location = new System.Drawing.Point(238, 210);
+            this.picBgImage.Location = new System.Drawing.Point(231, 202);
             this.picBgImage.Name = "picBgImage";
             this.picBgImage.Size = new System.Drawing.Size(128, 128);
             this.picBgImage.SizeMode = Gizmox.WebGUI.Forms.PictureBoxSizeMode.StretchImage;
             this.picBgImage.TabIndex = 0;
-            // 
-            // amsViewEn
-            // 
-            iconResourceHandle38.File = "16x16.English16.gif";
-            this.amsViewEn.Icon = iconResourceHandle38;
-            this.amsViewEn.Tag = "amsViewEn";
-            this.amsViewEn.Text = "English";
-            // 
-            // amsViewCht
-            // 
-            iconResourceHandle39.File = "16x16.TradChinese16.gif";
-            this.amsViewCht.Icon = iconResourceHandle39;
-            this.amsViewCht.Tag = "amsViewCht";
-            this.amsViewCht.Text = "Traditional Chinese";
-            // 
-            // amsViewChs
-            // 
-            iconResourceHandle40.File = "16x16.SimpChinese16.gif";
-            this.amsViewChs.Icon = iconResourceHandle40;
-            this.amsViewChs.Tag = "amsViewChs";
-            this.amsViewChs.Text = "Simplified Chinese";
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.Text = "-";
-            // 
-            // amsViewVista
-            // 
-            this.amsViewVista.Tag = "amsViewVista";
-            this.amsViewVista.Text = "Vista Theme";
-            // 
-            // amsViewBlack
-            // 
-            this.amsViewBlack.Tag = "amsViewBlack";
-            this.amsViewBlack.Text = "Black Theme";
-            // 
-            // amsViewWinXP
-            // 
-            this.amsViewWinXP.Tag = "amsViewWinXP";
-            this.amsViewWinXP.Text = "WinXP Theme";
+            this.picBgImage.TabStop = false;
             // 
             // Desktop
             // 
@@ -275,6 +276,11 @@ namespace xPort5
             this.Menu = this.amsMain;
             this.Size = new System.Drawing.Size(520, 370);
             this.Text = "xPort5";
+            this.navPane.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.navTabs)).EndInit();
+            this.navTabs.ResumeLayout(false);
+            this.wspPane.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picBgImage)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -49,7 +49,6 @@ namespace xPort5.Factory.GDocs
 
             SetCaptions();
             SetAttribute();
-            SetTheme();
             ResetToolbar();
             BuildFolderTree(tvwClient.Nodes);
         }
@@ -121,11 +120,6 @@ namespace xPort5.Factory.GDocs
             this.lvwFileExplorer.ListViewItemSorter = new ListViewItemSorter(this.lvwFileExplorer);
 
             toolTip1.SetToolTip(lvwFileExplorer, "Double click to download file");
-        }
-
-        private void SetTheme()
-        {
-            this.BackColor = Color.FromName("#ACC0E9");
         }
         #endregion
 

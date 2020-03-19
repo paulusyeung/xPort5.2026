@@ -112,9 +112,33 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="amsViewEn.Icon" xml:space="preserve">
+    <value>16x16.English16.gif</value>
+  </data>
+  <data name="amsViewChs.Icon" xml:space="preserve">
+    <value>16x16.SimpChinese16.gif</value>
+  </data>
+  <data name="amsViewCht.Icon" xml:space="preserve">
+    <value>16x16.TradChinese16.gif</value>
+  </data>
+  <data name="amsHelpAbout.Icon" xml:space="preserve">
+    <value>16x16.16_info.gif</value>
+  </data>
+  <data name="tabCoding.Image" xml:space="preserve">
+    <value>24x24.settings_24x24.gif</value>
+  </data>
+  <data name="tabOrder.Image" xml:space="preserve">
+    <value>24x24.sales_24x24.gif</value>
+  </data>
+  <data name="tabAdmin.Image" xml:space="preserve">
+    <value>24x24.services_24x24.gif</value>
+  </data>
+  <data name="tabSettings.Image" xml:space="preserve">
+    <value>24x24.24_settings.gif</value>
+  </data>
 </root>

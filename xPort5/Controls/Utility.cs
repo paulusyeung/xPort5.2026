@@ -1560,6 +1560,84 @@ ORDER BY [ColorName]
 
                 return result;
             }
+
+            public static Color TopPanelBackgroundColor
+            {
+                get
+                {
+                    Color color = Color.FromName("#ACC0E9");    // default color
+                    if (HttpContext.Current.Request.Cookies["xPort3_TopPanelBackgroundColor"] != null)
+                    {
+                        color = HttpContext.Current.Request.Cookies["xPort3_TopPanelBackgroundColor"].Value == String.Empty ?
+                            Color.FromName("#ACC0E9") :
+                            Color.FromName(HttpContext.Current.Request.Cookies["xPort3_TopPanelBackgroundColor"].Value);
+                    }
+                    return color;
+                }
+                set
+                {
+                    System.Web.HttpCookie oCookie = new System.Web.HttpCookie("xPort3_TopPanelBackgroundColor");
+
+                    if (value != null)
+                    {
+                        // create the cookie
+                        DateTime now = DateTime.Now;
+
+                        oCookie.Value = value.ToString();
+                        oCookie.Expires = now.AddYears(1);
+
+                        System.Web.HttpContext.Current.Response.Cookies.Add(oCookie);
+                    }
+                    else
+                    {
+                        // destory the cookie
+                        DateTime now = DateTime.Now;
+
+                        oCookie.Value = value.ToString();
+                        oCookie.Expires = now.AddDays(-1);
+
+                        System.Web.HttpContext.Current.Response.Cookies.Add(oCookie);
+                    }
+                }
+            }
+
+            public static String CurrentTheme
+            {
+                get
+                {
+                    String theme = "";
+                    if (HttpContext.Current.Request.Cookies["xPort3_CurrentTheme"] != null)
+                    {
+                        theme = HttpContext.Current.Request.Cookies["xPort3_CurrentTheme"].Value;
+                    }
+                    return theme == String.Empty ? "Vista" : theme;
+                }
+                set
+                {
+                    System.Web.HttpCookie oCookie = new System.Web.HttpCookie("xPort3_CurrentTheme");
+
+                    if (value != null)
+                    {
+                        // create the cookie
+                        DateTime now = DateTime.Now;
+
+                        oCookie.Value = value.ToString() == String.Empty ? "Vista" : value.ToString();
+                        oCookie.Expires = now.AddYears(1);
+
+                        System.Web.HttpContext.Current.Response.Cookies.Add(oCookie);
+                    }
+                    else
+                    {
+                        // destory the cookie
+                        DateTime now = DateTime.Now;
+
+                        oCookie.Value = value.ToString();
+                        oCookie.Expires = now.AddDays(-1);
+
+                        System.Web.HttpContext.Current.Response.Cookies.Add(oCookie);
+                    }
+                }
+            }
         }
 
         public class Supplier

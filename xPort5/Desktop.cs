@@ -1,4 +1,4 @@
-#region Using
+﻿#region Using
 
 using System;
 using System.Collections.Generic;
@@ -69,9 +69,15 @@ namespace xPort5
 
         private void SetTheme()
         {
-            ImageResourceHandle bgImage = new ImageResourceHandle("Images.logo_watermark.png");
+            ImageResourceHandle bgImage = new ImageResourceHandle("logo_watermark.png");
 
-            this.picBgImage.Image = bgImage;
+            picBgImage.Image = bgImage;
+
+            /**
+             * 2020.03.20 paulus: 根據個 theme 改個 background color
+             */
+            Context.CurrentTheme    = xPort5.Controls.Utility.Default.CurrentTheme;
+            wspPane.BackColor       = xPort5.Controls.Utility.Default.TopPanelBackgroundColor;
         }
 
         private void SetCaptions()
@@ -234,12 +240,18 @@ namespace xPort5
                         break;
                     case "amsViewWinXP":
                         this.Context.CurrentTheme = "iOS";
+                        xPort5.Controls.Utility.Default.TopPanelBackgroundColor = Color.FromName("#97B9CB");
+                        xPort5.Controls.Utility.Default.CurrentTheme = "iOS";
                         break;
                     case "amsViewVista":
                         this.Context.CurrentTheme = "Vista";
+                        xPort5.Controls.Utility.Default.TopPanelBackgroundColor = Color.FromName("#ACC0E9");
+                        xPort5.Controls.Utility.Default.CurrentTheme = "Vista";
                         break;
                     case "amsViewBlack":
-                        this.Context.CurrentTheme = "Black";
+                        this.Context.CurrentTheme = "Graphite";
+                        xPort5.Controls.Utility.Default.TopPanelBackgroundColor = Color.FromName("#333333");
+                        xPort5.Controls.Utility.Default.CurrentTheme = "Graphite";
                         break;
                     case "amsHelpAbout":
                         Help.About oAbout = new xPort5.Help.About();

@@ -32,7 +32,7 @@ namespace xPort5.NavPane
             {
                 Panel wspPane = (Panel)controls[0];
                 wspPane.Text = navAdmin.SelectedNode.Text;
-                wspPane.BackColor = Color.FromName("#ACC0E9");
+                //wspPane.BackColor = xPort5.Controls.Utility.Default.TopPanelBackgroundColor;
                 wspPane.Controls.Clear();
                 ShowWorkspace(ref wspPane, (string)navAdmin.SelectedNode.Tag);
                 ShowAppToolStrip((string)navAdmin.SelectedNode.Tag);

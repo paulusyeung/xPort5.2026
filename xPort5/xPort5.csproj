@@ -683,6 +683,7 @@
     <Compile Include="Factory\Product\Supplier\SupplierRecord.designer.cs">
       <DependentUpon>SupplierRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\ListViewHelper.cs" />
     <Compile Include="Help\About.cs">
       <SubType>Form</SubType>
     </Compile>

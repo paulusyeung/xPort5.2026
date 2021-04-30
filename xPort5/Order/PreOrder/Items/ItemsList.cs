@@ -1,4 +1,4 @@
-#region Using
+ï»¿#region Using
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ using Gizmox.WebGUI.Forms.Dialogs;
 using System.Data.SqlClient;
 using xPort5.Controls.Product;
 using xPort5.Controls;
+using xPort5.Helper;
 
 #endregion
 
@@ -104,11 +105,13 @@ namespace xPort5.Order.PreOrder.Items
 
         private void SetLvwList()
         {
-            this.lvwItems.ListViewItemSorter = new ListViewItemSorter(this.lvwItems);
+            //this.lvwItems.ListViewItemSorter = new ListViewItemSorter(this.lvwItems);
+            this.lvwItems.ListViewItemSorter = new Sorter();   // åƒè€ƒï¼šhttps://stackoverflow.com/a/1214333
+
             this.lvwItems.Dock = DockStyle.Fill;
             this.lvwItems.GridLines = true;
 
-            //Ìá¹©Ò»‚€¹Ì¶¨µÄ Guid tag£¬ ÔÚ UserPreference ÖĞÓÃ×÷ß@‚€ ListView µÄ unique key
+            //ÃŒÃ¡Â¹Â©Ã’Â»â€šâ‚¬Â¹ÃŒÂ¶Â¨ÂµÃ„ Guid tagÂ£Â¬ Ã”Ãš UserPreference Ã–ÃÃ“ÃƒÃ—Ã·ÃŸ@â€šâ‚¬ ListView ÂµÃ„ unique key
             lvwItems.Tag = new Guid("8F9BB42A-05B5-49c5-B91A-D26EFFB551E1");
 
             xPort5.Controls.Utility.DisplayPreference.Load(ref lvwItems);
@@ -608,6 +611,23 @@ ORDER BY [LineNumber]
         private void lvwList_DoubleClick(object sender, EventArgs e)
         {
             ShowRecord();
+        }
+
+        private void lvwItems_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // åƒè€ƒï¼šhttps://stackoverflow.com/a/1214333
+            Sorter s = (Sorter)lvwItems.ListViewItemSorter;
+            s.Column = e.Column;
+
+            if (s.Order == Gizmox.WebGUI.Forms.SortOrder.Ascending)
+            {
+                s.Order = Gizmox.WebGUI.Forms.SortOrder.Descending;
+            }
+            else
+            {
+                s.Order = Gizmox.WebGUI.Forms.SortOrder.Ascending;
+            }
+            lvwItems.Sort();
         }
     }
 }

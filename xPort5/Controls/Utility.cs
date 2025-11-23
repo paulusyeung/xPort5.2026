@@ -2500,9 +2500,28 @@ ORDER BY [ColorName]
                     xPort5.DAL.OrderQTItems orderItem = xPort5.DAL.OrderQTItems.Load(qtItemId);
                     if (orderItem != null)
                     {
+                        Guid orderId = orderItem.OrderQTId;
                         orderItem.Delete();
 
                         result = true;
+
+                        // Re-sequence remaining items
+                        xPort5.DAL.OrderQTItemsCollection remainingItems = xPort5.DAL.OrderQTItems.LoadCollection(
+                            String.Format("OrderQTId = '{0}'", orderId.ToString()));
+                        
+                        if (remainingItems.Count > 0)
+                        {
+                            // Sort by current LineNumber to maintain order
+                            remainingItems.Sort("LineNumber", true);
+                            
+                            int newLineNumber = 1;
+                            foreach (xPort5.DAL.OrderQTItems item in remainingItems)
+                            {
+                                item.LineNumber = newLineNumber;
+                                item.Save();
+                                newLineNumber++;
+                            }
+                        }
                     }
 
                     xPort5.DAL.OrderQTCustShippingCollection orderCShippingList = xPort5.DAL.OrderQTCustShipping.LoadCollection(sql);
@@ -2583,7 +2602,26 @@ ORDER BY [ColorName]
                 xPort5.DAL.OrderPLItems orderItem = xPort5.DAL.OrderPLItems.Load(preOrderItemId);
                 if (orderItem != null)
                 {
+                    Guid orderId = orderItem.OrderPLId;
                     orderItem.Delete();
+
+                    // Re-sequence remaining items
+                    xPort5.DAL.OrderPLItemsCollection remainingItems = xPort5.DAL.OrderPLItems.LoadCollection(
+                        String.Format("OrderPLId = '{0}'", orderId.ToString()));
+                    
+                    if (remainingItems.Count > 0)
+                    {
+                        // Sort by current LineNumber to maintain order
+                        remainingItems.Sort("LineNumber", true);
+                        
+                        int newLineNumber = 1;
+                        foreach (xPort5.DAL.OrderPLItems item in remainingItems)
+                        {
+                            item.LineNumber = newLineNumber;
+                            item.Save();
+                            newLineNumber++;
+                        }
+                    }
 
                     result = true;
                 }
@@ -2656,7 +2694,26 @@ ORDER BY [ColorName]
                 xPort5.DAL.OrderSCItems orderItem = xPort5.DAL.OrderSCItems.Load(contractItemId);
                 if (orderItem != null)
                 {
+                    Guid orderId = orderItem.OrderSCId;
                     orderItem.Delete();
+
+                    // Re-sequence remaining items
+                    xPort5.DAL.OrderSCItemsCollection remainingItems = xPort5.DAL.OrderSCItems.LoadCollection(
+                        String.Format("OrderSCId = '{0}'", orderId.ToString()));
+                    
+                    if (remainingItems.Count > 0)
+                    {
+                        // Sort by current LineNumber to maintain order
+                        remainingItems.Sort("LineNumber", true);
+                        
+                        int newLineNumber = 1;
+                        foreach (xPort5.DAL.OrderSCItems item in remainingItems)
+                        {
+                            item.LineNumber = newLineNumber;
+                            item.Save();
+                            newLineNumber++;
+                        }
+                    }
 
                     result = true;
                 }
@@ -2740,7 +2797,26 @@ ORDER BY [ColorName]
                 xPort5.DAL.OrderPCItems orderItem = xPort5.DAL.OrderPCItems.Load(contractItemId);
                 if (orderItem != null)
                 {
+                    Guid orderId = orderItem.OrderPCId;
                     orderItem.Delete();
+
+                    // Re-sequence remaining items
+                    xPort5.DAL.OrderPCItemsCollection remainingItems = xPort5.DAL.OrderPCItems.LoadCollection(
+                        String.Format("OrderPCId = '{0}'", orderId.ToString()));
+                    
+                    if (remainingItems.Count > 0)
+                    {
+                        // Sort by current LineNumber to maintain order
+                        remainingItems.Sort("LineNumber", true);
+                        
+                        int newLineNumber = 1;
+                        foreach (xPort5.DAL.OrderPCItems item in remainingItems)
+                        {
+                            item.LineNumber = newLineNumber;
+                            item.Save();
+                            newLineNumber++;
+                        }
+                    }
 
                     result = true;
                 }
@@ -2813,6 +2889,8 @@ ORDER BY [ColorName]
                 xPort5.DAL.OrderINItems orderItem = xPort5.DAL.OrderINItems.Load(contractItemId);
                 if (orderItem != null)
                 {
+                    Guid orderId = orderItem.OrderINId;
+                    
                     OrderINShipmentCollection shipmentList = OrderINShipment.LoadCollection("OrderINItemsId = '" + orderItem.OrderINItemsId.ToString() + "'");
                     foreach (OrderINShipment shipment in shipmentList)
                     {
@@ -2820,6 +2898,24 @@ ORDER BY [ColorName]
                     }
 
                     orderItem.Delete();
+
+                    // Re-sequence remaining items
+                    xPort5.DAL.OrderINItemsCollection remainingItems = xPort5.DAL.OrderINItems.LoadCollection(
+                        String.Format("OrderINId = '{0}'", orderId.ToString()));
+                    
+                    if (remainingItems.Count > 0)
+                    {
+                        // Sort by current LineNumber to maintain order
+                        remainingItems.Sort("LineNumber", true);
+                        
+                        int newLineNumber = 1;
+                        foreach (xPort5.DAL.OrderINItems item in remainingItems)
+                        {
+                            item.LineNumber = newLineNumber;
+                            item.Save();
+                            newLineNumber++;
+                        }
+                    }
 
                     result = true;
 
@@ -2934,7 +3030,26 @@ ORDER BY [ColorName]
                 xPort5.DAL.OrderSPItems orderItem = xPort5.DAL.OrderSPItems.Load(contractItemId);
                 if (orderItem != null)
                 {
+                    Guid orderId = orderItem.OrderSPId;
                     orderItem.Delete();
+
+                    // Re-sequence remaining items
+                    xPort5.DAL.OrderSPItemsCollection remainingItems = xPort5.DAL.OrderSPItems.LoadCollection(
+                        String.Format("OrderSPId = '{0}'", orderId.ToString()));
+                    
+                    if (remainingItems.Count > 0)
+                    {
+                        // Sort by current LineNumber to maintain order
+                        remainingItems.Sort("LineNumber", true);
+                        
+                        int newLineNumber = 1;
+                        foreach (xPort5.DAL.OrderSPItems item in remainingItems)
+                        {
+                            item.LineNumber = newLineNumber;
+                            item.Save();
+                            newLineNumber++;
+                        }
+                    }
 
                     result = true;
                 }

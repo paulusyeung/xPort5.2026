@@ -2507,13 +2507,10 @@ ORDER BY [ColorName]
 
                         // Re-sequence remaining items
                         xPort5.DAL.OrderQTItemsCollection remainingItems = xPort5.DAL.OrderQTItems.LoadCollection(
-                            String.Format("OrderQTId = '{0}'", orderId.ToString()));
+                            String.Format("OrderQTId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                         
                         if (remainingItems.Count > 0)
                         {
-                            // Sort by current LineNumber to maintain order
-                            remainingItems.Sort("LineNumber", true);
-                            
                             int newLineNumber = 1;
                             foreach (xPort5.DAL.OrderQTItems item in remainingItems)
                             {
@@ -2607,12 +2604,10 @@ ORDER BY [ColorName]
 
                     // Re-sequence remaining items
                     xPort5.DAL.OrderPLItemsCollection remainingItems = xPort5.DAL.OrderPLItems.LoadCollection(
-                        String.Format("OrderPLId = '{0}'", orderId.ToString()));
+                        String.Format("OrderPLId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
-                        // Sort by current LineNumber to maintain order
-                        remainingItems.Sort("LineNumber", true);
                         
                         int newLineNumber = 1;
                         foreach (xPort5.DAL.OrderPLItems item in remainingItems)
@@ -2699,12 +2694,10 @@ ORDER BY [ColorName]
 
                     // Re-sequence remaining items
                     xPort5.DAL.OrderSCItemsCollection remainingItems = xPort5.DAL.OrderSCItems.LoadCollection(
-                        String.Format("OrderSCId = '{0}'", orderId.ToString()));
+                        String.Format("OrderSCId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
-                        // Sort by current LineNumber to maintain order
-                        remainingItems.Sort("LineNumber", true);
                         
                         int newLineNumber = 1;
                         foreach (xPort5.DAL.OrderSCItems item in remainingItems)
@@ -2802,12 +2795,10 @@ ORDER BY [ColorName]
 
                     // Re-sequence remaining items
                     xPort5.DAL.OrderPCItemsCollection remainingItems = xPort5.DAL.OrderPCItems.LoadCollection(
-                        String.Format("OrderPCId = '{0}'", orderId.ToString()));
+                        String.Format("OrderPCId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
-                        // Sort by current LineNumber to maintain order
-                        remainingItems.Sort("LineNumber", true);
                         
                         int newLineNumber = 1;
                         foreach (xPort5.DAL.OrderPCItems item in remainingItems)
@@ -2901,12 +2892,10 @@ ORDER BY [ColorName]
 
                     // Re-sequence remaining items
                     xPort5.DAL.OrderINItemsCollection remainingItems = xPort5.DAL.OrderINItems.LoadCollection(
-                        String.Format("OrderINId = '{0}'", orderId.ToString()));
+                        String.Format("OrderINId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
-                        // Sort by current LineNumber to maintain order
-                        remainingItems.Sort("LineNumber", true);
                         
                         int newLineNumber = 1;
                         foreach (xPort5.DAL.OrderINItems item in remainingItems)
@@ -3035,12 +3024,10 @@ ORDER BY [ColorName]
 
                     // Re-sequence remaining items
                     xPort5.DAL.OrderSPItemsCollection remainingItems = xPort5.DAL.OrderSPItems.LoadCollection(
-                        String.Format("OrderSPId = '{0}'", orderId.ToString()));
+                        String.Format("OrderSPId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
-                        // Sort by current LineNumber to maintain order
-                        remainingItems.Sort("LineNumber", true);
                         
                         int newLineNumber = 1;
                         foreach (xPort5.DAL.OrderSPItems item in remainingItems)

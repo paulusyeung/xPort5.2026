@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 using xPort5.Controls;
 
@@ -207,11 +208,14 @@ namespace xPort5.Order.PurchaseContract
         #region ShowItem(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowItem()
         {
-            xPort5.DAL.OrderPC item = xPort5.DAL.OrderPC.Load(_OrderPCId);
+            xPort5.EF6.OrderPC item = xPort5.EF6.OrderPC.Load(_OrderPCId);
             if (item != null)
             {
                 txtPCNumber.Text = item.PCNumber;
-                datPCDate.Value = item.PCDate;
+                if (item.PCDate.HasValue)
+                {
+                    datPCDate.Value = item.PCDate.Value;
+                }
                 txtYourRef.Text = item.YourRef;
                 txtCarrier.Text = item.Carrier;
                 txtRemarks.Text = item.Remarks;
@@ -230,35 +234,50 @@ namespace xPort5.Order.PurchaseContract
                     cboPurchasedBy.Text = purchaseBy.Alias;
                     cboPurchasedBy.SelectedValue = purchaseBy.StaffId;
                 }
-                T_Port loadingPort = T_Port.Load(item.LoadingPort);
-                if (loadingPort != null)
+                if (item.LoadingPort.HasValue)
                 {
-                    cboLoadingPort.Text = loadingPort.PortName;
-                    cboLoadingPort.SelectedValue = loadingPort.PortId;
+                    T_Port loadingPort = T_Port.Load(item.LoadingPort.Value);
+                    if (loadingPort != null)
+                    {
+                        cboLoadingPort.Text = loadingPort.PortName;
+                        cboLoadingPort.SelectedValue = loadingPort.PortId;
+                    }
                 }
-                T_Port discPort = T_Port.Load(item.DischargePort);
-                if (discPort != null)
+                if (item.DischargePort.HasValue)
                 {
-                    cboDiscPort.Text = discPort.PortName;
-                    cboDiscPort.SelectedValue = discPort.PortId;
+                    T_Port discPort = T_Port.Load(item.DischargePort.Value);
+                    if (discPort != null)
+                    {
+                        cboDiscPort.Text = discPort.PortName;
+                        cboDiscPort.SelectedValue = discPort.PortId;
+                    }
                 }
-                T_Port destination = T_Port.Load(item.Destination);
-                if (destination != null)
+                if (item.Destination.HasValue)
                 {
-                    cboDestination.Text = destination.PortName;
-                    cboDestination.SelectedValue = destination.PortId;
+                    T_Port destination = T_Port.Load(item.Destination.Value);
+                    if (destination != null)
+                    {
+                        cboDestination.Text = destination.PortName;
+                        cboDestination.SelectedValue = destination.PortId;
+                    }
                 }
-                T_PaymentTerms pTerms = T_PaymentTerms.Load(item.PaymentTerms);
-                if (pTerms != null)
+                if (item.PaymentTerms.HasValue)
                 {
-                    cboPaymentTerms.Text = pTerms.TermsName;
-                    cboPaymentTerms.SelectedValue = pTerms.TermsId;
+                    T_PaymentTerms pTerms = T_PaymentTerms.Load(item.PaymentTerms.Value);
+                    if (pTerms != null)
+                    {
+                        cboPaymentTerms.Text = pTerms.TermsName;
+                        cboPaymentTerms.SelectedValue = pTerms.TermsId;
+                    }
                 }
-                T_PaymentTerms rTerms = T_PaymentTerms.Load(item.PricingTerms);
-                if(rTerms!=null)
+                if (item.PricingTerms.HasValue)
                 {
-                    cboPricingTerms.Text = rTerms.TermsName;
-                    cboPricingTerms.SelectedValue = rTerms.TermsId;
+                    T_PaymentTerms rTerms = T_PaymentTerms.Load(item.PricingTerms.Value);
+                    if (rTerms != null)
+                    {
+                        cboPricingTerms.Text = rTerms.TermsName;
+                        cboPricingTerms.SelectedValue = rTerms.TermsId;
+                    }
                 }
 
                 this._PCNumber = item.PCNumber;
@@ -273,11 +292,11 @@ namespace xPort5.Order.PurchaseContract
             {
                 try
                 {
-                    xPort5.DAL.OrderPC item = null;
+                    xPort5.EF6.OrderPC item = null;
                     switch ((int)_EditMode)
                     {
                         case (int)Common.Enums.EditMode.Add:
-                            item = new xPort5.DAL.OrderPC();
+                            item = new xPort5.EF6.OrderPC();
                             item.OrderPCId = _OrderPCId;
 
                             item.Status = (int)Common.Enums.Status.Active;
@@ -288,7 +307,7 @@ namespace xPort5.Order.PurchaseContract
                             item.Retired = false;
                             break;
                         case (int)Common.Enums.EditMode.Edit:
-                            item = xPort5.DAL.OrderPC.Load(_OrderPCId);
+                            item = xPort5.EF6.OrderPC.Load(_OrderPCId);
                             item.ModifiedOn = DateTime.Now;
                             item.ModifiedBy = Common.Config.CurrentUserId;
 
@@ -409,7 +428,7 @@ namespace xPort5.Order.PurchaseContract
                 }
                 else
                 {
-                    xPort5.DAL.OrderPC orderPC = xPort5.DAL.OrderPC.LoadWhere(String.Format("PCNumber = '{0}'", txtPCNumber.Text.Trim()));
+                    xPort5.EF6.OrderPC orderPC = xPort5.EF6.OrderPC.LoadWhere(String.Format("PCNumber = '{0}'", txtPCNumber.Text.Trim()));
                     if (orderPC != null)
                     {
                         errMsg += Environment.NewLine + "Quotation No. is in use.";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -14,7 +14,8 @@ using DevExpress.Utils;
 using DevExpress.XtraPivotGrid;
 
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 namespace xPort5.Admin.Olap
 {
@@ -101,7 +102,7 @@ namespace xPort5.Admin.Olap
             if (pvgOlap.Fields.Count != 0) return;      // 如果個 PivotGrid 已經有料，咁就唔使再 set
 
             #region 砌最初 OLAP 個樣出嚟
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
             pvgOlap.RetrieveFields();
 
             pvgOlap.OptionsPager.RowsPerPage = 0;       // hide pager
@@ -194,7 +195,7 @@ namespace xPort5.Admin.Olap
         {
             if (e.ValueType == DevExpress.XtraPivotGrid.PivotGridValueType.GrandTotal)
             {
-                nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+                nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
                 if (e.IsColumn)
                     e.DisplayText = e.DisplayText.ToLower() == "grand total" ? oDict.GetWord("grand_total") : e.DisplayText;

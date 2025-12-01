@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using xPort5.Controls;
 
@@ -80,7 +81,7 @@ namespace xPort5.Order.PreOrder
 
         private void SetAttributes()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             txtPLNumber.MaxLength = Common.Config.MaxLength_QTNumber;
 
@@ -128,7 +129,7 @@ namespace xPort5.Order.PreOrder
 
         private void SetAnsToolbar()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansToolbar.MenuHandle = false;
             this.ansToolbar.DragHandle = false;
@@ -204,11 +205,14 @@ namespace xPort5.Order.PreOrder
 
         private void ShowItem()
         {
-            xPort5.DAL.OrderPL item = xPort5.DAL.OrderPL.Load(_OrderPLId);
+            xPort5.EF6.OrderPL item = xPort5.EF6.OrderPL.Load(_OrderPLId);
             if (item != null)
             {
                 txtPLNumber.Text = item.PLNumber;
-                dtpDate.Value = item.PLDate;
+                if (item.PLDate.HasValue)
+                {
+                    dtpDate.Value = item.PLDate.Value;
+                }
                 txtRemarks.Text = item.Remarks;
 
                 Customer customer = Customer.Load(item.CustomerId);
@@ -236,11 +240,11 @@ namespace xPort5.Order.PreOrder
             {
                 try
                 {
-                    xPort5.DAL.OrderPL item = null;
+                    xPort5.EF6.OrderPL item = null;
                     switch ((int)_EditMode)
                     {
                         case (int)Common.Enums.EditMode.Add:
-                            item = new xPort5.DAL.OrderPL();
+                            item = new xPort5.EF6.OrderPL();
                             item.OrderPLId = _OrderPLId;
 
                             item.Status = (int)Common.Enums.Status.Active;
@@ -251,7 +255,7 @@ namespace xPort5.Order.PreOrder
                             item.Retired = false;
                             break;
                         case (int)Common.Enums.EditMode.Edit:
-                            item = xPort5.DAL.OrderPL.Load(_OrderPLId);
+                            item = xPort5.EF6.OrderPL.Load(_OrderPLId);
                             item.ModifiedOn = DateTime.Now;
                             item.ModifiedBy = Common.Config.CurrentUserId;
 
@@ -305,7 +309,7 @@ namespace xPort5.Order.PreOrder
                 }
                 else
                 {
-                    xPort5.DAL.OrderPL orderPL = xPort5.DAL.OrderPL.LoadWhere(String.Format("PLNumber = '{0}'", txtPLNumber.Text.Trim()));
+                    xPort5.EF6.OrderPL orderPL = xPort5.EF6.OrderPL.LoadWhere(String.Format("PLNumber = '{0}'", txtPLNumber.Text.Trim()));
                     if (orderPL != null)
                     {
                         errMsg += Environment.NewLine + "Pre-Order No. is in use.";

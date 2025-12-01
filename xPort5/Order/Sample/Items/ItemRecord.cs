@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 
@@ -118,7 +119,7 @@ namespace xPort5.Order.Sample.Items
 
         private void SetListAns()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansToolbar.Buttons.Clear();
             this.ansToolbar.ButtonClick -= new ToolBarButtonClickEventHandler(ansToolbar_ButtonClick);
@@ -142,7 +143,7 @@ namespace xPort5.Order.Sample.Items
 
             if (_EditMode != Common.Enums.EditMode.Read)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.Sample.Create") ||
                         xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.Sample.Update"))
@@ -222,7 +223,8 @@ namespace xPort5.Order.Sample.Items
                     OrderSP item = OrderSP.Load(this._SampleId);
                     if (item != null)
                     {
-                        if (CheckForOutstandingSamle(item.CustomerId))
+                        Guid customerId = item.CustomerId;
+                        if (CheckForOutstandingSamle(customerId))
                         {
                             result = true;
                         }
@@ -369,11 +371,17 @@ WHERE [CustomerId] = '{0}' AND [ArticleCode] = '{1}' AND [QTNumber] NOT IN ({2})
                 OrderSP item = OrderSP.Load(this._SampleId);
                 if (item != null)
                 {
-                    if (CheckForOutstandingSamle(item.CustomerId))
+                    var customerIdValue = item.CustomerId;
+                    Guid customerId = customerIdValue;
+                    if (customerId == Guid.Empty)
+                        return;
+                    
+                    string customerIdStr = customerId.ToString();
+                    if (CheckForOutstandingSamle(customerId))
                     {
                         lvwItems.Items.Clear();
                         int iCount = 0;
-                        sql = string.Format(sql, item.CustomerId.ToString(), this.txtArticleCode.Text.Trim(), this.ExceptQTNumber);
+                        sql = string.Format(sql, customerIdStr, this.txtArticleCode.Text.Trim(), this.ExceptQTNumber);
 
                         SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
                         while (reader.Read())

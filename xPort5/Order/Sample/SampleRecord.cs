@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using xPort5.Controls;
 
@@ -80,7 +81,7 @@ namespace xPort5.Order.Sample
 
         private void SetAttributes()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             txtSPNumber.MaxLength = Common.Config.MaxLength_QTNumber;
 
@@ -124,7 +125,7 @@ namespace xPort5.Order.Sample
 
         private void SetAnsToolbar()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansToolbar.MenuHandle = false;
             this.ansToolbar.DragHandle = false;
@@ -200,11 +201,14 @@ namespace xPort5.Order.Sample
 
         private void ShowItem()
         {
-            xPort5.DAL.OrderSP item = xPort5.DAL.OrderSP.Load(_SampleId);
+            xPort5.EF6.OrderSP item = xPort5.EF6.OrderSP.Load(_SampleId);
             if (item != null)
             {
                 txtSPNumber.Text = item.SPNumber;
-                dtpDate.Value = item.SPDate;
+                if (item.SPDate.HasValue)
+                {
+                    dtpDate.Value = item.SPDate.Value;
+                }
                 txtRemarks.Text = item.Remarks;
 
                 Customer customer = Customer.Load(item.CustomerId);
@@ -232,11 +236,11 @@ namespace xPort5.Order.Sample
             {
                 try
                 {
-                    xPort5.DAL.OrderSP item = null;
+                    xPort5.EF6.OrderSP item = null;
                     switch ((int)_EditMode)
                     {
                         case (int)Common.Enums.EditMode.Add:
-                            item = new xPort5.DAL.OrderSP();
+                            item = new xPort5.EF6.OrderSP();
                             item.OrderSPId = _SampleId;
 
                             item.Status = (int)Common.Enums.Status.Active;
@@ -247,7 +251,7 @@ namespace xPort5.Order.Sample
                             item.Retired = false;
                             break;
                         case (int)Common.Enums.EditMode.Edit:
-                            item = xPort5.DAL.OrderSP.Load(_SampleId);
+                            item = xPort5.EF6.OrderSP.Load(_SampleId);
                             item.ModifiedOn = DateTime.Now;
                             item.ModifiedBy = Common.Config.CurrentUserId;
 
@@ -298,7 +302,7 @@ namespace xPort5.Order.Sample
                 }
                 else
                 {
-                    xPort5.DAL.OrderSP orderPL = xPort5.DAL.OrderSP.LoadWhere(String.Format("SPNumber = '{0}'", txtSPNumber.Text.Trim()));
+                    xPort5.EF6.OrderSP orderPL = xPort5.EF6.OrderSP.LoadWhere(String.Format("SPNumber = '{0}'", txtSPNumber.Text.Trim()));
                     if (orderPL != null)
                     {
                         errMsg += Environment.NewLine + "Sample No. is in use.";

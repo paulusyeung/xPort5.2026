@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using xPort5.Controls;
 
@@ -80,7 +81,7 @@ namespace xPort5.Order.SalesContract
         #region Configure Controls on Form Load
         private void SetAttributes()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.Text = string.Format("{0} {1}", string.Format(oDict.GetWord("record"), oDict.GetWord("sales_contract")), oDict.GetWordWithSquareBracket(this._EditMode.ToString() + " Mode"));
 
@@ -135,7 +136,7 @@ namespace xPort5.Order.SalesContract
 
         private void SetAnsToolbar()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansToolbar.MenuHandle = false;
             this.ansToolbar.DragHandle = false;
@@ -204,11 +205,14 @@ namespace xPort5.Order.SalesContract
         #region ShowItem(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowItem()
         {
-            xPort5.DAL.OrderSC item = xPort5.DAL.OrderSC.Load(_ContractId);
+            xPort5.EF6.OrderSC item = xPort5.EF6.OrderSC.Load(_ContractId);
             if (item != null)
             {
                 txtSCNumber.Text = item.SCNumber;
-                datSCDate.Value = item.SCDate;
+                if (item.SCDate.HasValue)
+                {
+                    datSCDate.Value = item.SCDate.Value;
+                }
                 txtRemarks.Text = item.Remarks;
                 txtYourOrderNumber.Text = item.YourOrderNo;
                 txtYourReference.Text = item.YourRef;
@@ -226,41 +230,59 @@ namespace xPort5.Order.SalesContract
                     cboSalesperson.Text = salesperson.Alias;
                     cboSalesperson.SelectedValue = salesperson.StaffId;
                 }
-                T_PaymentTerms oTerms = T_PaymentTerms.Load(item.PaymentTerms);
-                if (oTerms != null)
+                if (item.PaymentTerms.HasValue)
                 {
-                    cboTerms.Text = oTerms.TermsName;
-                    cboTerms.SelectedValue = oTerms.TermsId;
+                    T_PaymentTerms oTerms = T_PaymentTerms.Load(item.PaymentTerms.Value);
+                    if (oTerms != null)
+                    {
+                        cboTerms.Text = oTerms.TermsName;
+                        cboTerms.SelectedValue = oTerms.TermsId;
+                    }
                 }
-                T_PaymentTerms oPriceTerms = T_PaymentTerms.Load(item.PricingTerms);
-                if (oPriceTerms != null)
+                if (item.PricingTerms.HasValue)
                 {
-                    cboPriceTerms.Text = oPriceTerms.TermsName;
-                    cboPriceTerms.SelectedValue = oPriceTerms.TermsId;
+                    T_PaymentTerms oPriceTerms = T_PaymentTerms.Load(item.PricingTerms.Value);
+                    if (oPriceTerms != null)
+                    {
+                        cboPriceTerms.Text = oPriceTerms.TermsName;
+                        cboPriceTerms.SelectedValue = oPriceTerms.TermsId;
+                    }
                 }
-                T_Port oLoadingPort = T_Port.Load(item.LoadingPort);
-                if (oLoadingPort != null)
+                if (item.LoadingPort.HasValue)
                 {
-                    cboLoadingPort.Text = oLoadingPort.PortName;
-                    cboLoadingPort.SelectedValue = oLoadingPort.PortId;
+                    T_Port oLoadingPort = T_Port.Load(item.LoadingPort.Value);
+                    if (oLoadingPort != null)
+                    {
+                        cboLoadingPort.Text = oLoadingPort.PortName;
+                        cboLoadingPort.SelectedValue = oLoadingPort.PortId;
+                    }
                 }
-                T_Port oDischargePort = T_Port.Load(item.DischargePort);
-                if (oDischargePort != null)
+                if (item.DischargePort.HasValue)
                 {
-                    cboDischargePort.Text = oDischargePort.PortName;
-                    cboDischargePort.SelectedValue = oDischargePort.PortId;
+                    T_Port oDischargePort = T_Port.Load(item.DischargePort.Value);
+                    if (oDischargePort != null)
+                    {
+                        cboDischargePort.Text = oDischargePort.PortName;
+                        cboDischargePort.SelectedValue = oDischargePort.PortId;
+                    }
                 }
-                T_Port oDestinationPort = T_Port.Load(item.Destination);
-                if (oDestinationPort != null)
+                if (item.Destination.HasValue)
                 {
-                    cboDestination.Text = oDestinationPort.PortName;
-                    cboDestination.SelectedValue = oDestinationPort.PortId;
+                    T_Port oDestinationPort = T_Port.Load(item.Destination.Value);
+                    if (oDestinationPort != null)
+                    {
+                        cboDestination.Text = oDestinationPort.PortName;
+                        cboDestination.SelectedValue = oDestinationPort.PortId;
+                    }
                 }
-                T_Origin oOrigin = T_Origin.Load(item.OriginId);
-                if (oOrigin != null)
+                if (item.OriginId.HasValue)
                 {
-                    cboOrigin.Text = oOrigin.OriginName;
-                    cboOrigin.SelectedValue = oOrigin.OriginId;
+                    T_Origin oOrigin = T_Origin.Load(item.OriginId.Value);
+                    if (oOrigin != null)
+                    {
+                        cboOrigin.Text = oOrigin.OriginName;
+                        cboOrigin.SelectedValue = oOrigin.OriginId;
+                    }
                 }
 
                 _SCNumber = item.SCNumber;
@@ -275,11 +297,11 @@ namespace xPort5.Order.SalesContract
             {
                 try
                 {
-                    xPort5.DAL.OrderSC item = null;
+                    xPort5.EF6.OrderSC item = null;
                     switch ((int)_EditMode)
                     {
                         case (int)Common.Enums.EditMode.Add:
-                            item = new xPort5.DAL.OrderSC();
+                            item = new xPort5.EF6.OrderSC();
 
                             item.Status = (int)Common.Enums.Status.Active;
                             item.CreatedOn = DateTime.Now;
@@ -289,7 +311,7 @@ namespace xPort5.Order.SalesContract
                             item.Retired = false;
                             break;
                         case (int)Common.Enums.EditMode.Edit:
-                            item = xPort5.DAL.OrderSC.Load(_ContractId);
+                            item = xPort5.EF6.OrderSC.Load(_ContractId);
                             item.ModifiedOn = DateTime.Now;
                             item.ModifiedBy = Common.Config.CurrentUserId;
 
@@ -350,7 +372,7 @@ namespace xPort5.Order.SalesContract
                 }
                 else
                 {
-                    xPort5.DAL.OrderSC order = xPort5.DAL.OrderSC.LoadWhere(String.Format("SCNumber = '{0}'", txtSCNumber.Text.Trim()));
+                    xPort5.EF6.OrderSC order = xPort5.EF6.OrderSC.LoadWhere(String.Format("SCNumber = '{0}'", txtSCNumber.Text.Trim()));
                     if (order != null)
                     {
                         errMsg += Environment.NewLine + "Sales Contract No. is in use.";

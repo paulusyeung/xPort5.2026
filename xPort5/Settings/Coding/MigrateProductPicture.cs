@@ -12,7 +12,8 @@ using System.Text;
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 #endregion
 
@@ -30,9 +31,9 @@ namespace xPort5.Settings.Coding
             bool result = false;
 
             string oldPictureDirectory = @"C:\Shared\xPort5\Picture\";
-            if (ConfigurationSettings.AppSettings["OldPictureDirectory"] != null)
+            if (ConfigurationManager.AppSettings["OldPictureDirectory"] != null)
             {
-                oldPictureDirectory = ConfigurationSettings.AppSettings["OldPictureDirectory"];
+                oldPictureDirectory = ConfigurationManager.AppSettings["OldPictureDirectory"];
             }
             string oldFilePath = Path.Combine(oldPictureDirectory, prod.ColorPattern.Replace(@"L:\eTrader\Picture\", ""));
             string newFilePath = xPort5.Controls.Utility.Resources.PictureFilePath(prod.ArticleId, Path.GetFileName(oldFilePath));

@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -198,7 +199,7 @@ namespace xPort5.Settings.Coding.Division
                 try
                 {
                     sql = String.Format("DivisionCode = '{0}'", txtCode.Text.Trim());
-                    T_Group group = T_Group.LoadWhere(sql);
+                    T_Division group = T_Division.LoadWhere(sql);
                     if (group != null)
                     {
                         errMsg += Environment.NewLine + "Code is in use.";

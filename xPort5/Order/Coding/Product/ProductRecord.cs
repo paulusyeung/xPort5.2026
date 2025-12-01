@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 using xPort5.Controls.Product;
 
@@ -303,11 +304,14 @@ namespace xPort5.Order.Coding.Product
                 cboColor.Text = item.ColorPattern;
                 #endregion
 
-                T_Origin oOrigin = T_Origin.Load(item.OriginId);
-                if (oOrigin != null)
+                if (item.OriginId.HasValue)
                 {
-                    cboOrigin.Text = oOrigin.OriginName;
-                    cboOrigin.SelectedValue = oOrigin.OriginId;
+                    T_Origin oOrigin = T_Origin.Load(item.OriginId.Value);
+                    if (oOrigin != null)
+                    {
+                        cboOrigin.Text = oOrigin.OriginName;
+                        cboOrigin.SelectedValue = oOrigin.OriginId;
+                    }
                 }
                 T_Category oCategory = T_Category.Load(item.CategoryId);
                 if (oCategory != null)

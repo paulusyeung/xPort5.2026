@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -121,7 +122,7 @@ namespace xPort5.Order.Coding.Product.Supplier
 
         private void SetDropdowns()
         {
-            xPort5.DAL.Supplier.LoadCombo(ref cboSupplier, "SupplierName", false);
+            xPort5.EF6.Supplier.LoadCombo(ref cboSupplier, "SupplierName", false);
             T_Currency.LoadCombo(ref cboCurrency, "CurrencyCode", false);
 
             xPort5.Controls.Utility.Default.Currency(ref cboCurrency);
@@ -195,7 +196,7 @@ namespace xPort5.Order.Coding.Product.Supplier
                 txtUnitCost.Text = prodSupplier.UnitCost.ToString("##0.0000");
                 txtNotes.Text = prodSupplier.Notes;
 
-                xPort5.DAL.Supplier supplier = xPort5.DAL.Supplier.Load(prodSupplier.SupplierId);
+                xPort5.EF6.Supplier supplier = xPort5.EF6.Supplier.Load(prodSupplier.SupplierId);
                 if (supplier != null)
                 {
                     cboSupplier.Text = supplier.SupplierName;

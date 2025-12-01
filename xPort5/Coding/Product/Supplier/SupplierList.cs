@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
 using Gizmox.WebGUI.Common.Resources;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 #endregion
 
@@ -90,7 +91,7 @@ namespace xPort5.Coding.Product.Supplier
             this.lvwSupplier.Dock = DockStyle.Fill;
             this.lvwSupplier.GridLines = true;
 
-            //Ìá¹©Ò»‚€¹Ì¶¨µÄ Guid tag£¬ ÔÚ UserPreference ÖÐÓÃ×÷ß@‚€ ListView µÄ unique key
+            //ï¿½á¹©Ò»ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½ Guid tagï¿½ï¿½ ï¿½ï¿½ UserPreference ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½ï¿½ ListView ï¿½ï¿½ unique key
             lvwSupplier.Tag = new Guid("AB6094F9-37CA-4e9f-98F0-420F9CF24B06");
 
             xPort5.Controls.Utility.Preference.Load(ref lvwSupplier);
@@ -131,7 +132,7 @@ namespace xPort5.Coding.Product.Supplier
             cmdDelete.Tag = "Delete";
             cmdDelete.Image = new IconResourceHandle("16x16.16_L_remove.gif");
 
-            if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+            if (xPort5.Common.Config.UseNetSqlAzMan)
             {
                 if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Factory", "Product.Create"))
                 {
@@ -158,7 +159,7 @@ namespace xPort5.Coding.Product.Supplier
 
             if (_EditMode == Common.Enums.EditMode.Edit)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Factory", "Product.Delete"))
                     {

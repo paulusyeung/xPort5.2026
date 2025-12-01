@@ -1,4 +1,4 @@
-﻿namespace xPort5.Settings
+namespace xPort5.Settings
 {
     using System;
     using System.Data;
@@ -11,7 +11,8 @@
     using Gizmox.WebGUI.Server;
     using Gizmox.WebGUI.Forms;
 
-    using xPort5.DAL;
+    using xPort5.EF6;
+using xPort5.Common;
 
     public class Utility
     {

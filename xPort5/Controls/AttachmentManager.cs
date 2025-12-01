@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 using System.IO;
@@ -58,7 +59,7 @@ namespace xPort5.Controls
 
             PrepareGDocs();
 
-            BindImageList(Utility.Resources.ImageSize.Medium, false);
+            BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
         }
 
         #region Set Captions, AnsToolbar, Combo, PrintFormDefault
@@ -134,16 +135,16 @@ namespace xPort5.Controls
                 switch (((string)e.MenuItem.Tag).ToLower())
                 {
                     case "small":
-                        BindImageList(Utility.Resources.ImageSize.Small, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Small, false);
                         break;
                     case "medium":
-                        BindImageList(Utility.Resources.ImageSize.Medium, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         break;
                     case "large":
-                        BindImageList(Utility.Resources.ImageSize.Large, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Large, false);
                         break;
                     case "x-large":
-                        BindImageList(Utility.Resources.ImageSize.XLarge, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.XLarge, false);
                         break;
                 }
             }
@@ -184,7 +185,7 @@ namespace xPort5.Controls
 
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        if (!File.Exists(Utility.Resources.PictureFilePath(this.OrderId, fileName)))
+                        if (!File.Exists(xPort5.Controls.Utility.Resources.PictureFilePath(this.OrderId, fileName)))
                         {
                             //string gdocFile = string.Format(_GDocFileName, Utility.Product.ProductCode(this.ProductId), Utility.Product.GetCategoryName(this.ProductId), attached.OriginalFileName);
 
@@ -234,13 +235,13 @@ namespace xPort5.Controls
 
             if (contentType == Common.Enums.ContentType.Image)
             {
-                fileName = Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFileName);
+                fileName = xPort5.Controls.Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFileName);
             }
             else
             {
                 if (fileExt.Equals("pdf"))
                 {
-                    fileName = string.Format("{0}.jpg", Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFileName));
+                    fileName = string.Format("{0}.jpg", xPort5.Controls.Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFileName));
                 }
                 else
                 {
@@ -420,7 +421,7 @@ namespace xPort5.Controls
 
                 resc.Save();
 
-                BindImageList(Utility.Resources.ImageSize.Medium, false);
+                BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
             }
         }
 
@@ -534,10 +535,10 @@ namespace xPort5.Controls
                 foreach (string attachedFile in GetCheckedItems())
                 {
                     string sql = "SaveAsFileId = '" + this.OrderId.ToString() + "'";
-                    string fileName = Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFile);
+                    string fileName = xPort5.Controls.Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFile);
 
-                    xPort5.DAL.ResourcesCollection rescList = xPort5.DAL.Resources.LoadCollection(sql);
-                    foreach (xPort5.DAL.Resources resc in rescList)
+                    xPort5.EF6.ResourcesCollection rescList = xPort5.EF6.Resources.LoadCollection(sql);
+                    foreach (xPort5.EF6.Resources resc in rescList)
                     {
                         if (resc.OriginalFileName == attachedFile)
                         {
@@ -566,7 +567,7 @@ namespace xPort5.Controls
                     }
                 }
 
-                BindImageList(Utility.Resources.ImageSize.Medium, false);
+                BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
             }
         }
 
@@ -574,7 +575,7 @@ namespace xPort5.Controls
         {
             foreach (string attachedFile in GetCheckedItems())
             {
-                string fileName = Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFile);
+                string fileName = xPort5.Controls.Utility.Resources.ResourceFilePath(this.OrderNumber, attachedFile);
 
                 FileDownloadGateway downloadGateway = new FileDownloadGateway();
                 downloadGateway.Filename = Path.GetFileName(fileName);
@@ -594,7 +595,7 @@ namespace xPort5.Controls
             OpenFileDialog objFileDialog = sender as OpenFileDialog;
             if (objFileDialog != null)
             {
-                string fileName = Utility.Resources.UploadResource(openFileDialog, this.OrderNumber);
+                string fileName = xPort5.Controls.Utility.Resources.UploadResource(openFileDialog, this.OrderNumber);
 
                 CreatePdfPreviewImage(fileName);
 
@@ -615,7 +616,7 @@ namespace xPort5.Controls
             {
                 try
                 {
-                    string fullName = Utility.Resources.UploadResource(openFileDialog, this.OrderNumber);
+                    string fullName = xPort5.Controls.Utility.Resources.UploadResource(openFileDialog, this.OrderNumber);
                     string imgName = string.Format("{0}.jpg", fullName);
 
                     if (!File.Exists(imgName))

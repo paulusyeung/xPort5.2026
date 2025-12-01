@@ -40,7 +40,7 @@ namespace xPort5.Order.PurchaseContract.Items
 
         private void SetAttributes()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.Text = string.Format(oDict.GetWord("supplier")+oDict.GetWord("shipment_schedule"));
             this.lblSDate.Text = oDict.GetWord("date");
@@ -48,7 +48,7 @@ namespace xPort5.Order.PurchaseContract.Items
 
             this.txtSQty.Validator = TextBoxValidation.FloatValidator;
 
-            if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+            if (xPort5.Common.Config.UseNetSqlAzMan)
             {
                 if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.PurchaseContract.Create") ||
                     xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.PurchaseContract.Update"))

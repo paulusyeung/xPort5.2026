@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
 using Gizmox.WebGUI.Common.Resources;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 #endregion
 
@@ -92,7 +93,7 @@ namespace xPort5.Order.Coding.Product.Supplier
             this.lvwSupplier.Dock = DockStyle.Fill;
             this.lvwSupplier.GridLines = true;
 
-            //Ìá¹©Ò»‚€¹Ì¶¨µÄ Guid tag£¬ ÔÚ UserPreference ÖÐÓÃ×÷ß@‚€ ListView µÄ unique key
+            //ï¿½á¹©Ò»ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½ Guid tagï¿½ï¿½ ï¿½ï¿½ UserPreference ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½ï¿½ ListView ï¿½ï¿½ unique key
             lvwSupplier.Tag = new Guid("529C001B-1BCB-44cc-9480-30F990CA1CEC");
 
             xPort5.Controls.Utility.DisplayPreference.Load(ref lvwSupplier);

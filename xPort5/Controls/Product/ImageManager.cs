@@ -1,4 +1,4 @@
-﻿#region Using
+#region Using
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 using System.IO;
@@ -55,7 +56,7 @@ namespace xPort5.Controls.Product
 
             PrepareGWebAlbum();
 
-            BindImageList(Utility.Resources.ImageSize.Medium, false);
+            BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
         }
 
         #region Set Captions, AnsToolbar, Combo, PrintFormDefault
@@ -140,16 +141,16 @@ namespace xPort5.Controls.Product
                 switch (((string)e.MenuItem.Tag).ToLower())
                 {
                     case "small":
-                        BindImageList(Utility.Resources.ImageSize.Small, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Small, false);
                         break;
                     case "medium":
-                        BindImageList(Utility.Resources.ImageSize.Medium, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         break;
                     case "large":
-                        BindImageList(Utility.Resources.ImageSize.Large, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Large, false);
                         break;
                     case "details":
-                        BindImageList(Utility.Resources.ImageSize.XLarge, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.XLarge, false);
                         break;
                 }
             }
@@ -162,7 +163,7 @@ namespace xPort5.Controls.Product
                 switch (e.Button.Tag.ToString().ToLower())
                 {
                     case "refresh":
-                        BindImageList(Utility.Resources.ImageSize.Medium, false);
+                        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         break;
                     case "upload":
                         UploadFile();
@@ -194,7 +195,7 @@ namespace xPort5.Controls.Product
 
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        if (!File.Exists(Utility.Resources.PictureFilePath(this.ProductId, fileName)))
+                        if (!File.Exists(xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, fileName)))
                         {
                             //string gdocFile = string.Format(_GDocFileName, Utility.Product.ProductCode(this.ProductId), Utility.Product.GetCategoryName(this.ProductId), attached.OriginalFileName);
 
@@ -266,7 +267,7 @@ namespace xPort5.Controls.Product
 
                             Utility.Product.SaveKeyPicture(productId, resourceId);
 
-                            BindImageList(Utility.Resources.ImageSize.Medium, false);
+                            BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         }
                     }
                 }
@@ -336,10 +337,10 @@ namespace xPort5.Controls.Product
 
                 foreach (string item in GetCheckedItems())
                 {
-                    string fileName = Utility.Resources.PictureFilePath(this.ProductId, item);
+                    string fileName = xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, item);
 
-                    xPort5.DAL.ResourcesCollection deleteList = xPort5.DAL.Resources.LoadCollection(sql);
-                    foreach (xPort5.DAL.Resources resc in deleteList)
+                    xPort5.EF6.ResourcesCollection deleteList = xPort5.EF6.Resources.LoadCollection(sql);
+                    foreach (xPort5.EF6.Resources resc in deleteList)
                     {
                         if (Utility.Product.IsKeyPicture(this.ProductId, resc.ResourcesId))
                         {
@@ -364,7 +365,7 @@ namespace xPort5.Controls.Product
                     }
                 }
 
-                xPort5.DAL.ResourcesCollection rescList = xPort5.DAL.Resources.LoadCollection(sql);
+                xPort5.EF6.ResourcesCollection rescList = xPort5.EF6.Resources.LoadCollection(sql);
                 if (rescList.Count > 0)
                 {
                     if (!Utility.Product.HasKeyPicture(this.ProductId))
@@ -373,7 +374,7 @@ namespace xPort5.Controls.Product
                     }
                 }
 
-                BindImageList(Utility.Resources.ImageSize.Medium, false);
+                BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
             }
         }
 
@@ -381,7 +382,7 @@ namespace xPort5.Controls.Product
         {
             foreach (string item in GetCheckedItems())
             {
-                string fileName = Utility.Resources.PictureFilePath(this.ProductId, item);
+                string fileName = xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, item);
 
                 FileDownloadGateway downloadGateway = new FileDownloadGateway();
                 downloadGateway.Filename = Path.GetFileName(fileName);
@@ -402,9 +403,9 @@ namespace xPort5.Controls.Product
             OpenFileDialog objFileDialog = sender as OpenFileDialog;
             if (objFileDialog != null)
             {
-                string fileName = Utility.Resources.UploadPicture(openFileDialog, this.ProductId);
+                string fileName = xPort5.Controls.Utility.Resources.UploadPicture(openFileDialog, this.ProductId);
 
-                string fullName = Utility.Resources.PictureFilePath(this.ProductId, fileName);
+                string fullName = xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, fileName);
                 fileName = string.Format(_GDocFileName, Utility.Product.ProductCode(this.ProductId), Utility.Product.GetCategoryName(this.ProductId), Path.GetFileName(fileName));
 
                 //if (!GData.GDocs.IsFileExist(fileName))
@@ -412,7 +413,7 @@ namespace xPort5.Controls.Product
                 //    GData.GDocs.UploadFile3(fullName, fileName);
                 //}
 
-                BindImageList(Utility.Resources.ImageSize.Medium, false);
+                BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
             }
         }
 

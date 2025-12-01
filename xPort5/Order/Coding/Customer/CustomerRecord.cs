@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -181,7 +182,7 @@ namespace xPort5.Order.Coding.Customer
         #region ShowItem(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowCustomer()
         {
-            xPort5.DAL.Customer item = xPort5.DAL.Customer.Load(_CustomerId);
+            xPort5.EF6.Customer item = xPort5.EF6.Customer.Load(_CustomerId);
             if (item != null)
             {
                 txtCustomerCode.Text = item.CustomerCode;
@@ -194,23 +195,32 @@ namespace xPort5.Order.Coding.Customer
                 chkBlacklisted.Checked = item.BlackListed;
                 txtRemarks.Text = item.Remarks;
 
-                T_Region region = T_Region.Load(item.RegionId);
-                if (region != null)
+                if (item.RegionId.HasValue)
                 {
-                    cboRegion.Text = region.RegionName;
-                    cboRegion.SelectedValue = region.RegionId;
+                    T_Region region = T_Region.Load(item.RegionId.Value);
+                    if (region != null)
+                    {
+                        cboRegion.Text = region.RegionName;
+                        cboRegion.SelectedValue = region.RegionId;
+                    }
                 }
-                T_PaymentTerms oTerms = T_PaymentTerms.Load(item.TermsId);
-                if (oTerms != null)
+                if (item.TermsId.HasValue)
                 {
-                    cboTerms.Text = oTerms.TermsName;
-                    cboTerms.SelectedValue = oTerms.TermsId;
+                    T_PaymentTerms oTerms = T_PaymentTerms.Load(item.TermsId.Value);
+                    if (oTerms != null)
+                    {
+                        cboTerms.Text = oTerms.TermsName;
+                        cboTerms.SelectedValue = oTerms.TermsId;
+                    }
                 }
-                T_Currency oCny = T_Currency.Load(item.CurrencyId);
-                if (oCny != null)
+                if (item.CurrencyId.HasValue)
                 {
-                    cboCurrency.Text = oCny.CurrencyCode;
-                    cboCurrency.SelectedValue = oCny.CurrencyId;
+                    T_Currency oCny = T_Currency.Load(item.CurrencyId.Value);
+                    if (oCny != null)
+                    {
+                        cboCurrency.Text = oCny.CurrencyCode;
+                        cboCurrency.SelectedValue = oCny.CurrencyId;
+                    }
                 }
 
                 Staff s1 = Staff.Load(item.CreatedBy);
@@ -233,11 +243,11 @@ namespace xPort5.Order.Coding.Customer
             {
                 try
                 {
-                    xPort5.DAL.Customer item = null;
+                    xPort5.EF6.Customer item = null;
                     switch ((int)_EditMode)
                     {
                         case (int)Common.Enums.EditMode.Add:
-                            item = new xPort5.DAL.Customer();
+                            item = new xPort5.EF6.Customer();
                             item.CustomerId = _CustomerId;
                             item.CustomerCode = txtCustomerCode.Text.Trim();
 
@@ -248,7 +258,7 @@ namespace xPort5.Order.Coding.Customer
                             item.Retired = false;
                             break;
                         case (int)Common.Enums.EditMode.Edit:
-                            item = xPort5.DAL.Customer.Load(_CustomerId);
+                            item = xPort5.EF6.Customer.Load(_CustomerId);
                             item.ModifiedOn = DateTime.Now;
                             item.ModifiedBy = Common.Config.CurrentUserId;
                             break;
@@ -302,7 +312,7 @@ namespace xPort5.Order.Coding.Customer
                 }
                 else
                 {
-                    xPort5.DAL.Customer customer = xPort5.DAL.Customer.LoadWhere(String.Format("CustomerCode = '{0}'", txtCustomerCode.Text.Trim()));
+                    xPort5.EF6.Customer customer = xPort5.EF6.Customer.LoadWhere(String.Format("CustomerCode = '{0}'", txtCustomerCode.Text.Trim()));
                     if (customer != null)
                     {
                         errMsg += Environment.NewLine + "Customer Code is in use.";
@@ -319,7 +329,7 @@ namespace xPort5.Order.Coding.Customer
                 }
                 else
                 {
-                    xPort5.DAL.Customer customer = xPort5.DAL.Customer.LoadWhere(String.Format("CustomerName = N'{0}'", txtName.Text.Trim()));
+                    xPort5.EF6.Customer customer = xPort5.EF6.Customer.LoadWhere(String.Format("CustomerName = N'{0}'", txtName.Text.Trim()));
                     if (customer != null)
                     {
                         errMsg += Environment.NewLine + "Customer Name is in use.";

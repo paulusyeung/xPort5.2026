@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -38,8 +38,8 @@ namespace xPort5.Controls
         }
         public static void LogInfo(LogAction action, String message)
         {
-            String sql = String.Format("UserSid = '{0}'", xPort5.DAL.Common.Config.CurrentUserId.ToString());
-            xPort5.DAL.UserProfile user = xPort5.DAL.UserProfile.LoadWhere(sql);
+            String sql = String.Format("UserSid = '{0}'", xPort5.Common.Config.CurrentUserId.ToString());
+            xPort5.EF6.UserProfile user = xPort5.EF6.UserProfile.LoadWhere(sql);
             if (user != null)
                 LogInfo(String.Format("[{0}] [{1}] {2}", user.Alias, action.ToString("g").ToUpper().PadRight(7), message));
         }

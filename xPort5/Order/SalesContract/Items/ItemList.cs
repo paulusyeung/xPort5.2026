@@ -1,4 +1,4 @@
-﻿#region Using
+#region Using
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 using Gizmox.WebGUI.Forms.Dialogs;
@@ -77,7 +78,7 @@ namespace xPort5.Order.SalesContract.Items
 
         private void SetAttribute()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.colItemCode.Text = oDict.GetWord("product_code");
             this.colSupplier.Text = oDict.GetWord("supplier");
@@ -115,7 +116,7 @@ namespace xPort5.Order.SalesContract.Items
 
         private void SetListAns()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansItems.MenuHandle = false;
             this.ansItems.DragHandle = false;
@@ -197,7 +198,7 @@ namespace xPort5.Order.SalesContract.Items
 
 
             #region add cndNew
-            if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+            if (xPort5.Common.Config.UseNetSqlAzMan)
             {
                 if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.SalesContract.Create"))
                 {
@@ -213,7 +214,7 @@ namespace xPort5.Order.SalesContract.Items
             #region cmdDelete
             if (_EditMode == Common.Enums.EditMode.Edit)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.SalesContract.Delete"))
                     {
@@ -373,7 +374,7 @@ ORDER BY [LineNumber]
 
                         if (!lvwItems.Visible)
                         {
-                            BindImageList(Utility.Resources.ImageSize.Medium, false);
+                            BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         }
                         break;
                     case "multiselect":
@@ -473,7 +474,7 @@ ORDER BY [LineNumber]
                 }
                 else
                 {
-                    List<Guid> selectedList = Utility.ImagePanel.GetCheckedItems(flpImageList, Utility.ImagePanel.CheckedType.Order);
+                    List<Guid> selectedList = xPort5.Controls.Utility.ImagePanel.GetCheckedItems(flpImageList, xPort5.Controls.Utility.ImagePanel.CheckedType.Order);
                     if (selectedList.Count > 0)
                     {
                         foreach (System.Guid itemId in selectedList)
@@ -482,7 +483,7 @@ ORDER BY [LineNumber]
                         }
                     }
 
-                    BindImageList(Utility.Resources.ImageSize.Medium, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                 }
             }
         }
@@ -517,16 +518,16 @@ ORDER BY [LineNumber]
             switch (e.MenuItem.Tag.ToString())
             {
                 case "Small":
-                    BindImageList(Utility.Resources.ImageSize.Small, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Small, false);
                     break;
                 case "Medium":
-                    BindImageList(Utility.Resources.ImageSize.Medium, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                     break;
                 case "Large":
-                    BindImageList(Utility.Resources.ImageSize.Large, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Large, false);
                     break;
                 case "Details":
-                    BindImageList(Utility.Resources.ImageSize.XLarge, true);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.XLarge, true);
                     break;
             }
         }

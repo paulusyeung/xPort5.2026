@@ -9,7 +9,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.IO;
 using xPort5.Controls.Product;
 
@@ -22,7 +23,7 @@ namespace xPort5.Controls
         public Guid ProductId { get; set; }
         public Guid ResourceId { get; set; }
         public string CurrentImageFile { get; set; }
-        public Utility.ImagePanel.ThumbnailSize ThumbnailSize { get; set; }
+        public xPort5.Controls.Utility.ImagePanel.ThumbnailSize ThumbnailSize { get; set; }
 
         private Size currentThumbnailSize;
         private Point currentImageLocation = new Point(0, 0);
@@ -42,7 +43,7 @@ namespace xPort5.Controls
                 SetCaptions();
 
                 this.productImage.SizeMode = PictureBoxSizeMode.CenterImage;
-                ReallocateImagePositionAndSize(Utility.Resources.ImageSize.Medium);
+                ReallocateImagePositionAndSize(xPort5.Controls.Utility.Resources.ImageSize.Medium);
             }
         }
 
@@ -70,14 +71,14 @@ namespace xPort5.Controls
         {
             switch (this.ThumbnailSize)
             {
-                case Utility.ImagePanel.ThumbnailSize.Small:
+                case xPort5.Controls.Utility.ImagePanel.ThumbnailSize.Small:
                     this.currentThumbnailSize = new Size(24, 24);
                     break;
-                case Utility.ImagePanel.ThumbnailSize.Medium:
+                case xPort5.Controls.Utility.ImagePanel.ThumbnailSize.Medium:
                 default:
                     this.currentThumbnailSize = new Size(32, 32);
                     break;
-                case Utility.ImagePanel.ThumbnailSize.Large:
+                case xPort5.Controls.Utility.ImagePanel.ThumbnailSize.Large:
                     this.currentThumbnailSize = new Size(64, 64);
                     break;
             }
@@ -108,7 +109,7 @@ namespace xPort5.Controls
 
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        if (!File.Exists(Utility.Resources.PictureFilePath(this.ProductId, fileName)))
+                        if (!File.Exists(xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, fileName)))
                         {
                             //string gdocFile = string.Format(_GDocFileName, Utility.Product.ProductCode(this.ProductId), Utility.Product.GetCategoryName(this.ProductId), attached.OriginalFileName);
 
@@ -149,7 +150,7 @@ namespace xPort5.Controls
                         if (Utility.Product.IsKeyPicture(this.ProductId, resc.ResourcesId))
                         {
                             string fileName = resc.OriginalFileName;
-                            this.CurrentImageFile = string.IsNullOrEmpty(fileName) ? xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, xPort5.Controls.Utility.Product.KeyPicture(this.ProductId)) : Utility.Resources.PictureFilePath(this.ProductId, fileName);
+                            this.CurrentImageFile = string.IsNullOrEmpty(fileName) ? xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, xPort5.Controls.Utility.Product.KeyPicture(this.ProductId)) : xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, fileName);
 
                             this.productImage.ImageName = CurrentImageFile;
 
@@ -175,7 +176,7 @@ namespace xPort5.Controls
 
             xPort5.Controls.ProductImage prodImage = new xPort5.Controls.ProductImage();
             prodImage.Name = resId.ToString();
-            prodImage.ImageName = string.IsNullOrEmpty(fileName) ? xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, xPort5.Controls.Utility.Product.KeyPicture(this.ProductId)) : Utility.Resources.PictureFilePath(this.ProductId, fileName);
+            prodImage.ImageName = string.IsNullOrEmpty(fileName) ? xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, xPort5.Controls.Utility.Product.KeyPicture(this.ProductId)) : xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, fileName);
             prodImage.BorderStyle = BorderStyle.FixedSingle;
             prodImage.BorderWidth = 1;
             prodImage.BorderColor = Color.Gainsboro;
@@ -194,7 +195,7 @@ namespace xPort5.Controls
 
         void prodImage_Click(object sender, EventArgs e)
         {
-            ReallocateImagePositionAndSize(Utility.Resources.ImageSize.Medium);
+            ReallocateImagePositionAndSize(xPort5.Controls.Utility.Resources.ImageSize.Medium);
 
             ProductImage prodImage = sender as ProductImage;
             if (prodImage != null)
@@ -232,11 +233,11 @@ namespace xPort5.Controls
         {
             if (!zoomed)
             {
-                ReallocateImagePositionAndSize(Utility.Resources.ImageSize.Large);
+                ReallocateImagePositionAndSize(xPort5.Controls.Utility.Resources.ImageSize.Large);
             }
             else
             {
-                ReallocateImagePositionAndSize(Utility.Resources.ImageSize.Medium);
+                ReallocateImagePositionAndSize(xPort5.Controls.Utility.Resources.ImageSize.Medium);
             }
 
             zoomed = !zoomed;
@@ -280,10 +281,10 @@ namespace xPort5.Controls
                 bool cannotDelete = false;
                 string sql = "Keyword = '" + Utility.Product.ProductCode(this.ProductId) + "'";
 
-                string fileName = Utility.Resources.PictureFilePath(this.ProductId, Path.GetFileName(CurrentImageFile));
+                string fileName = xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, Path.GetFileName(CurrentImageFile));
 
-                xPort5.DAL.ResourcesCollection deleteList = xPort5.DAL.Resources.LoadCollection(sql);
-                foreach (xPort5.DAL.Resources resc in deleteList)
+                xPort5.EF6.ResourcesCollection deleteList = xPort5.EF6.Resources.LoadCollection(sql);
+                foreach (xPort5.EF6.Resources resc in deleteList)
                 {
                     if (Utility.Product.IsKeyPicture(this.ProductId, resc.ResourcesId))
                     {
@@ -311,7 +312,7 @@ namespace xPort5.Controls
                     }
                 }
 
-                xPort5.DAL.ResourcesCollection rescList = xPort5.DAL.Resources.LoadCollection(sql);
+                xPort5.EF6.ResourcesCollection rescList = xPort5.EF6.Resources.LoadCollection(sql);
                 if (rescList.Count > 0)
                 {
                     if (!Utility.Product.HasKeyPicture(this.ProductId))
@@ -344,9 +345,9 @@ namespace xPort5.Controls
             OpenFileDialog objFileDialog = sender as OpenFileDialog;
             if (objFileDialog != null)
             {
-                string fileName = Utility.Resources.UploadPicture(openFileDialog, this.ProductId);
+                string fileName = xPort5.Controls.Utility.Resources.UploadPicture(openFileDialog, this.ProductId);
 
-                string fullName = Utility.Resources.PictureFilePath(this.ProductId, fileName);
+                string fullName = xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, fileName);
                 fileName = string.Format(_GDocFileName, Utility.Product.ProductCode(this.ProductId), Utility.Product.GetCategoryName(this.ProductId), Path.GetFileName(fileName));
 
                 //if (!GData.GDocs.IsFileExist(fileName))

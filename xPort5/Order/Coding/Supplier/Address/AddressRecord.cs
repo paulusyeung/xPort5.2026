@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -80,7 +81,7 @@ namespace xPort5.Order.Coding.Supplier.Address
             this.lblAddress.Text = oDict.GetWordWithColon("address");
             this.chkIsMailing.Text = oDict.GetWord("mailing_address");
             this.lblPhone1.Text = oDict.GetWordWithColon("business");
-            this.lblPhone2.Text = oDict.GetWord("business") + "2£º";
+            this.lblPhone2.Text = oDict.GetWord("business") + "2ï¿½ï¿½";
             this.lblPhone3.Text = oDict.GetWordWithColon("fax");
             this.lblPhone4.Text = oDict.GetWordWithColon("website");
             this.lblPhone5.Text = oDict.GetWordWithColon("other");
@@ -117,7 +118,7 @@ namespace xPort5.Order.Coding.Supplier.Address
 
         private void SetDropdowns()
         {
-            xPort5.DAL.Z_Address.LoadCombo(ref cboAddress, "AddressName", false);
+            xPort5.EF6.Z_Address.LoadCombo(ref cboAddress, "AddressName", false);
         }
 
         private void SetAnsToolbar()
@@ -163,7 +164,7 @@ namespace xPort5.Order.Coding.Supplier.Address
         #region ShowItem(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowSupplier()
         {
-            xPort5.DAL.Supplier customer = xPort5.DAL.Supplier.Load(_SupplierId);
+            xPort5.EF6.Supplier customer = xPort5.EF6.Supplier.Load(_SupplierId);
             if (customer != null)
             {
                 txtUserCode.Text = customer.SupplierCode;
@@ -302,7 +303,7 @@ namespace xPort5.Order.Coding.Supplier.Address
                     sql = String.Format("SupplierId = '{0}' AND AddressId = '{1}'",
                         _SupplierId.ToString(),
                         addr.AddressId.ToString());
-                    xPort5.DAL.SupplierAddress cAddress = xPort5.DAL.SupplierAddress.LoadWhere(sql);
+                    xPort5.EF6.SupplierAddress cAddress = xPort5.EF6.SupplierAddress.LoadWhere(sql);
                     if (cAddress != null)
                     {
                         errMsg += Environment.NewLine + "Address is in use.";

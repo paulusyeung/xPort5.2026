@@ -13,7 +13,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using xPort5.Controls;
 using xPort5.Controls.Product;
 
@@ -182,7 +183,7 @@ namespace xPort5.Coding.Product
             {
                 if (_EditMode != Common.Enums.EditMode.Add)
                 {
-                    if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                    if (xPort5.Common.Config.UseNetSqlAzMan)
                     {
                         if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Factory", "Product.Approve"))
                         {

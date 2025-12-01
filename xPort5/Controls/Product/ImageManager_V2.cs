@@ -1,4 +1,4 @@
-﻿#region Using
+#region Using
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 using System.IO;
@@ -54,7 +55,7 @@ namespace xPort5.Controls.Product
             this.imagePane.Controls.Clear();
 
             ProductImage_AllInOne prodImg = new ProductImage_AllInOne();
-            prodImg.ThumbnailSize = Utility.ImagePanel.ThumbnailSize.Medium;
+            prodImg.ThumbnailSize = xPort5.Controls.Utility.ImagePanel.ThumbnailSize.Medium;
             prodImg.ProductId = this.ProductId;
             prodImg.LoadImagesList();
             prodImg.Dock = DockStyle.Fill;
@@ -78,16 +79,16 @@ namespace xPort5.Controls.Product
                 //switch (((string)e.MenuItem.Tag).ToLower())
                 //{
                 //    case "small":
-                //        BindImageList(Utility.Resources.ImageSize.Small, false);
+                //        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Small, false);
                 //        break;
                 //    case "medium":
-                //        BindImageList(Utility.Resources.ImageSize.Medium, false);
+                //        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                 //        break;
                 //    case "large":
-                //        BindImageList(Utility.Resources.ImageSize.Large, false);
+                //        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Large, false);
                 //        break;
                 //    case "details":
-                //        BindImageList(Utility.Resources.ImageSize.XLarge, false);
+                //        BindImageList(xPort5.Controls.Utility.Resources.ImageSize.XLarge, false);
                 //        break;
                 //}
             }

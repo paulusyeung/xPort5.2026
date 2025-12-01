@@ -7,7 +7,8 @@ using System.IO;
 using DevExpress.XtraReports.UI;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 namespace xPort5.Factory.Product.Report
 {

@@ -1444,9 +1444,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\xPort5.Common\xPort5.Common.csproj">
+      <Project>{00c9b9a6-3db2-4770-a0f4-c3e09cdf84c4}</Project>
+      <Name>xPort5.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\xPort5.DAL\xPort5.DAL.csproj">
       <Project>{8E3643B9-85ED-45C0-8236-102EB497D18B}</Project>
       <Name>xPort5.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\xPort5.EF6\xPort5.EF6.csproj">
+      <Project>{573EA8D8-E09D-49FB-8CC2-1DCF78B3CF4E}</Project>
+      <Name>xPort5.EF6</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

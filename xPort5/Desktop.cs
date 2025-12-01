@@ -1,4 +1,4 @@
-﻿#region Using
+#region Using
 
 using System;
 using System.Collections.Generic;
@@ -82,7 +82,7 @@ namespace xPort5
 
         private void SetCaptions()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             tabCoding.Text = oDict.GetWord("factory");
             tabAdmin.Text = oDict.GetWord("admin");

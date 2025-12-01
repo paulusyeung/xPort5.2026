@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -173,7 +174,7 @@ namespace xPort5.Order.Coding.Supplier
         #region ShowItem(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowSupplier()
         {
-            xPort5.DAL.Supplier item = xPort5.DAL.Supplier.Load(_SupplierId);
+            xPort5.EF6.Supplier item = xPort5.EF6.Supplier.Load(_SupplierId);
             if (item != null)
             {
                 txtSupplierCode.Text = item.SupplierCode;
@@ -183,17 +184,23 @@ namespace xPort5.Order.Coding.Supplier
                 txtACNumber.Text = item.ACNumber;
                 txtRemarks.Text = item.Remarks;
 
-                T_Region region = T_Region.Load(item.RegionId);
-                if (region != null)
+                if (item.RegionId.HasValue)
                 {
-                    cboRegion.Text = region.RegionName;
-                    cboRegion.SelectedValue = region.RegionId;
+                    T_Region region = T_Region.Load(item.RegionId.Value);
+                    if (region != null)
+                    {
+                        cboRegion.Text = region.RegionName;
+                        cboRegion.SelectedValue = region.RegionId;
+                    }
                 }
-                T_PaymentTerms oTerms = T_PaymentTerms.Load(item.TermsId);
-                if (oTerms != null)
+                if (item.TermsId.HasValue)
                 {
-                    cboTerms.Text = oTerms.TermsName;
-                    cboTerms.SelectedValue = oTerms.TermsId;
+                    T_PaymentTerms oTerms = T_PaymentTerms.Load(item.TermsId.Value);
+                    if (oTerms != null)
+                    {
+                        cboTerms.Text = oTerms.TermsName;
+                        cboTerms.SelectedValue = oTerms.TermsId;
+                    }
                 }
 
                 Staff s1 = Staff.Load(item.CreatedBy);
@@ -216,11 +223,11 @@ namespace xPort5.Order.Coding.Supplier
             {
                 try
                 {
-                    xPort5.DAL.Supplier item = null;
+                    xPort5.EF6.Supplier item = null;
                     switch ((int)_EditMode)
                     {
                         case (int)Common.Enums.EditMode.Add:
-                            item = new xPort5.DAL.Supplier();
+                            item = new xPort5.EF6.Supplier();
                             item.SupplierId = _SupplierId;
                             item.SupplierCode = txtSupplierCode.Text.Trim();
 
@@ -231,7 +238,7 @@ namespace xPort5.Order.Coding.Supplier
                             item.Retired = false;
                             break;
                         case (int)Common.Enums.EditMode.Edit:
-                            item = xPort5.DAL.Supplier.Load(_SupplierId);
+                            item = xPort5.EF6.Supplier.Load(_SupplierId);
                             item.ModifiedOn = DateTime.Now;
                             item.ModifiedBy = Common.Config.CurrentUserId;
                             break;
@@ -281,7 +288,7 @@ namespace xPort5.Order.Coding.Supplier
                 }
                 else
                 {
-                    xPort5.DAL.Supplier customer = xPort5.DAL.Supplier.LoadWhere(String.Format("SupplierCode = '{0}'", txtSupplierCode.Text.Trim()));
+                    xPort5.EF6.Supplier customer = xPort5.EF6.Supplier.LoadWhere(String.Format("SupplierCode = '{0}'", txtSupplierCode.Text.Trim()));
                     if (customer != null)
                     {
                         errMsg += Environment.NewLine + "Supplier Code is in use.";
@@ -298,7 +305,7 @@ namespace xPort5.Order.Coding.Supplier
                 }
                 else
                 {
-                    xPort5.DAL.Supplier customer = xPort5.DAL.Supplier.LoadWhere(String.Format("SupplierName = N'{0}'", txtName.Text.Trim()));
+                    xPort5.EF6.Supplier customer = xPort5.EF6.Supplier.LoadWhere(String.Format("SupplierName = N'{0}'", txtName.Text.Trim()));
                     if (customer != null)
                     {
                         errMsg += Environment.NewLine + "Supplier Name is in use.";

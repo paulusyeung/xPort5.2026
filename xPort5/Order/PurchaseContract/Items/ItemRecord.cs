@@ -9,7 +9,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 
@@ -135,7 +136,7 @@ namespace xPort5.Order.PurchaseContract.Items
 
         private void SetAttributes()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.Text = string.Format(oDict.GetWord("record"), oDict.GetWord("item"));
             //this.lblLineNumber.Text = oDict.GetWordWithColon("line_no");
@@ -176,7 +177,7 @@ namespace xPort5.Order.PurchaseContract.Items
 
         private void SetAnsToolbar()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansToolbar.MenuHandle = false;
             this.ansToolbar.DragHandle = false;
@@ -216,7 +217,7 @@ namespace xPort5.Order.PurchaseContract.Items
             #region add cmdDNew, cmdCNew, cmdSDelete, cmdCDelete
             if (editMode != Common.Enums.EditMode.Read)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.PurchaseContract.Create"))
                     {
@@ -346,7 +347,7 @@ namespace xPort5.Order.PurchaseContract.Items
         #region ShowItem(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowOrder()
         {
-            xPort5.DAL.OrderPC order = xPort5.DAL.OrderPC.Load(orderPCId);
+            xPort5.EF6.OrderPC order = xPort5.EF6.OrderPC.Load(orderPCId);
             if (order != null)
             {
                 txtPCNumber.Text = order.PCNumber;
@@ -431,11 +432,14 @@ namespace xPort5.Order.PurchaseContract.Items
                             txtLCLCost.Text = "$" + articleSupp.LCLCost.ToString("##0.0000");
                             txtUnitCost.Text = "$" + articleSupp.UnitCost.ToString("##0.0000");
 
-                            T_Currency curr = T_Currency.Load(articleSupp.CurrencyId);
-                            if (curr != null)
+                            if (articleSupp.CurrencyId.HasValue)
                             {
-                                currencyId = curr.CurrencyId;
-                                txtCurrency.Text = curr.CurrencyCode;
+                                T_Currency curr = T_Currency.Load(articleSupp.CurrencyId.Value);
+                                if (curr != null)
+                                {
+                                    currencyId = curr.CurrencyId;
+                                    txtCurrency.Text = curr.CurrencyCode;
+                                }
                             }
                         }
                     }
@@ -455,7 +459,7 @@ namespace xPort5.Order.PurchaseContract.Items
             {
                 ListViewItem lvItem = new ListViewItem();
                 lvItem.SubItems.Add(supp.OrderQTSuppShippingId.ToString());
-                lvItem.SubItems.Add(supp.DateShipped.ToString("yyyy-MM-dd"));
+                lvItem.SubItems.Add(supp.DateShipped.HasValue ? supp.DateShipped.Value.ToString("yyyy-MM-dd") : "");
                 lvItem.SubItems.Add(supp.QtyOrdered.ToString("n0"));
                 lvItem.SubItems.Add("");
                 lvSSSchedule.Items.Add(lvItem);
@@ -470,7 +474,7 @@ namespace xPort5.Order.PurchaseContract.Items
             {
                 ListViewItem lvItem2 = new ListViewItem();
                 lvItem2.SubItems.Add(cust.OrderQTCustShippingId.ToString());
-                lvItem2.SubItems.Add(cust.ShippedOn.ToString("yyyy-MM-dd"));
+                lvItem2.SubItems.Add(cust.ShippedOn.HasValue ? cust.ShippedOn.Value.ToString("yyyy-MM-dd") : "");
                 lvItem2.SubItems.Add(cust.QtyOrdered.ToString("n0"));
                 lvItem2.SubItems.Add("");
                 lvCSSchedule.Items.Add(lvItem2);

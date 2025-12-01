@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Gizmox.WebGUI.Forms;
 using System.Drawing;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.IO;
 
 namespace xPort5.Controls.Product
@@ -80,7 +81,7 @@ namespace xPort5.Controls.Product
 
             xPort5.Controls.ProductImage prodImage = new xPort5.Controls.ProductImage();
             prodImage.Name = this.OrderItemId.ToString();
-            prodImage.ImageName = string.IsNullOrEmpty(this.FileName) ? xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, xPort5.Controls.Utility.Product.KeyPicture(this.ProductId)) : Utility.Resources.PictureFilePath(this.ProductId, this.FileName);
+            prodImage.ImageName = string.IsNullOrEmpty(this.FileName) ? xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, xPort5.Controls.Utility.Product.KeyPicture(this.ProductId)) : xPort5.Controls.Utility.Resources.PictureFilePath(this.ProductId, this.FileName);
             prodImage.BorderStyle = BorderStyle.FixedSingle;
             prodImage.BorderWidth = 1;
             prodImage.BorderColor = Color.Gainsboro;

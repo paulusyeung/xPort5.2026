@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -162,7 +163,7 @@ namespace xPort5.Order.Coding.Product.Package
 
         private void SetDropdowns()
         {
-            xPort5.DAL.T_Package.LoadCombo(ref cboPackage, "PackageName", false);
+            xPort5.EF6.T_Package.LoadCombo(ref cboPackage, "PackageName", false);
             T_UnitOfMeasures.LoadCombo(ref cboUoM, "UomName", false);
 
             xPort5.Controls.Utility.Default.UoM(ref cboUoM);
@@ -227,17 +228,20 @@ namespace xPort5.Order.Coding.Product.Package
             ArticlePackage aPackage = ArticlePackage.Load(_ProdPackageId);
             if (aPackage != null)
             {
-                xPort5.DAL.T_Package package = xPort5.DAL.T_Package.Load(aPackage.PackageId);
+                xPort5.EF6.T_Package package = xPort5.EF6.T_Package.Load(aPackage.PackageId);
                 if (package != null)
                 {
                     cboPackage.Text = package.PackageName;
                     cboPackage.SelectedValue = package.PackageId;
                 }
-                T_UnitOfMeasures uom = T_UnitOfMeasures.Load(aPackage.UomId);
-                if (uom != null)
+                if (aPackage.UomId.HasValue)
                 {
-                    cboUoM.Text = uom.UomName;
-                    cboUoM.SelectedValue = uom.UomId;
+                    T_UnitOfMeasures uom = T_UnitOfMeasures.Load(aPackage.UomId.Value);
+                    if (uom != null)
+                    {
+                        cboUoM.Text = uom.UomName;
+                        cboUoM.SelectedValue = uom.UomId;
+                    }
                 }
 
                 txtInnerBox.Text = aPackage.InnerBox.ToString("##0.00");
@@ -319,7 +323,14 @@ namespace xPort5.Order.Coding.Product.Package
                     }
 
                     prodPackage.PackageId = (Guid)cboPackage.SelectedValue;
-                    prodPackage.UomId = (Guid)cboUoM.SelectedValue;
+                    if (cboUoM.SelectedValue != null)
+                    {
+                        prodPackage.UomId = (Guid)cboUoM.SelectedValue;
+                    }
+                    else
+                    {
+                        prodPackage.UomId = null;
+                    }
 
                     prodPackage.InnerBox = Convert.ToDecimal(txtInnerBox.Text.Trim());
                     prodPackage.OuterBox = Convert.ToDecimal(txtOuterBox.Text.Trim());
@@ -372,7 +383,7 @@ namespace xPort5.Order.Coding.Product.Package
             {
                 #region validate Package
 
-                // 2010-09-07 [david] : È¡Ïû
+                // 2010-09-07 [david] : È¡ï¿½ï¿½
                 //try
                 //{
                 //    sql = String.Format("ArticleId = '{0}' AND PackageId = '{1}'",

@@ -165,7 +165,7 @@ namespace xPort5.Order.SalesContract
                             FROM vwPrint_PriceList 
                             WHERE QTNumber='" + SalesContractList.SalesContractNum + "'";
 
-            return xPort5.DAL.SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql).Tables[0];
+            return xPort5.EF6.SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql).Tables[0];
         }
 
         private string BuildDetailSql(string[] orderByColumns)
@@ -188,7 +188,7 @@ namespace xPort5.Order.SalesContract
 
         private DataTable BindDataToReport(string sql)
         {
-            return xPort5.DAL.SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql).Tables[0];
+            return xPort5.EF6.SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql).Tables[0];
         }
 
         private void PreviewReport(DataTable table, string reportDSName, string reportName,string parameters)

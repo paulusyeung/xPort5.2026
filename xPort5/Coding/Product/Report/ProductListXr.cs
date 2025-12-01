@@ -9,7 +9,8 @@ using DevExpress.XtraReports.UI;
 using Gizmox.WebGUI.Forms;
 
 using nxStudio.BaseClass;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 namespace xPort5.Coding.Product.Report
 {
@@ -22,7 +23,7 @@ namespace xPort5.Coding.Product.Report
             InitializeComponent();
 
             #region Set Captions
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             lblProductCode.Text = oDict.GetWord("product_code");
             lblDescription.Text = oDict.GetWord("product_description");
@@ -62,7 +63,7 @@ namespace xPort5.Coding.Product.Report
         private void ProductListXr_BeforePrint(object sender, System.Drawing.Printing.PrintEventArgs e)
         {
             //this.txtPrintedOn.Text = DateTime.Now.ToString("yyyy-MM-dd HH:MM");
-            Staff user = Staff.Load(xPort5.DAL.Common.Config.CurrentUserId);
+            Staff user = Staff.Load(xPort5.Common.Config.CurrentUserId);
             this.txtPrintedBy.Text = user.Alias;
         }
 

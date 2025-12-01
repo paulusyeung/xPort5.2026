@@ -24,7 +24,8 @@ using Google.GData.Documents;
 using Google.GData.Client;
 using Google.GData.Extensions;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 #endregion
 

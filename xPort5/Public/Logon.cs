@@ -13,7 +13,8 @@ using Gizmox.WebGUI.Forms;
 using Gizmox.WebGUI.Forms.Authentication;
 using Gizmox.WebGUI.Common.Interfaces;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 namespace xPort5.Public
 {
@@ -78,13 +79,13 @@ namespace xPort5.Public
             if (Verify())
             {
                 string sql = "LoginName = N'" + txtUserName.Text.Trim().Replace("'", "") + "' AND LoginPassword = '" + txtPassword.Text.Trim().Replace("'", "") + "'";
-                xPort5.DAL.UserProfile oUser = xPort5.DAL.UserProfile.LoadWhere(sql);
+                xPort5.EF6.UserProfile oUser = xPort5.EF6.UserProfile.LoadWhere(sql);
                 if (oUser != null)
                 {
                     this.Context.Session.IsLoggedOn = true;
 
                     Common.Config.CurrentUserId = oUser.UserSid;
-                    Common.Config.CurrentUserType = oUser.UserType;
+                    Common.Config.CurrentUserType = oUser.UserType ?? 0;
 
                     // The below code will logout the loggedin user when idle for the time specified
                     if (ConfigurationManager.AppSettings["sessionTimeout"] != null)

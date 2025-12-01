@@ -1,4 +1,4 @@
-﻿#region Using
+#region Using
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,8 @@ using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms.Dialogs;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using xPort5.Controls.Product;
 using xPort5.Controls;
 using xPort5.Helper;
@@ -190,7 +191,7 @@ namespace xPort5.Order.PurchaseContract.Items
             cmdDelete.Image = new IconResourceHandle("16x16.16_L_remove.gif");
 
             #region add cndNew
-            if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+            if (xPort5.Common.Config.UseNetSqlAzMan)
             {
                 if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.PurchaseContract.Create"))
                 {
@@ -206,7 +207,7 @@ namespace xPort5.Order.PurchaseContract.Items
             #region cmdDelete
             if (editMode == Common.Enums.EditMode.Edit)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.PurchaseContract.Delete"))
                     {
@@ -383,7 +384,7 @@ ORDER BY [LineNumber]
 
                         if (!lvwItems.Visible)
                         {
-                            BindImageList(Utility.Resources.ImageSize.Medium, false);
+                            BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         }
                         break;
                     case "multiselect":
@@ -486,7 +487,7 @@ ORDER BY [LineNumber]
                 }
                 else
                 {
-                    List<Guid> selectedList = Utility.ImagePanel.GetCheckedItems(flpImageList, Utility.ImagePanel.CheckedType.Order);
+                    List<Guid> selectedList = xPort5.Controls.Utility.ImagePanel.GetCheckedItems(flpImageList, xPort5.Controls.Utility.ImagePanel.CheckedType.Order);
                     if (selectedList.Count > 0)
                     {
                         foreach (System.Guid itemId in selectedList)
@@ -495,7 +496,7 @@ ORDER BY [LineNumber]
                         }
                     }
 
-                    BindImageList(Utility.Resources.ImageSize.Medium, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                 }
             }
         }
@@ -508,16 +509,16 @@ ORDER BY [LineNumber]
             switch (e.MenuItem.Tag.ToString())
             {
                 case "Small":
-                    BindImageList(Utility.Resources.ImageSize.Small, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Small, false);
                     break;
                 case "Medium":
-                    BindImageList(Utility.Resources.ImageSize.Medium, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                     break;
                 case "Large":
-                    BindImageList(Utility.Resources.ImageSize.Large, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Large, false);
                     break;
                 case "Details":
-                    BindImageList(Utility.Resources.ImageSize.XLarge, true);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.XLarge, true);
                     break;
             }
         }

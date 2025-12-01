@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -18,7 +18,8 @@ using Gizmox.WebGUI.Common.Resources;
 using NetSqlAzMan;
 using NetSqlAzMan.Interfaces;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 namespace xPort5.Controls
 {
@@ -121,7 +122,7 @@ namespace xPort5.Controls
             {
                 bool result = false;
 
-                xPort5.DAL.Customer item = xPort5.DAL.Customer.Load(customerId);
+                xPort5.EF6.Customer item = xPort5.EF6.Customer.Load(customerId);
                 if (item != null)
                 {
                     switch ((int)item.Status)
@@ -137,18 +138,18 @@ namespace xPort5.Controls
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.CustomerAddressCollection addresses = xPort5.DAL.CustomerAddress.LoadCollection(String.Format("CustomerId = '{0}'", customerId.ToString()));
+                            xPort5.EF6.CustomerAddressCollection addresses = xPort5.EF6.CustomerAddress.LoadCollection(String.Format("CustomerId = '{0}'", customerId.ToString()));
                             if (addresses.Count > 0)
                             {
-                                foreach (xPort5.DAL.CustomerAddress address in addresses)
+                                foreach (xPort5.EF6.CustomerAddress address in addresses)
                                 {
                                     address.Delete();
                                 }
                             }
-                            xPort5.DAL.CustomerContactCollection contacts = xPort5.DAL.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", customerId.ToString()));
+                            xPort5.EF6.CustomerContactCollection contacts = xPort5.EF6.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", customerId.ToString()));
                             if (contacts.Count > 0)
                             {
-                                foreach (xPort5.DAL.CustomerContact contact in contacts)
+                                foreach (xPort5.EF6.CustomerContact contact in contacts)
                                 {
                                     contact.Delete();
                                 }
@@ -182,7 +183,7 @@ namespace xPort5.Controls
 
             public static string GetCustomerName(Guid customerId)
             {
-                xPort5.DAL.Customer item = xPort5.DAL.Customer.Load(customerId);
+                xPort5.EF6.Customer item = xPort5.EF6.Customer.Load(customerId);
                 if (item != null)
                 {
                     return item.CustomerName;
@@ -198,7 +199,7 @@ namespace xPort5.Controls
             {
                 bool result = true;
 
-                xPort5.DAL.CustomerAddress item = xPort5.DAL.CustomerAddress.Load(cAddressId);
+                xPort5.EF6.CustomerAddress item = xPort5.EF6.CustomerAddress.Load(cAddressId);
                 if (item != null)
                 {
                     // 2009.09.25 paulus: 直接 delete 算了
@@ -237,10 +238,10 @@ namespace xPort5.Controls
                     if (item.DefaultRec)
                     {
                         // set the next CustomerAddress record to DefaultRec
-                        xPort5.DAL.CustomerAddressCollection uAddresses = xPort5.DAL.CustomerAddress.LoadCollection(String.Format("CustomerId = '{0}'", item.CustomerId.ToString()));
+                        xPort5.EF6.CustomerAddressCollection uAddresses = xPort5.EF6.CustomerAddress.LoadCollection(String.Format("CustomerId = '{0}'", item.CustomerId.ToString()));
                         if (uAddresses.Count > 0)
                         {
-                            xPort5.DAL.CustomerAddress uAddress = uAddresses[0];
+                            xPort5.EF6.CustomerAddress uAddress = uAddresses[0];
                             uAddress.DefaultRec = true;
                             uAddress.Save();
                         }
@@ -256,7 +257,7 @@ namespace xPort5.Controls
 
             public static int Count(Guid userId)
             {
-                xPort5.DAL.CustomerAddressCollection items = xPort5.DAL.CustomerAddress.LoadCollection(String.Format("CustomerId = '{0}'", userId.ToString()));
+                xPort5.EF6.CustomerAddressCollection items = xPort5.EF6.CustomerAddress.LoadCollection(String.Format("CustomerId = '{0}'", userId.ToString()));
                 return items.Count;
             }
         }
@@ -267,7 +268,7 @@ namespace xPort5.Controls
             {
                 bool result = true;
 
-                xPort5.DAL.CustomerContact item = xPort5.DAL.CustomerContact.Load(cAddressId);
+                xPort5.EF6.CustomerContact item = xPort5.EF6.CustomerContact.Load(cAddressId);
                 if (item != null)
                 {
                     // 2009.09.25 paulus: 直接 delete 算了
@@ -306,10 +307,10 @@ namespace xPort5.Controls
                     if (item.DefaultRec)
                     {
                         // set the next CustomerContact record to DefaultRec
-                        xPort5.DAL.CustomerContactCollection contacts = xPort5.DAL.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", item.CustomerId.ToString()));
+                        xPort5.EF6.CustomerContactCollection contacts = xPort5.EF6.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", item.CustomerId.ToString()));
                         if (contacts.Count > 0)
                         {
-                            xPort5.DAL.CustomerContact contact = contacts[0];
+                            xPort5.EF6.CustomerContact contact = contacts[0];
                             contact.DefaultRec = true;
                             contact.Save();
                         }
@@ -325,7 +326,7 @@ namespace xPort5.Controls
 
             public static int Count(Guid userId)
             {
-                xPort5.DAL.CustomerContactCollection items = xPort5.DAL.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", userId.ToString()));
+                xPort5.EF6.CustomerContactCollection items = xPort5.EF6.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", userId.ToString()));
                 return items.Count;
             }
         }
@@ -462,7 +463,7 @@ namespace xPort5.Controls
                 ArticleKeyPicture keyPic = ArticleKeyPicture.LoadWhere(sql);
                 if (keyPic != null)
                 {
-                    xPort5.DAL.Resources resc = xPort5.DAL.Resources.Load(keyPic.ResourcesId);
+                    xPort5.EF6.Resources resc = xPort5.EF6.Resources.Load(keyPic.ResourcesId);
                     if (resc != null)
                     {
                         return resc.OriginalFileName;
@@ -1094,7 +1095,7 @@ ORDER BY
 UPDATE [dbo].[T_Currency]
 SET [LocalCurrency] = 0;";
 
-                xPort5.DAL.SqlHelper.Default.ExecuteNonQuery(CommandType.Text, sql);
+                xPort5.EF6.SqlHelper.Default.ExecuteNonQuery(CommandType.Text, sql);
             }
 
             public static string GetCurrencyName(string currencyCode)
@@ -1223,7 +1224,7 @@ ORDER BY [ColorName]
                     ComboList itemlist = new ComboList();
                     foreach (ArticleSupplier prodSupplier in prodSuppliers)
                     {
-                        xPort5.DAL.Supplier supplier = xPort5.DAL.Supplier.Load(prodSupplier.SupplierId);
+                        xPort5.EF6.Supplier supplier = xPort5.EF6.Supplier.Load(prodSupplier.SupplierId);
                         if (supplier != null)
                         {
                             itemlist.Add(new ComboItem(supplier.SupplierName, supplier.SupplierId));
@@ -1646,7 +1647,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.Supplier item = xPort5.DAL.Supplier.Load(supplierId);
+                xPort5.EF6.Supplier item = xPort5.EF6.Supplier.Load(supplierId);
                 if (item != null)
                 {
                     switch ((int)item.Status)
@@ -1662,18 +1663,18 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.SupplierAddressCollection addresses = xPort5.DAL.SupplierAddress.LoadCollection(String.Format("SupplierId = '{0}'", supplierId.ToString()));
+                            xPort5.EF6.SupplierAddressCollection addresses = xPort5.EF6.SupplierAddress.LoadCollection(String.Format("SupplierId = '{0}'", supplierId.ToString()));
                             if (addresses.Count > 0)
                             {
-                                foreach (xPort5.DAL.SupplierAddress address in addresses)
+                                foreach (xPort5.EF6.SupplierAddress address in addresses)
                                 {
                                     address.Delete();
                                 }
                             }
-                            xPort5.DAL.SupplierContactCollection contacts = xPort5.DAL.SupplierContact.LoadCollection(String.Format("SupplierId = '{0}'", supplierId.ToString()));
+                            xPort5.EF6.SupplierContactCollection contacts = xPort5.EF6.SupplierContact.LoadCollection(String.Format("SupplierId = '{0}'", supplierId.ToString()));
                             if (contacts.Count > 0)
                             {
-                                foreach (xPort5.DAL.SupplierContact contact in contacts)
+                                foreach (xPort5.EF6.SupplierContact contact in contacts)
                                 {
                                     contact.Delete();
                                 }
@@ -1709,10 +1710,10 @@ ORDER BY [ColorName]
             {
                 String result = String.Empty;
 
-                xPort5.DAL.Supplier item = xPort5.DAL.Supplier.Load(supplierId);
+                xPort5.EF6.Supplier item = xPort5.EF6.Supplier.Load(supplierId);
                 if (item != null)
                 {
-                    switch (xPort5.DAL.Common.Config.CurrentLanguageId)
+                    switch (xPort5.Common.Config.CurrentLanguageId)
                     {
                         case 2:
                             result = item.SupplierName_Chs;
@@ -1737,7 +1738,7 @@ ORDER BY [ColorName]
             {
                 bool result = true;
 
-                xPort5.DAL.SupplierAddress item = xPort5.DAL.SupplierAddress.Load(cAddressId);
+                xPort5.EF6.SupplierAddress item = xPort5.EF6.SupplierAddress.Load(cAddressId);
                 if (item != null)
                 {
                     // 2009.09.25 paulus: 直接 delete 算了
@@ -1776,10 +1777,10 @@ ORDER BY [ColorName]
                     if (item.DefaultRec)
                     {
                         // set the next SupplierAddress record to DefaultRec
-                        xPort5.DAL.SupplierAddressCollection uAddresses = xPort5.DAL.SupplierAddress.LoadCollection(String.Format("SupplierId = '{0}'", item.SupplierId.ToString()));
+                        xPort5.EF6.SupplierAddressCollection uAddresses = xPort5.EF6.SupplierAddress.LoadCollection(String.Format("SupplierId = '{0}'", item.SupplierId.ToString()));
                         if (uAddresses.Count > 0)
                         {
-                            xPort5.DAL.SupplierAddress uAddress = uAddresses[0];
+                            xPort5.EF6.SupplierAddress uAddress = uAddresses[0];
                             uAddress.DefaultRec = true;
                             uAddress.Save();
                         }
@@ -1792,7 +1793,7 @@ ORDER BY [ColorName]
 
             public static int Count(Guid userId)
             {
-                xPort5.DAL.SupplierAddressCollection items = xPort5.DAL.SupplierAddress.LoadCollection(String.Format("SupplierId = '{0}'", userId.ToString()));
+                xPort5.EF6.SupplierAddressCollection items = xPort5.EF6.SupplierAddress.LoadCollection(String.Format("SupplierId = '{0}'", userId.ToString()));
                 return items.Count;
             }
         }
@@ -1803,7 +1804,7 @@ ORDER BY [ColorName]
             {
                 bool result = true;
 
-                xPort5.DAL.SupplierContact item = xPort5.DAL.SupplierContact.Load(contactId);
+                xPort5.EF6.SupplierContact item = xPort5.EF6.SupplierContact.Load(contactId);
                 if (item != null)
                 {
                     #region 2009.09.25 paulus: 直接 delete 算了
@@ -1843,10 +1844,10 @@ ORDER BY [ColorName]
                     if (item.DefaultRec)
                     {
                         // set the next SupplierContact record to DefaultRec
-                        xPort5.DAL.SupplierContactCollection contacts = xPort5.DAL.SupplierContact.LoadCollection(String.Format("SupplierId = '{0}'", item.SupplierId.ToString()));
+                        xPort5.EF6.SupplierContactCollection contacts = xPort5.EF6.SupplierContact.LoadCollection(String.Format("SupplierId = '{0}'", item.SupplierId.ToString()));
                         if (contacts.Count > 0)
                         {
-                            xPort5.DAL.SupplierContact contact = contacts[0];
+                            xPort5.EF6.SupplierContact contact = contacts[0];
                             contact.DefaultRec = true;
                             contact.Save();
                         }
@@ -1865,18 +1866,18 @@ ORDER BY [ColorName]
 
             public static int Count(Guid userId)
             {
-                xPort5.DAL.SupplierContactCollection items = xPort5.DAL.SupplierContact.LoadCollection(String.Format("SupplierId = '{0}'", userId.ToString()));
+                xPort5.EF6.SupplierContactCollection items = xPort5.EF6.SupplierContact.LoadCollection(String.Format("SupplierId = '{0}'", userId.ToString()));
                 return items.Count;
             }
         }
 
         public class Staff
         {
-            public static bool IsAccessAllowed(xPort5.DAL.Common.Enums.UserGroup security)
+            public static bool IsAccessAllowed(xPort5.Common.Enums.UserGroup security)
             {
                 bool result = false;
 
-                xPort5.DAL.Staff user = xPort5.DAL.Staff.Load(Common.Config.CurrentUserId);
+                xPort5.EF6.Staff user = xPort5.EF6.Staff.Load(Common.Config.CurrentUserId);
                 if (user != null)
                 {
                     T_Group group = T_Group.Load(user.GroupId);
@@ -1912,7 +1913,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.Staff staff = xPort5.DAL.Staff.Load(userId);
+                xPort5.EF6.Staff staff = xPort5.EF6.Staff.Load(userId);
                 if (staff != null)
                 {
                     // cannot delete primary user (primary user means CreatedBy = Guid.Empty)
@@ -1931,10 +1932,10 @@ ORDER BY [ColorName]
                                 break;
 
                             case (int)Common.Enums.Status.Draft:
-                                xPort5.DAL.StaffAddressCollection addresses = xPort5.DAL.StaffAddress.LoadCollection(String.Format("StaffId = '{0}'", userId.ToString()));
+                                xPort5.EF6.StaffAddressCollection addresses = xPort5.EF6.StaffAddress.LoadCollection(String.Format("StaffId = '{0}'", userId.ToString()));
                                 if (addresses.Count > 0)
                                 {
-                                    foreach (xPort5.DAL.StaffAddress address in addresses)
+                                    foreach (xPort5.EF6.StaffAddress address in addresses)
                                     {
                                         address.Delete();
                                     }
@@ -1958,7 +1959,7 @@ ORDER BY [ColorName]
             public static string GetAlias(Guid userId)
             {
                 string result = String.Empty;
-                xPort5.DAL.Staff user = xPort5.DAL.Staff.Load(userId);
+                xPort5.EF6.Staff user = xPort5.EF6.Staff.Load(userId);
                 if (user != null)
                 {
                     result = user.Alias;
@@ -1970,11 +1971,11 @@ ORDER BY [ColorName]
             {
                 Guid supplierId = new Guid();
 
-                xPort5.DAL.Staff user = xPort5.DAL.Staff.Load(userId);
+                xPort5.EF6.Staff user = xPort5.EF6.Staff.Load(userId);
                 if (user != null)
                 {
                     string[] password = user.Password.Split('-');
-                    xPort5.DAL.Supplier supplier = xPort5.DAL.Supplier.LoadWhere(String.Format("SupplierCode = '{0}'", password[1]));
+                    xPort5.EF6.Supplier supplier = xPort5.EF6.Supplier.LoadWhere(String.Format("SupplierCode = '{0}'", password[1]));
                     if (supplier != null)
                     {
                         supplierId = supplier.SupplierId;
@@ -1988,7 +1989,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.Staff staff = xPort5.DAL.Staff.Load(userId);
+                xPort5.EF6.Staff staff = xPort5.EF6.Staff.Load(userId);
                 if (staff != null)
                 {
                     if (staff.CreatedBy == Guid.Empty)
@@ -2005,7 +2006,7 @@ ORDER BY [ColorName]
                 Guid result = Guid.Empty;
 
                 String sql = String.Format("CreatedBy = '{0}'", Guid.Empty.ToString());
-                xPort5.DAL.Staff staff = xPort5.DAL.Staff.LoadWhere(sql);
+                xPort5.EF6.Staff staff = xPort5.EF6.Staff.LoadWhere(sql);
                 if (staff != null)
                 {
                     result = staff.StaffId;
@@ -2020,7 +2021,7 @@ ORDER BY [ColorName]
             {
                 bool result = true;
 
-                xPort5.DAL.StaffAddress item = xPort5.DAL.StaffAddress.Load(userAddressId);
+                xPort5.EF6.StaffAddress item = xPort5.EF6.StaffAddress.Load(userAddressId);
                 if (item != null)
                 {
                     // 2009.09.25 paulus: 直接 delete 算了
@@ -2059,10 +2060,10 @@ ORDER BY [ColorName]
                     if (item.DefaultRec)
                     {
                         // set the next StaffAddress record to DefaultRec
-                        xPort5.DAL.StaffAddressCollection uAddresses = xPort5.DAL.StaffAddress.LoadCollection(String.Format("StaffId = '{0}'", item.StaffId.ToString()));
+                        xPort5.EF6.StaffAddressCollection uAddresses = xPort5.EF6.StaffAddress.LoadCollection(String.Format("StaffId = '{0}'", item.StaffId.ToString()));
                         if (uAddresses.Count > 0)
                         {
-                            xPort5.DAL.StaffAddress uAddress = uAddresses[0];
+                            xPort5.EF6.StaffAddress uAddress = uAddresses[0];
                             uAddress.DefaultRec = true;
                             uAddress.Save();
                         }
@@ -2078,7 +2079,7 @@ ORDER BY [ColorName]
 
             public static int Count(Guid userId)
             {
-                xPort5.DAL.StaffAddressCollection items = xPort5.DAL.StaffAddress.LoadCollection(String.Format("StaffId = '{0}'", userId.ToString()));
+                xPort5.EF6.StaffAddressCollection items = xPort5.EF6.StaffAddress.LoadCollection(String.Format("StaffId = '{0}'", userId.ToString()));
                 return items.Count;
             }
         }
@@ -2141,12 +2142,12 @@ ORDER BY [ColorName]
                         where = String.Format("SUBSTRING([CustomerName], 1, 1) = N'{0}'", ((char)(row + 64)).ToString());
                         break;
                 }
-                xPort5.DAL.CustomerCollection oClients = xPort5.DAL.Customer.LoadCollection(where, orderby, true);
+                xPort5.EF6.CustomerCollection oClients = xPort5.EF6.Customer.LoadCollection(where, orderby, true);
                 if (oClients.Count > 0)
                 {
                     oNode.Loaded = true;
 
-                    foreach (xPort5.DAL.Customer client in oClients)
+                    foreach (xPort5.EF6.Customer client in oClients)
                     {
                         TreeNode endNode = new TreeNode();
                         if (byNameOrCode)
@@ -2251,12 +2252,12 @@ ORDER BY [ColorName]
                     switch (classType.Name.ToLower())
                     {
                         case "customer":
-                            xPort5.DAL.CustomerCollection oClients = xPort5.DAL.Customer.LoadCollection(where, orderby, true);
+                            xPort5.EF6.CustomerCollection oClients = xPort5.EF6.Customer.LoadCollection(where, orderby, true);
                             if (oClients.Count > 0)
                             {
                                 oNode.Loaded = true;
 
-                                foreach (xPort5.DAL.Customer client in oClients)
+                                foreach (xPort5.EF6.Customer client in oClients)
                                 {
                                     TreeNode endNode = new TreeNode();
                                     if (byNameOrCode)
@@ -2282,12 +2283,12 @@ ORDER BY [ColorName]
                             }
                             break;
                         case "supplier":
-                            xPort5.DAL.SupplierCollection oSuppliers = xPort5.DAL.Supplier.LoadCollection(where, orderby, true);
+                            xPort5.EF6.SupplierCollection oSuppliers = xPort5.EF6.Supplier.LoadCollection(where, orderby, true);
                             if (oSuppliers.Count > 0)
                             {
                                 oNode.Loaded = true;
 
-                                foreach (xPort5.DAL.Supplier supplier in oSuppliers)
+                                foreach (xPort5.EF6.Supplier supplier in oSuppliers)
                                 {
                                     TreeNode endNode = new TreeNode();
                                     if (byNameOrCode)
@@ -2319,7 +2320,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderQT order = xPort5.DAL.OrderQT.Load(quotationId);
+                xPort5.EF6.OrderQT order = xPort5.EF6.OrderQT.Load(quotationId);
                 if (order != null)
                 {
                     switch ((int)order.Status)
@@ -2335,16 +2336,16 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.OrderQTItemsCollection items = xPort5.DAL.OrderQTItems.LoadCollection(String.Format("OrderQTId = '{0}'", quotationId.ToString()));
+                            xPort5.EF6.OrderQTItemsCollection items = xPort5.EF6.OrderQTItems.LoadCollection(String.Format("OrderQTId = '{0}'", quotationId.ToString()));
                             if (items.Count > 0)
                             {
-                                foreach (xPort5.DAL.OrderQTItems item in items)
+                                foreach (xPort5.EF6.OrderQTItems item in items)
                                 {
                                     #region delete child OrderQTCustShipping
-                                    xPort5.DAL.OrderQTCustShippingCollection custShipping = xPort5.DAL.OrderQTCustShipping.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
+                                    xPort5.EF6.OrderQTCustShippingCollection custShipping = xPort5.EF6.OrderQTCustShipping.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
                                     if (custShipping.Count > 0)
                                     {
-                                        foreach (xPort5.DAL.OrderQTCustShipping cust in custShipping)
+                                        foreach (xPort5.EF6.OrderQTCustShipping cust in custShipping)
                                         {
                                             cust.Delete();
                                         }
@@ -2352,10 +2353,10 @@ ORDER BY [ColorName]
                                     #endregion
 
                                     #region delete child OrderQTSuppShipping
-                                    xPort5.DAL.OrderQTSuppShippingCollection suppShipping = xPort5.DAL.OrderQTSuppShipping.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
+                                    xPort5.EF6.OrderQTSuppShippingCollection suppShipping = xPort5.EF6.OrderQTSuppShipping.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
                                     if (suppShipping.Count > 0)
                                     {
-                                        foreach (xPort5.DAL.OrderQTSuppShipping supp in suppShipping)
+                                        foreach (xPort5.EF6.OrderQTSuppShipping supp in suppShipping)
                                         {
                                             supp.Delete();
                                         }
@@ -2363,10 +2364,10 @@ ORDER BY [ColorName]
                                     #endregion
 
                                     #region delete child OrderQTPackage
-                                    xPort5.DAL.OrderQTPackageCollection packages = xPort5.DAL.OrderQTPackage.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
+                                    xPort5.EF6.OrderQTPackageCollection packages = xPort5.EF6.OrderQTPackage.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
                                     if (packages.Count > 0)
                                     {
-                                        foreach (xPort5.DAL.OrderQTPackage package in packages)
+                                        foreach (xPort5.EF6.OrderQTPackage package in packages)
                                         {
                                             package.Delete();
                                         }
@@ -2374,10 +2375,10 @@ ORDER BY [ColorName]
                                     #endregion
 
                                     #region delete child OrderQTSupplier
-                                    xPort5.DAL.OrderQTSupplierCollection suppliers = xPort5.DAL.OrderQTSupplier.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
+                                    xPort5.EF6.OrderQTSupplierCollection suppliers = xPort5.EF6.OrderQTSupplier.LoadCollection(String.Format("OrderQTItemId = '{0}'", item.OrderQTItemId.ToString()));
                                     if (suppliers.Count > 0)
                                     {
-                                        foreach (xPort5.DAL.OrderQTSupplier supplier in suppliers)
+                                        foreach (xPort5.EF6.OrderQTSupplier supplier in suppliers)
                                         {
                                             supplier.Delete();
                                         }
@@ -2416,12 +2417,12 @@ ORDER BY [ColorName]
 
             public static string GetCurrencyCode(Guid quotationId)
             {
-                if (quotationId != null)
+                if (quotationId != Guid.Empty)
                 {
-                    xPort5.DAL.OrderQT order = xPort5.DAL.OrderQT.Load(quotationId);
-                    if (order != null)
+                    xPort5.EF6.OrderQT order = xPort5.EF6.OrderQT.Load(quotationId);
+                    if (order != null && order.CurrencyId.HasValue)
                     {
-                        return Currency.CurrencyUsed(order.CurrencyId);
+                        return Currency.CurrencyUsed(order.CurrencyId.Value);
                     }
                 }
 
@@ -2430,13 +2431,13 @@ ORDER BY [ColorName]
 
             public static string GetCurrencyCode_Factory(Guid qtItemId)
             {
-                if (qtItemId != null)
+                if (qtItemId != Guid.Empty)
                 {
                     String sql = String.Format("OrderQtItemId = '{0}'", qtItemId.ToString());
-                    xPort5.DAL.OrderQTSupplier order = xPort5.DAL.OrderQTSupplier.LoadWhere(sql);
-                    if (order != null)
+                    xPort5.EF6.OrderQTSupplier order = xPort5.EF6.OrderQTSupplier.LoadWhere(sql);
+                    if (order != null && order.CurrencyId.HasValue)
                     {
-                        return Currency.CurrencyUsed(order.CurrencyId);
+                        return Currency.CurrencyUsed(order.CurrencyId.Value);
                     }
                 }
 
@@ -2448,7 +2449,7 @@ ORDER BY [ColorName]
                 if (qtItemId != null)
                 {
                     String sql = String.Format("OrderQtItemId = '{0}'", qtItemId.ToString());
-                    xPort5.DAL.OrderQTPackage order = xPort5.DAL.OrderQTPackage.LoadWhere(sql);
+                    xPort5.EF6.OrderQTPackage order = xPort5.EF6.OrderQTPackage.LoadWhere(sql);
                     if (order != null)
                     {
                         return order.Unit;
@@ -2462,7 +2463,7 @@ ORDER BY [ColorName]
             {
                 Decimal result = 1;
 
-                xPort5.DAL.OrderQT order = xPort5.DAL.OrderQT.Load(orderId);
+                xPort5.EF6.OrderQT order = xPort5.EF6.OrderQT.Load(orderId);
                 if (order != null)
                 {
                     result = order.ExchangeRate;
@@ -2474,10 +2475,10 @@ ORDER BY [ColorName]
             {
                 Decimal result = 1;
                 String sql = String.Format("OrderQTItemId = '{0}'", qtItemId.ToString());
-                xPort5.DAL.OrderQTSupplier order = xPort5.DAL.OrderQTSupplier.LoadWhere(sql);
+                xPort5.EF6.OrderQTSupplier order = xPort5.EF6.OrderQTSupplier.LoadWhere(sql);
                 if (order != null)
                 {
-                    xPort5.DAL.T_Currency cny = xPort5.DAL.T_Currency.Load(order.CurrencyId);
+                    xPort5.EF6.T_Currency cny = xPort5.EF6.T_Currency.Load(order.CurrencyId);
                     if (cny != null)
                         result = cny.XchgRate;
                 }
@@ -2490,14 +2491,14 @@ ORDER BY [ColorName]
                 string sql = string.Format("OrderQTItemId = '{0}'", qtItemId.ToString());
 
                 // [David 2010-08-05]: 如果该Quotation Item已经生成咗Pre-Order的话，那么就不能删除该Item了。
-                xPort5.DAL.OrderPLItemsCollection itemList = xPort5.DAL.OrderPLItems.LoadCollection(sql);
+                xPort5.EF6.OrderPLItemsCollection itemList = xPort5.EF6.OrderPLItems.LoadCollection(sql);
                 if (itemList.Count > 0)
                 {
                     result = false;
                 }
                 else
                 {
-                    xPort5.DAL.OrderQTItems orderItem = xPort5.DAL.OrderQTItems.Load(qtItemId);
+                    xPort5.EF6.OrderQTItems orderItem = xPort5.EF6.OrderQTItems.Load(qtItemId);
                     if (orderItem != null)
                     {
                         Guid orderId = orderItem.OrderQTId;
@@ -2506,13 +2507,13 @@ ORDER BY [ColorName]
                         result = true;
 
                         // Re-sequence remaining items
-                        xPort5.DAL.OrderQTItemsCollection remainingItems = xPort5.DAL.OrderQTItems.LoadCollection(
+                        xPort5.EF6.OrderQTItemsCollection remainingItems = xPort5.EF6.OrderQTItems.LoadCollection(
                             String.Format("OrderQTId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                         
                         if (remainingItems.Count > 0)
                         {
                             int newLineNumber = 1;
-                            foreach (xPort5.DAL.OrderQTItems item in remainingItems)
+                            foreach (xPort5.EF6.OrderQTItems item in remainingItems)
                             {
                                 item.LineNumber = newLineNumber;
                                 item.Save();
@@ -2521,26 +2522,26 @@ ORDER BY [ColorName]
                         }
                     }
 
-                    xPort5.DAL.OrderQTCustShippingCollection orderCShippingList = xPort5.DAL.OrderQTCustShipping.LoadCollection(sql);
-                    foreach (xPort5.DAL.OrderQTCustShipping orderCShipping in orderCShippingList)
+                    xPort5.EF6.OrderQTCustShippingCollection orderCShippingList = xPort5.EF6.OrderQTCustShipping.LoadCollection(sql);
+                    foreach (xPort5.EF6.OrderQTCustShipping orderCShipping in orderCShippingList)
                     {
                         orderCShipping.Delete();
                     }
 
-                    xPort5.DAL.OrderQTSuppShippingCollection orderSShippingList = xPort5.DAL.OrderQTSuppShipping.LoadCollection(sql);
-                    foreach (xPort5.DAL.OrderQTSuppShipping orderSShipping in orderSShippingList)
+                    xPort5.EF6.OrderQTSuppShippingCollection orderSShippingList = xPort5.EF6.OrderQTSuppShipping.LoadCollection(sql);
+                    foreach (xPort5.EF6.OrderQTSuppShipping orderSShipping in orderSShippingList)
                     {
                         orderSShipping.Delete();
                     }
 
-                    xPort5.DAL.OrderQTPackageCollection orderPackageList = xPort5.DAL.OrderQTPackage.LoadCollection(sql);
-                    foreach (xPort5.DAL.OrderQTPackage orderPackage in orderPackageList)
+                    xPort5.EF6.OrderQTPackageCollection orderPackageList = xPort5.EF6.OrderQTPackage.LoadCollection(sql);
+                    foreach (xPort5.EF6.OrderQTPackage orderPackage in orderPackageList)
                     {
                         orderPackage.Delete();
                     }
 
-                    xPort5.DAL.OrderQTSupplierCollection orderSupplierList = xPort5.DAL.OrderQTSupplier.LoadCollection(sql);
-                    foreach (xPort5.DAL.OrderQTSupplier orderSupplier in orderSupplierList)
+                    xPort5.EF6.OrderQTSupplierCollection orderSupplierList = xPort5.EF6.OrderQTSupplier.LoadCollection(sql);
+                    foreach (xPort5.EF6.OrderQTSupplier orderSupplier in orderSupplierList)
                     {
                         orderSupplier.Delete();
                     }
@@ -2556,7 +2557,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderPL order = xPort5.DAL.OrderPL.Load(preOrderId);
+                xPort5.EF6.OrderPL order = xPort5.EF6.OrderPL.Load(preOrderId);
                 if (order != null)
                 {
                     switch ((int)order.Status)
@@ -2572,10 +2573,10 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.OrderPLItemsCollection items = xPort5.DAL.OrderPLItems.LoadCollection(String.Format("OrderPLId = '{0}'", preOrderId.ToString()));
+                            xPort5.EF6.OrderPLItemsCollection items = xPort5.EF6.OrderPLItems.LoadCollection(String.Format("OrderPLId = '{0}'", preOrderId.ToString()));
                             if (items.Count > 0)
                             {
-                                foreach (xPort5.DAL.OrderPLItems item in items)
+                                foreach (xPort5.EF6.OrderPLItems item in items)
                                 {
                                     item.Delete();
                                 }
@@ -2596,21 +2597,21 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderPLItems orderItem = xPort5.DAL.OrderPLItems.Load(preOrderItemId);
+                xPort5.EF6.OrderPLItems orderItem = xPort5.EF6.OrderPLItems.Load(preOrderItemId);
                 if (orderItem != null)
                 {
                     Guid orderId = orderItem.OrderPLId;
                     orderItem.Delete();
 
                     // Re-sequence remaining items
-                    xPort5.DAL.OrderPLItemsCollection remainingItems = xPort5.DAL.OrderPLItems.LoadCollection(
+                    xPort5.EF6.OrderPLItemsCollection remainingItems = xPort5.EF6.OrderPLItems.LoadCollection(
                         String.Format("OrderPLId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
                         
                         int newLineNumber = 1;
-                        foreach (xPort5.DAL.OrderPLItems item in remainingItems)
+                        foreach (xPort5.EF6.OrderPLItems item in remainingItems)
                         {
                             item.LineNumber = newLineNumber;
                             item.Save();
@@ -2646,7 +2647,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderSC order = xPort5.DAL.OrderSC.Load(contractId);
+                xPort5.EF6.OrderSC order = xPort5.EF6.OrderSC.Load(contractId);
                 if (order != null)
                 {
                     switch ((int)order.Status)
@@ -2662,10 +2663,10 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.OrderSCItemsCollection items = xPort5.DAL.OrderSCItems.LoadCollection(String.Format("OrderSCId = '{0}'", contractId.ToString()));
+                            xPort5.EF6.OrderSCItemsCollection items = xPort5.EF6.OrderSCItems.LoadCollection(String.Format("OrderSCId = '{0}'", contractId.ToString()));
                             if (items.Count > 0)
                             {
-                                foreach (xPort5.DAL.OrderSCItems item in items)
+                                foreach (xPort5.EF6.OrderSCItems item in items)
                                 {
                                     item.Delete();
                                 }
@@ -2686,21 +2687,21 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderSCItems orderItem = xPort5.DAL.OrderSCItems.Load(contractItemId);
+                xPort5.EF6.OrderSCItems orderItem = xPort5.EF6.OrderSCItems.Load(contractItemId);
                 if (orderItem != null)
                 {
                     Guid orderId = orderItem.OrderSCId;
                     orderItem.Delete();
 
                     // Re-sequence remaining items
-                    xPort5.DAL.OrderSCItemsCollection remainingItems = xPort5.DAL.OrderSCItems.LoadCollection(
+                    xPort5.EF6.OrderSCItemsCollection remainingItems = xPort5.EF6.OrderSCItems.LoadCollection(
                         String.Format("OrderSCId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
                         
                         int newLineNumber = 1;
-                        foreach (xPort5.DAL.OrderSCItems item in remainingItems)
+                        foreach (xPort5.EF6.OrderSCItems item in remainingItems)
                         {
                             item.LineNumber = newLineNumber;
                             item.Save();
@@ -2747,7 +2748,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderPC order = xPort5.DAL.OrderPC.Load(contractId);
+                xPort5.EF6.OrderPC order = xPort5.EF6.OrderPC.Load(contractId);
                 if (order != null)
                 {
                     switch ((int)order.Status)
@@ -2763,10 +2764,10 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.OrderPCItemsCollection items = xPort5.DAL.OrderPCItems.LoadCollection(String.Format("OrderPCId = '{0}'", contractId.ToString()));
+                            xPort5.EF6.OrderPCItemsCollection items = xPort5.EF6.OrderPCItems.LoadCollection(String.Format("OrderPCId = '{0}'", contractId.ToString()));
                             if (items.Count > 0)
                             {
-                                foreach (xPort5.DAL.OrderPCItems item in items)
+                                foreach (xPort5.EF6.OrderPCItems item in items)
                                 {
                                     item.Delete();
                                 }
@@ -2787,21 +2788,21 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderPCItems orderItem = xPort5.DAL.OrderPCItems.Load(contractItemId);
+                xPort5.EF6.OrderPCItems orderItem = xPort5.EF6.OrderPCItems.Load(contractItemId);
                 if (orderItem != null)
                 {
                     Guid orderId = orderItem.OrderPCId;
                     orderItem.Delete();
 
                     // Re-sequence remaining items
-                    xPort5.DAL.OrderPCItemsCollection remainingItems = xPort5.DAL.OrderPCItems.LoadCollection(
+                    xPort5.EF6.OrderPCItemsCollection remainingItems = xPort5.EF6.OrderPCItems.LoadCollection(
                         String.Format("OrderPCId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
                         
                         int newLineNumber = 1;
-                        foreach (xPort5.DAL.OrderPCItems item in remainingItems)
+                        foreach (xPort5.EF6.OrderPCItems item in remainingItems)
                         {
                             item.LineNumber = newLineNumber;
                             item.Save();
@@ -2837,7 +2838,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderIN order = xPort5.DAL.OrderIN.Load(contractId);
+                xPort5.EF6.OrderIN order = xPort5.EF6.OrderIN.Load(contractId);
                 if (order != null)
                 {
                     switch ((int)order.Status)
@@ -2853,10 +2854,10 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.OrderINItemsCollection items = xPort5.DAL.OrderINItems.LoadCollection(String.Format("OrderINId = '{0}'", contractId.ToString()));
+                            xPort5.EF6.OrderINItemsCollection items = xPort5.EF6.OrderINItems.LoadCollection(String.Format("OrderINId = '{0}'", contractId.ToString()));
                             if (items.Count > 0)
                             {
-                                foreach (xPort5.DAL.OrderINItems item in items)
+                                foreach (xPort5.EF6.OrderINItems item in items)
                                 {
                                     item.Delete();
                                 }
@@ -2877,7 +2878,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderINItems orderItem = xPort5.DAL.OrderINItems.Load(contractItemId);
+                xPort5.EF6.OrderINItems orderItem = xPort5.EF6.OrderINItems.Load(contractItemId);
                 if (orderItem != null)
                 {
                     Guid orderId = orderItem.OrderINId;
@@ -2891,14 +2892,14 @@ ORDER BY [ColorName]
                     orderItem.Delete();
 
                     // Re-sequence remaining items
-                    xPort5.DAL.OrderINItemsCollection remainingItems = xPort5.DAL.OrderINItems.LoadCollection(
+                    xPort5.EF6.OrderINItemsCollection remainingItems = xPort5.EF6.OrderINItems.LoadCollection(
                         String.Format("OrderINId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
                         
                         int newLineNumber = 1;
-                        foreach (xPort5.DAL.OrderINItems item in remainingItems)
+                        foreach (xPort5.EF6.OrderINItems item in remainingItems)
                         {
                             item.LineNumber = newLineNumber;
                             item.Save();
@@ -2935,7 +2936,7 @@ ORDER BY [ColorName]
                 Decimal result = 0;
 
                 String sql = String.Format("INNumber = '{0}'", invoiceNumber);
-                xPort5.DAL.OrderIN invoice = xPort5.DAL.OrderIN.LoadWhere(sql);
+                xPort5.EF6.OrderIN invoice = xPort5.EF6.OrderIN.LoadWhere(sql);
                 if (invoice != null)
                 {
                     result = TotalCharges(invoice.OrderINId);
@@ -2948,7 +2949,7 @@ ORDER BY [ColorName]
                 Decimal result = 0;
 
                 String sql = String.Format("OrderINId = '{0}'", invoiceId.ToString());
-                xPort5.DAL.OrderINChargesCollection charges = xPort5.DAL.OrderINCharges.LoadCollection(sql);
+                xPort5.EF6.OrderINChargesCollection charges = xPort5.EF6.OrderINCharges.LoadCollection(sql);
                 if (charges.Count > 0)
                 {
                     for (int i = 0; i < charges.Count; i++)
@@ -2976,7 +2977,7 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderSP order = xPort5.DAL.OrderSP.Load(contractId);
+                xPort5.EF6.OrderSP order = xPort5.EF6.OrderSP.Load(contractId);
                 if (order != null)
                 {
                     switch ((int)order.Status)
@@ -2992,10 +2993,10 @@ ORDER BY [ColorName]
                             break;
 
                         case (int)Common.Enums.Status.Draft:
-                            xPort5.DAL.OrderSPItemsCollection items = xPort5.DAL.OrderSPItems.LoadCollection(String.Format("OrderSPId = '{0}'", contractId.ToString()));
+                            xPort5.EF6.OrderSPItemsCollection items = xPort5.EF6.OrderSPItems.LoadCollection(String.Format("OrderSPId = '{0}'", contractId.ToString()));
                             if (items.Count > 0)
                             {
-                                foreach (xPort5.DAL.OrderSPItems item in items)
+                                foreach (xPort5.EF6.OrderSPItems item in items)
                                 {
                                     item.Delete();
                                 }
@@ -3016,21 +3017,21 @@ ORDER BY [ColorName]
             {
                 bool result = false;
 
-                xPort5.DAL.OrderSPItems orderItem = xPort5.DAL.OrderSPItems.Load(contractItemId);
+                xPort5.EF6.OrderSPItems orderItem = xPort5.EF6.OrderSPItems.Load(contractItemId);
                 if (orderItem != null)
                 {
                     Guid orderId = orderItem.OrderSPId;
                     orderItem.Delete();
 
                     // Re-sequence remaining items
-                    xPort5.DAL.OrderSPItemsCollection remainingItems = xPort5.DAL.OrderSPItems.LoadCollection(
+                    xPort5.EF6.OrderSPItemsCollection remainingItems = xPort5.EF6.OrderSPItems.LoadCollection(
                         String.Format("OrderSPId = '{0}' ORDER BY LineNumber", orderId.ToString()));
                     
                     if (remainingItems.Count > 0)
                     {
                         
                         int newLineNumber = 1;
-                        foreach (xPort5.DAL.OrderSPItems item in remainingItems)
+                        foreach (xPort5.EF6.OrderSPItems item in remainingItems)
                         {
                             item.LineNumber = newLineNumber;
                             item.Save();
@@ -3159,7 +3160,7 @@ ORDER BY [ColorName]
             {
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    xPort5.DAL.Resources resc = new xPort5.DAL.Resources();
+                    xPort5.EF6.Resources resc = new xPort5.EF6.Resources();
                     resc.Keyword = Utility.Product.ProductCode(productId);
                     resc.ContentType = (int)Common.Enums.ContentType.Image;
                     resc.OriginalFileName = fileName;
@@ -3255,8 +3256,8 @@ ORDER BY [ColorName]
                     }
 
                     sql = "Keyword = '" + Utility.Product.ProductCode(productId) + "'";
-                    xPort5.DAL.ResourcesCollection resList = xPort5.DAL.Resources.LoadCollection(sql);
-                    foreach (xPort5.DAL.Resources res in resList)
+                    xPort5.EF6.ResourcesCollection resList = xPort5.EF6.Resources.LoadCollection(sql);
+                    foreach (xPort5.EF6.Resources res in resList)
                     {
                         DeletePicture(product.ArticleId, res.OriginalFileName);
                     }
@@ -3414,8 +3415,8 @@ ORDER BY [ColorName]
             public static void DeleteResources(Guid orderId, string orderNumber)
             {
                 string sql = "SaveAsFileId = '" + orderId.ToString() + "'";
-                xPort5.DAL.ResourcesCollection resList = xPort5.DAL.Resources.LoadCollection(sql);
-                foreach (xPort5.DAL.Resources res in resList)
+                xPort5.EF6.ResourcesCollection resList = xPort5.EF6.Resources.LoadCollection(sql);
+                foreach (xPort5.EF6.Resources res in resList)
                 {
                     DeleteResource(orderId, orderNumber, res.OriginalFileName);
                 }
@@ -3445,7 +3446,7 @@ ORDER BY [ColorName]
                 bool result = false;
 
                 string sql = "KeyWord = '" + orderNumber + "'";
-                xPort5.DAL.ResourcesCollection resList = xPort5.DAL.Resources.LoadCollection(sql);
+                xPort5.EF6.ResourcesCollection resList = xPort5.EF6.Resources.LoadCollection(sql);
                 if (resList.Count > 0)
                 {
                     result = true;
@@ -3459,7 +3460,7 @@ ORDER BY [ColorName]
                 bool result = false;
 
                 string sql = "SaveAsFileId = '" + orderId.ToString() + "'";
-                xPort5.DAL.ResourcesCollection resList = xPort5.DAL.Resources.LoadCollection(sql);
+                xPort5.EF6.ResourcesCollection resList = xPort5.EF6.Resources.LoadCollection(sql);
                 if (resList.Count > 0)
                 {
                     result = true;
@@ -3634,7 +3635,7 @@ ORDER BY [ColorName]
                 bool result = true;
 
                 String sql = String.Format("UserSid = '{0}'", userSid.ToString());
-                xPort5.DAL.UserProfile user = xPort5.DAL.UserProfile.LoadWhere(sql);
+                xPort5.EF6.UserProfile user = xPort5.EF6.UserProfile.LoadWhere(sql);
 
                 if (user != null)
                 {
@@ -3648,7 +3649,7 @@ ORDER BY [ColorName]
                 }
                 else
                 {
-                    user = new xPort5.DAL.UserProfile();
+                    user = new xPort5.EF6.UserProfile();
                     user.UserSid = userSid;
                     user.UserType = userType;
                     user.LoginName = loginName;
@@ -3667,7 +3668,7 @@ ORDER BY [ColorName]
                 bool result = false;
 
                 String sql = String.Format("UserSid = '{0}'", userSid.ToString());
-                xPort5.DAL.UserProfile user = xPort5.DAL.UserProfile.LoadWhere(sql);
+                xPort5.EF6.UserProfile user = xPort5.EF6.UserProfile.LoadWhere(sql);
 
                 if (user != null)
                 {
@@ -3726,7 +3727,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
             /// </summary>
             /// <param name="sid"></param>
             /// <returns></returns>
-            public static bool AddUserToGroup(xPort5.DAL.Staff staff)
+            public static bool AddUserToGroup(xPort5.EF6.Staff staff)
             {
                 bool result = false;
                 String groupName = String.Empty;
@@ -3734,7 +3735,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
                 #region 找出 staff 所屬的 groupName = T_Group.GroupName
                 if (staff != null)
                 {
-                    xPort5.DAL.T_Group staffGroup = xPort5.DAL.T_Group.Load(staff.GroupId);
+                    xPort5.EF6.T_Group staffGroup = xPort5.EF6.T_Group.Load(staff.GroupId);
                     groupName = staffGroup.GroupName;
                 }
                 #endregion
@@ -3744,7 +3745,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
 
                 return result;
             }
-            public static bool AddUserToGroup(xPort5.DAL.CustomerContact customer)
+            public static bool AddUserToGroup(xPort5.EF6.CustomerContact customer)
             {
                 bool result = false;
                 String groupName = "Customer";
@@ -3754,7 +3755,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
 
                 return result;
             }
-            public static bool AddUserToGroup(xPort5.DAL.SupplierContact supplier)
+            public static bool AddUserToGroup(xPort5.EF6.SupplierContact supplier)
             {
                 bool result = false;
                 String groupName = "Supplier";
@@ -3847,7 +3848,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
             {
                 // 把每個 ColumnHeader 的資料保存在 MetadataXml 中
                 String sql = String.Format("UserSid = '{0}'", Common.Config.CurrentUserId.ToString());
-                xPort5.DAL.UserProfile user = xPort5.DAL.UserProfile.LoadWhere(sql);
+                xPort5.EF6.UserProfile user = xPort5.EF6.UserProfile.LoadWhere(sql);
                 if (user != null)
                 {
                     sql = String.Format("UserId = '{0}' AND PreferenceObjectId = '{1}'", user.UserId.ToString(), ((Guid)lvwList.Tag).ToString());
@@ -3861,7 +3862,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
                         userPref.PreferenceObjectId = (Guid)lvwList.Tag;
                     }
 
-                    userPref.MetadataXml = new Dictionary<string, UserDisplayPreference.MetadataAttributes>();     // 首先清空舊的 Metadata.
+                    // userPref.MetadataXml = new Dictionary<string, UserDisplayPreference.MetadataAttributes>();     // Removed: MetadataXml is now a string in EF6
 
                     foreach (ColumnHeader col in lvwList.Columns)
                     {
@@ -3889,7 +3890,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
             public static void Delete(ListView lvwList)
             {
                 String sql = String.Format("UserSid = '{0}'", Common.Config.CurrentUserId.ToString());
-                xPort5.DAL.UserProfile user = xPort5.DAL.UserProfile.LoadWhere(sql);
+                xPort5.EF6.UserProfile user = xPort5.EF6.UserProfile.LoadWhere(sql);
                 if (user != null)
                 {
                     sql = String.Format("UserId = '{0}' AND PreferenceObjectId = '{1}'", user.UserId.ToString(), ((Guid)lvwList.Tag).ToString());
@@ -3906,7 +3907,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
             public static void Load(ref ListView lvwList)
             {
                 String sql = String.Format("UserSid = '{0}'", Common.Config.CurrentUserId.ToString());
-                xPort5.DAL.UserProfile user = xPort5.DAL.UserProfile.LoadWhere(sql);
+                xPort5.EF6.UserProfile user = xPort5.EF6.UserProfile.LoadWhere(sql);
                 if (user != null)
                 {
                     // 2012.04.18 paulus:
@@ -3922,12 +3923,12 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
                     #region 搵到就根據 UserDisplayPreference 的資料更改 ColumnHeader
                     if (userPref != null)
                     {
-                        Dictionary<string, xPort5.DAL.UserDisplayPreference.MetadataAttributes> metadata = userPref.MetadataXml;
-                        foreach (KeyValuePair<string, xPort5.DAL.UserDisplayPreference.MetadataAttributes> col in metadata)
+                        Dictionary<string, xPort5.EF6.UserDisplayPreference.MetadataAttributes> metadata = userPref.GetMetadataXmlDictionary();
+                        foreach (KeyValuePair<string, xPort5.EF6.UserDisplayPreference.MetadataAttributes> col in metadata)
                         {
                             int colIndex = int.Parse(col.Key);      // col.Key 等於 ColumnHeader.Index
 
-                            foreach (xPort5.DAL.UserDisplayPreference.MetadataAttribute item in col.Value)
+                            foreach (xPort5.EF6.UserDisplayPreference.MetadataAttribute item in col.Value)
                             {
                                 int position = 0, sortPosition = 0, width = 0;
                                 bool visible = false;
@@ -4055,7 +4056,7 @@ WHERE [UserId] = '" + user.UserId.ToString() + @"'
             {
                 nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(Common.Config.CurrentWordDict, Common.Config.CurrentLanguageId);
 
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     #region 用 NetSqlAzMan 就要 check permissions
                     // cmdSave

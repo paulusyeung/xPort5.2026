@@ -10,7 +10,8 @@ using System.Text;
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 
 #endregion
 

@@ -12,7 +12,8 @@ using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Common.Resources;
 using Gizmox.WebGUI.Forms;
 
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using System.Data.SqlClient;
 
 #endregion
@@ -115,7 +116,7 @@ namespace xPort5.Admin.Coding.Staff.Address
 
         private void SetDropdowns()
         {
-            xPort5.DAL.Z_Address.LoadCombo(ref cboAddress, "AddressName", false);
+            xPort5.EF6.Z_Address.LoadCombo(ref cboAddress, "AddressName", false);
         }
 
         private void SetAnsToolbar()
@@ -161,7 +162,7 @@ namespace xPort5.Admin.Coding.Staff.Address
         #region ShowUser(), SaveItem(), VerifyItem(), DeleteItem()
         private void ShowUser()
         {
-            xPort5.DAL.Staff user = xPort5.DAL.Staff.Load(_UserId);
+            xPort5.EF6.Staff user = xPort5.EF6.Staff.Load(_UserId);
             if (user != null)
             {
                 txtUserCode.Text = user.StaffCode;
@@ -190,8 +191,8 @@ namespace xPort5.Admin.Coding.Staff.Address
                     cboAddress.SelectedValue = addr.AddressId;
                 }
 
-                xPort5.DAL.Staff s1 = xPort5.DAL.Staff.Load(uAddress.CreatedBy);
-                xPort5.DAL.Staff s2 = xPort5.DAL.Staff.Load(uAddress.ModifiedBy);
+                xPort5.EF6.Staff s1 = xPort5.EF6.Staff.Load(uAddress.CreatedBy);
+                xPort5.EF6.Staff s2 = xPort5.EF6.Staff.Load(uAddress.ModifiedBy);
                 txtCreatedOn.Text = uAddress.CreatedOn.ToString("yyyy-MM-dd HH:mm");
                 if (s1 == null)
                     txtCreatedBy.Text = String.Empty;

@@ -10,7 +10,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using xPort5.Controls;
 
@@ -181,7 +182,7 @@ namespace xPort5.Order.Invoice.Items
 
             if (_EditMode != Common.Enums.EditMode.Read)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.Invoice.Create") ||
                         xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.Invoice.Update"))
@@ -244,10 +245,10 @@ namespace xPort5.Order.Invoice.Items
             OrderINItems item = OrderINItems.Load(this._OrderINItemId);
             if (item != null)
             {
-                txtLineNumber.Text = item.LineNumber.ToString();
+                txtLineNumber.Text = item.LineNumber.HasValue ? item.LineNumber.Value.ToString() : "";
                 txtShippingMark.Text = item.ShippingMark;
 
-                string sql = "OrderQTItemId = '" + Utility.OrderSC.OrderQTItemId(item.OrderSCItemsId).ToString() + "'";
+                string sql = "OrderQTItemId = '" + xPort5.Controls.Utility.OrderSC.OrderQTItemId(item.OrderSCItemsId).ToString() + "'";
                 OrderQTPackage qtPackage = OrderQTPackage.LoadWhere(sql);
                 if (qtPackage != null)
                 {
@@ -313,7 +314,7 @@ namespace xPort5.Order.Invoice.Items
                         xPort5.Controls.Log4net.LogInfo(xPort5.Controls.Log4net.LogAction.Update, item.ToString());
                     #endregion
 
-                    string sql = "OrderQTItemId = '" + Utility.OrderSC.OrderQTItemId(item.OrderSCItemsId).ToString() + "'";
+                    string sql = "OrderQTItemId = '" + xPort5.Controls.Utility.OrderSC.OrderQTItemId(item.OrderSCItemsId).ToString() + "'";
                     OrderQTPackage qtPackage = OrderQTPackage.LoadWhere(sql);
                     if (qtPackage != null)
                     {

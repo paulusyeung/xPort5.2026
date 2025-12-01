@@ -9,7 +9,8 @@ using System.Text;
 
 using Gizmox.WebGUI.Common;
 using Gizmox.WebGUI.Forms;
-using xPort5.DAL;
+using xPort5.EF6;
+using xPort5.Common;
 using Gizmox.WebGUI.Common.Resources;
 using System.Data.SqlClient;
 using Gizmox.WebGUI.Forms.Dialogs;
@@ -77,7 +78,7 @@ namespace xPort5.Order.Sample.Items
             this.lvwItems.ListViewItemSorter = new ListViewItemSorter(this.lvwItems);
             this.lvwItems.Dock = DockStyle.Fill;
 
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             toolTip1.SetToolTip(this.lvwItems, oDict.GetWord("double_click_to_open_record"));
 
@@ -109,7 +110,7 @@ namespace xPort5.Order.Sample.Items
             this.lvwItems.Dock = DockStyle.Fill;
             this.lvwItems.GridLines = true;
 
-            //Ìá¹©Ò»‚€¹Ì¶¨µÄ Guid tag£¬ ÔÚ UserPreference ÖÐÓÃ×÷ß@‚€ ListView µÄ unique key
+            //ï¿½á¹©Ò»ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½ Guid tagï¿½ï¿½ ï¿½ï¿½ UserPreference ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½ï¿½ ListView ï¿½ï¿½ unique key
             lvwItems.Tag = new Guid("20880DBD-A4E7-49f1-A7A1-2253ABF4CFF2");
 
             xPort5.Controls.Utility.DisplayPreference.Load(ref lvwItems);
@@ -117,7 +118,7 @@ namespace xPort5.Order.Sample.Items
 
         private void SetListAns()
         {
-            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.DAL.Common.Config.CurrentWordDict, xPort5.DAL.Common.Config.CurrentLanguageId);
+            nxStudio.BaseClass.WordDict oDict = new nxStudio.BaseClass.WordDict(xPort5.Common.Config.CurrentWordDict, xPort5.Common.Config.CurrentLanguageId);
 
             this.ansItems.MenuHandle = false;
             this.ansItems.DragHandle = false;
@@ -199,7 +200,7 @@ namespace xPort5.Order.Sample.Items
             cmdDelete.Image = new IconResourceHandle("16x16.16_L_remove.gif");
 
             #region add cndNew
-            if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+            if (xPort5.Common.Config.UseNetSqlAzMan)
             {
                 if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.Sample.Create"))
                 {
@@ -215,7 +216,7 @@ namespace xPort5.Order.Sample.Items
             #region cmdDelete
             if (_EditMode == Common.Enums.EditMode.Edit)
             {
-                if (xPort5.DAL.Common.Config.UseNetSqlAzMan)
+                if (xPort5.Common.Config.UseNetSqlAzMan)
                 {
                     if (xPort5.Controls.Utility.NetSqlAzMan.IsAccessAuthorized("Order", "Order.Sample.Delete"))
                     {
@@ -413,7 +414,7 @@ ORDER BY [LineNumber]
 
                         if (!lvwItems.Visible)
                         {
-                            BindImageList(Utility.Resources.ImageSize.Medium, false);
+                            BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                         }
                         break;
                     case "multiselect":
@@ -540,7 +541,7 @@ ORDER BY [LineNumber]
                 }
                 else
                 {
-                    List<Guid> selectedList = Utility.ImagePanel.GetCheckedItems(flpImageList, Utility.ImagePanel.CheckedType.Order);
+                    List<Guid> selectedList = xPort5.Controls.Utility.ImagePanel.GetCheckedItems(flpImageList, xPort5.Controls.Utility.ImagePanel.CheckedType.Order);
                     if (selectedList.Count > 0)
                     {
                         foreach (System.Guid spItemId in selectedList)
@@ -549,7 +550,7 @@ ORDER BY [LineNumber]
                         }
                     }
 
-                    BindImageList(Utility.Resources.ImageSize.Medium, false);
+                    BindImageList(xPort5.Controls.Utility.Resources.ImageSize.Medium, false);
                 }
             }
         }

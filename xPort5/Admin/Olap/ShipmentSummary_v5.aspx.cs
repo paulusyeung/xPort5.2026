@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -76,21 +75,11 @@ namespace xPort5.Admin.Olap
                 if (custList.Length > 0)
                 {
                     #region 攞 SQL data
-                    SqlParameter[] param = new SqlParameter[3];
-
-                    param[0] = new SqlParameter("@CustomerId_Array", SqlDbType.NVarChar);
-                    param[0].Direction = ParameterDirection.Input;
-                    param[0].Value = custList.ToString();
-
-                    param[1] = new SqlParameter("@FromDate", SqlDbType.DateTime);
-                    param[1].Direction = ParameterDirection.Input;
-                    param[1].Value = period[0] + " 00:00:00";
-
-                    param[2] = new SqlParameter("@CurrencyCode", SqlDbType.NVarChar);
-                    param[2].Direction = ParameterDirection.Input;
-                    param[2].Value = currency;
-
-                    dataSource = SqlHelper.Default.ExecuteDataSet("olap_ShipmentSummary", param);
+                    // 2025-01-XX Composer: Use LINQ query instead of stored procedure
+                    dataSource = OlapService.Default.GetShipmentSummary(
+                        custList.ToString(),
+                        period[0] + " 00:00:00",
+                        currency);
                     #endregion
                 }
             }

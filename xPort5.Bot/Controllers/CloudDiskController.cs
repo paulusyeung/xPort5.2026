@@ -565,19 +565,25 @@ namespace xPort5.Bot.Controllers
             var items = CloudDiskHelper.GetSubAdminUsers();
             if (items.Count > 0)
             {
-                using (var ctx = new xPort5Entities())
+                // Use ViewService instead of direct EF6 query
+                string whereClause = "ID IN (" + string.Join(",", items) + ")";
+                
+                if (workshop.ToLower() != "all")
                 {
-                    if (workshop.ToLower() == "all")
-                    {
-                        var all = ctx.vwClientList.Where(c => items.Contains(c.ID.ToString())).OrderBy(x => x.Name).ToList();
-                        return Json(all);
-                    }
-                    else
-                    {
-                        var list = ctx.vwClientList.Where(c => items.Contains(c.ID.ToString()) && c.BranchName == workshop).OrderBy(x => x.Name).ToList();
-                        return Json(list);
-                    }
+                    whereClause += " AND BranchName = '" + workshop + "'";
                 }
+                
+                System.Data.DataSet ds = ViewService.Default.GetClientList(whereClause, "Name");
+                var result = ds.Tables[0].AsEnumerable()
+                    .Select(row => new
+                    {
+                        ID = row.Field<int>("ID"),
+                        Name = row.Field<string>("Name"),
+                        BranchName = row.Field<string>("BranchName")
+                    })
+                    .ToList();
+                    
+                return Json(result);
             }
 
             return null;
@@ -597,62 +603,34 @@ namespace xPort5.Bot.Controllers
         {
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.BadRequest);
 
-            using (var ctx = new xPort5Entities())
+            // Use ViewService instead of direct EF6 query
+            string whereClause = "ID = " + clientId.ToString();
+            System.Data.DataSet ds = ViewService.Default.GetClientList(whereClause, "");
+            
+            if (ds.Tables[0].Rows.Count > 0)
             {
-                //ctx.Configuration.LazyLoadingEnabled = false;
-                var client = ctx.vwClientList.Where(x => x.ID == clientId).SingleOrDefault();
-                if (client != null)
+                var img = CloudDiskHelper.Thumbnail(clientId, filename);
+                if (img != null)
                 {
-                    var img = CloudDiskHelper.Thumbnail(clientId, filename);
-                    if (img != null)
+                    try
                     {
-                        try
+                        // 2018.12.05 paulus: 新 thumbnail 改用 LowRes Tiff
+                        var isTiff = (filename.Substring(filename.LastIndexOf('.')).Contains("tif")) ? true : false;
+
+                        if (isTiff)
                         {
-                            // 2018.12.05 paulus: 新 thumbnail 改用 LowRes Tiff
-                            var isTiff = (filename.Substring(filename.LastIndexOf('.')).Contains("tif")) ? true : false;
+                            #region 新 code，先將 Tiff 轉成 PNG，再改 size，送出
+                            Byte[] pngBytes;
 
-                            if (isTiff)
+                            using (MemoryStream outStream = new MemoryStream())
                             {
-                                #region 新 code，先將 Tiff 轉成 PNG，再改 size，送出
-                                Byte[] pngBytes;
+                                //System.Drawing.Bitmap.FromStream(img).Save(outStream, System.Drawing.Imaging.ImageFormat.Png);
+                                Image.FromStream(img).Save(outStream, System.Drawing.Imaging.ImageFormat.Png);
+                                //pngBytes = outStream.ToArray();
 
-                                using (MemoryStream outStream = new MemoryStream())
-                                {
-                                    //System.Drawing.Bitmap.FromStream(img).Save(outStream, System.Drawing.Imaging.ImageFormat.Png);
-                                    Image.FromStream(img).Save(outStream, System.Drawing.Imaging.ImageFormat.Png);
-                                    //pngBytes = outStream.ToArray();
-
-                                    var suffix = "png";
-                                    var pngImage = Image.FromStream(outStream);
-                                    var thumb = width == 0 || height == 0 ? pngImage : ImageHelper.FixedSize(pngImage, width, height);
-                                    var buffer = ImageHelper.ImageToByteArray(thumb, suffix);
-
-                                    var contentLength = buffer.Length;
-
-                                    //200
-                                    //successful
-                                    var statuscode = HttpStatusCode.OK;
-                                    response = Request.CreateResponse(statuscode);
-                                    response.Content = new StreamContent(new MemoryStream(buffer));
-                                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
-                                    response.Content.Headers.ContentLength = contentLength;
-
-                                    ContentDispositionHeaderValue contentDisposition = null;
-                                    if (ContentDispositionHeaderValue.TryParse("inline; filename=" + filename, out contentDisposition))
-                                    {
-                                        response.Content.Headers.ContentDisposition = contentDisposition;
-                                    }
-                                }
-                                #endregion
-                            }
-                            else
-                            {
-                                #region 蕭 code，已經係 PNG，改 size，送出
                                 var suffix = "png";
-                                var image = Image.FromStream(img);
-
-                                //var thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
-                                var thumb = width == 0 || height == 0 ? image : ImageHelper.FixedSize(image, width, height);
+                                var pngImage = Image.FromStream(outStream);
+                                var thumb = width == 0 || height == 0 ? pngImage : ImageHelper.FixedSize(pngImage, width, height);
                                 var buffer = ImageHelper.ImageToByteArray(thumb, suffix);
 
                                 var contentLength = buffer.Length;
@@ -670,24 +648,52 @@ namespace xPort5.Bot.Controllers
                                 {
                                     response.Content.Headers.ContentDisposition = contentDisposition;
                                 }
-                                #endregion
                             }
+                            #endregion
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            var message = String.Format("Exception throw. Resource \"{0}\" contains error.", filename);
-                            HttpError err = new HttpError(message);
-                            response = Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+                            #region 蕭 code，已經係 PNG，改 size，送出
+                            var suffix = "png";
+                            var image = Image.FromStream(img);
+
+                            //var thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
+                            var thumb = width == 0 || height == 0 ? image : ImageHelper.FixedSize(image, width, height);
+                            var buffer = ImageHelper.ImageToByteArray(thumb, suffix);
+
+                            var contentLength = buffer.Length;
+
+                            //200
+                            //successful
+                            var statuscode = HttpStatusCode.OK;
+                            response = Request.CreateResponse(statuscode);
+                            response.Content = new StreamContent(new MemoryStream(buffer));
+                            response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                            response.Content.Headers.ContentLength = contentLength;
+
+                            ContentDispositionHeaderValue contentDisposition = null;
+                            if (ContentDispositionHeaderValue.TryParse("inline; filename=" + filename, out contentDisposition))
+                            {
+                                response.Content.Headers.ContentDisposition = contentDisposition;
+                            }
+                            #endregion
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        var message = String.Format("Unable to find resource. Resource \"{0}\" may not exist.", filename);
+                        var message = String.Format("Exception throw. Resource \"{0}\" contains error.", filename);
                         HttpError err = new HttpError(message);
-                        response = Request.CreateErrorResponse(HttpStatusCode.NotFound, err);
+                        response = Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
                     }
                 }
+                else
+                {
+                    var message = String.Format("Unable to find resource. Resource \"{0}\" may not exist.", filename);
+                    HttpError err = new HttpError(message);
+                    response = Request.CreateErrorResponse(HttpStatusCode.NotFound, err);
+                }
             }
+            
             return response;
         }
 

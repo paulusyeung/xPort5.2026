@@ -346,15 +346,19 @@ FROM [dbo].[vwPreOrderList]
             this.lvwList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            DataSet ds = ViewService.Default.GetPreOrderList(whereClause, "");
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                ListViewItem objItem = this.lvwList.Items.Add(reader.GetString(1));    //PLNumber
-                objItem.SubItems.Add(reader.GetGuid(0).ToString());     //Id
+                ListViewItem objItem = this.lvwList.Items.Add(row["PLNumber"].ToString());    //PLNumber
+                objItem.SubItems.Add(row["OrderPLId"].ToString());     //Id
                 #region Icon
-                switch (reader.GetInt32(11))        // revision
+                int revision = Convert.ToInt32(row["Revision"]);
+                switch (revision)
                 {
                     case 0:
                         objItem.SmallImage = new IconResourceHandle("16x16.invoice16_0.png");
@@ -375,7 +379,8 @@ FROM [dbo].[vwPreOrderList]
                 }
                 #endregion
                 #region Status icon
-                switch (reader.GetInt32(5))     // Status
+                int status = Convert.ToInt32(row["Status"]);
+                switch (status)
                 {
                     case 0:
                         objItem.SubItems.Add(String.Empty);
@@ -389,7 +394,8 @@ FROM [dbo].[vwPreOrderList]
                 }
                 #endregion
                 #region Sample icon
-                switch (Convert.ToInt32(reader.GetDecimal(12)))     // TotalQty
+                decimal totalQty = row["TotalQty"] != DBNull.Value ? Convert.ToDecimal(row["TotalQty"]) : 0;
+                switch (Convert.ToInt32(totalQty))
                 {
                     case 0:
                         objItem.SubItems.Add(String.Empty);
@@ -400,7 +406,7 @@ FROM [dbo].[vwPreOrderList]
                 }
                 #endregion
                 #region Attachment
-                if (xPort5.Controls.Utility.Resources.HasAttachment(reader.GetString(1))) // Attachment
+                if (xPort5.Controls.Utility.Resources.HasAttachment(row["PLNumber"].ToString())) // Attachment
                 {
                     objItem.SubItems.Add(new IconResourceHandle("16x16.ico_16_1001_d.gif").ToString());
                 }
@@ -410,19 +416,20 @@ FROM [dbo].[vwPreOrderList]
                 }
                 #endregion
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(3));              // CustomerName
-                objItem.SubItems.Add(reader.GetString(4));              // Remarks
-                objItem.SubItems.Add(reader.GetString(6));              // CreatedOn
-                objItem.SubItems.Add(reader.GetString(7));              // CreatedBy
-                objItem.SubItems.Add(reader.GetString(8));              // ModifiedOn
-                objItem.SubItems.Add(reader.GetString(9));             // ModifiedBy
+                objItem.SubItems.Add(row["CustomerName"] != DBNull.Value ? row["CustomerName"].ToString() : "");              // CustomerName
+                objItem.SubItems.Add(row["Remarks"] != DBNull.Value ? row["Remarks"].ToString() : "");              // Remarks
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // CreatedOn
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "");              // CreatedBy
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // ModifiedOn
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : "");             // ModifiedBy
 
                 iCount++;
             }
-            reader.Close();
+            
             this.lvwList.Sort();        // 2012.04.18 paulus: 依照當前的 ListView.SortOrder 和 ListView.SortPosition 排序，使 UserPreference 有效
         }
 
+        // Deprecated: Replaced by BuildWhereClause() for ViewService
         private string BuildSql()
         {
             StringBuilder sql = new StringBuilder();
@@ -430,6 +437,22 @@ FROM [dbo].[vwPreOrderList]
             sql.Append(curSqlWhere + Environment.NewLine);
 
             return sql.ToString();
+        }
+
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            string whereClause = curSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
         }
 
         private void DoLookup()

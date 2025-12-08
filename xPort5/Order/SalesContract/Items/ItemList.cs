@@ -238,36 +238,23 @@ namespace xPort5.Order.SalesContract.Items
             //            this.ansItems.ButtonClick += new ToolBarButtonClickEventHandler(ansItem_ButtonClick);
         }
 
-        private string BuildSql()
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
         {
-            string sql = String.Format(@"
-SELECT TOP 100 PERCENT
-       [OrderSCId]          -- 0
-      ,[SCNumber]
-      ,[SCDate]
-      ,[OrderSCItemsId]
-      ,[LineNumber]
-      ,[ArticleId]          -- 5
-      ,[SKU]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[PackageId]
-      ,[PackageName]		-- 10
-      ,[SupplierId]
-      ,[SupplierCode]
-      ,[FactoryCost]
-      ,[Qty]
-      ,[Unit]               -- 15
-      ,[Amount]
-      ,[CurrencyCode]
-      ,[CustRef]
-FROM [dbo].[vwSalesContractItemList]
-WHERE [OrderSCId] = '{0}'
-ORDER BY [LineNumber]
-", _SalesContractId.ToString());
-
-            return sql;
+            return String.Format("[OrderSCId] = '{0}'", _SalesContractId.ToString());
         }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            return "[LineNumber]";
+        }
+
+
 
         private void BindList()
         {
@@ -275,41 +262,38 @@ ORDER BY [LineNumber]
 
             int iCount = 1;
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetSalesContractItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(3);
-                OrderSCItems item = OrderSCItems.Load(itemId);
+                Guid itemId = row["OrderSCItemsId"] != DBNull.Value ? (Guid)row["OrderSCItemsId"] : Guid.Empty;
+                string articleCode = row["ArticleCode"] != DBNull.Value ? row["ArticleCode"].ToString() : "";
 
-                ListViewItem objItem = this.lvwItems.Items.Add(reader.GetString(7));  // Product Code
+                ListViewItem objItem = this.lvwItems.Items.Add(articleCode);  // Product Code
                 #region Product Image
-                //if (cAddress.DefaultRec)
-                //{
                 objItem.SmallImage = new IconResourceHandle("16x16.pumpkin_16.png");
                 objItem.LargeImage = new IconResourceHandle("32x32.pumpkin_32.png");
-                //}
-                //else
-                //{
-                //    objItem.SmallImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //    objItem.LargeImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //}
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(3).ToString());     // Items Id
+                objItem.SubItems.Add(itemId.ToString());     // Items Id
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(xPort5.Controls.Utility.Supplier.GetSupplierName(reader.GetGuid(11)));     // Supplier
-                objItem.SubItems.Add(reader.GetString(10));             // Packing
-                objItem.SubItems.Add(reader.GetString(18));             // Cust. Ref.
-                objItem.SubItems.Add(reader.GetString(8));              // Product Name
-                objItem.SubItems.Add(reader.GetDecimal(14).ToString("#,##0"));         // Qty
-                objItem.SubItems.Add(reader.GetString(15));              // Unit
-                objItem.SubItems.Add(reader.GetDecimal(13).ToString("#,##0.0000"));         // Factory Cost
-                objItem.SubItems.Add(reader.GetDecimal(16).ToString("#,##0.0000"));         // Amount
-                objItem.SubItems.Add(reader.GetString(17));                                 // Currency
+                
+                Guid supplierId = row["SupplierId"] != DBNull.Value ? (Guid)row["SupplierId"] : Guid.Empty;
+                objItem.SubItems.Add(xPort5.Controls.Utility.Supplier.GetSupplierName(supplierId));     // Supplier
+                objItem.SubItems.Add(row["PackageName"] != DBNull.Value ? row["PackageName"].ToString() : "");             // Packing
+                objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");             // Cust. Ref.
+                objItem.SubItems.Add(row["ArticleName"] != DBNull.Value ? row["ArticleName"].ToString() : "");              // Product Name
+                objItem.SubItems.Add(row["Qty"] != DBNull.Value ? Convert.ToDecimal(row["Qty"]).ToString("#,##0") : "0");         // Qty
+                objItem.SubItems.Add(row["Unit"] != DBNull.Value ? row["Unit"].ToString() : "");              // Unit
+                objItem.SubItems.Add(row["FactoryCost"] != DBNull.Value ? Convert.ToDecimal(row["FactoryCost"]).ToString("#,##0.0000") : "0.0000");         // Factory Cost
+                objItem.SubItems.Add(row["Amount"] != DBNull.Value ? Convert.ToDecimal(row["Amount"]).ToString("#,##0.0000") : "0.0000");         // Amount
+                objItem.SubItems.Add(row["CurrencyCode"] != DBNull.Value ? row["CurrencyCode"].ToString() : "");                                 // Currency
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwItems.Sort();
         }
@@ -318,19 +302,21 @@ ORDER BY [LineNumber]
         {
             this.flpImageList.Controls.Clear();
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetSalesContractItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(3);
-                Guid articleId = reader.GetGuid(5);
+                Guid itemId = row["OrderSCItemsId"] != DBNull.Value ? (Guid)row["OrderSCItemsId"] : Guid.Empty;
+                Guid articleId = row["ArticleId"] != DBNull.Value ? (Guid)row["ArticleId"] : Guid.Empty;
 
                 ImagePanel imgItem = new ImagePanel(imageSize, articleId, inDetail, itemId, System.Guid.Empty, string.Empty, lvwItems.CheckBoxes, false);
                 imgItem.DoubleClick += new EventHandler(imgItem_DoubleClick);
                 flpImageList.Controls.Add(imgItem);
             }
-
-            reader.Close();
         }
 
         void imgItem_DoubleClick(object sender, EventArgs e)

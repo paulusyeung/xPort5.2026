@@ -240,6 +240,7 @@
     <Compile Include="UserProfile.cs">
       <DependentUpon>xPort5Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewService.cs" />
     <Compile Include="xPort5Model.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

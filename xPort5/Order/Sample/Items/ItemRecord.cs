@@ -274,17 +274,15 @@ namespace xPort5.Order.Sample.Items
         {
             bool result = false;
 
-            string sql = @"
-SELECT [SampleQty]
-  FROM [dbo].[vwOSSample]
-WHERE [CustomerId] = '{0}' AND ArticleCode = '{1}'";
-
-            sql = string.Format(sql, customerId.ToString(), this.txtArticleCode.Text.Trim());
-
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
-            while (reader.Read())
+            string whereClause = string.Format("[CustomerId] = '{0}' AND [ArticleCode] = '{1}'", customerId.ToString(), this.txtArticleCode.Text.Trim());
+            
+            // Use ViewService instead of direct SQL query
+            DataSet ds = ViewService.Default.GetSampleItemRecord(whereClause, "");
+            DataTable dt = ds.Tables[0];
+            
+            foreach (DataRow row in dt.Rows)
             {
-                if (reader.GetDecimal(0) > 0)
+                if (row["SampleQty"] != DBNull.Value && Convert.ToDecimal(row["SampleQty"]) > 0)
                 {
                     result = true;
                 }
@@ -354,18 +352,6 @@ WHERE [CustomerId] = '{0}' AND ArticleCode = '{1}'";
 
         private void txtArticleCode_TextChanged(object sender, EventArgs e)
         {
-            string sql = @"
-SELECT [OrderQTItemId]
-      ,[QTDate]
-      ,[QTNumber]
-      ,[SupplierCode]
-      ,[SupplierName]
-      ,[PackageCode]
-      ,[PackageName]
-      ,[SampleQty]
-  FROM [dbo].[vwOSSample]
-WHERE [CustomerId] = '{0}' AND [ArticleCode] = '{1}' AND [QTNumber] NOT IN ({2})";
-
             if (txtArticleCode.Text.Trim() != String.Empty)
             {
                 OrderSP item = OrderSP.Load(this._SampleId);
@@ -381,26 +367,35 @@ WHERE [CustomerId] = '{0}' AND [ArticleCode] = '{1}' AND [QTNumber] NOT IN ({2})
                     {
                         lvwItems.Items.Clear();
                         int iCount = 0;
-                        sql = string.Format(sql, customerIdStr, this.txtArticleCode.Text.Trim(), this.ExceptQTNumber);
+                        
+                        string whereClause = string.Format("[CustomerId] = '{0}' AND [ArticleCode] = '{1}' AND [QTNumber] NOT IN ({2})", 
+                            customerIdStr, this.txtArticleCode.Text.Trim(), this.ExceptQTNumber);
 
-                        SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
-                        while (reader.Read())
+                        // Use ViewService instead of direct SQL query
+                        DataSet ds = ViewService.Default.GetSampleItemRecord(whereClause, "");
+                        DataTable dt = ds.Tables[0];
+                        
+                        foreach (DataRow row in dt.Rows)
                         {
-                            if (reader.GetDecimal(7) > 0)
+                            decimal sampleQty = row["SampleQty"] != DBNull.Value ? Convert.ToDecimal(row["SampleQty"]) : 0;
+                            if (sampleQty > 0)
                             {
-                                ListViewItem lvItem = lvwItems.Items.Add(reader.GetGuid(0).ToString());
-                                lvItem.SubItems.Add(Common.DateTimeHelper.DateTimeToString(reader.GetDateTime(1), false));
-                                lvItem.SubItems.Add(reader.GetString(2));
-                                lvItem.SubItems.Add(reader.GetString(3));
-                                lvItem.SubItems.Add(reader.GetString(4));
-                                lvItem.SubItems.Add(reader.GetString(5));
-                                lvItem.SubItems.Add(reader.GetString(6));
-                                lvItem.SubItems.Add(reader.GetDecimal(7).ToString("N0"));
+                                Guid orderQTItemId = row["OrderQTItemId"] != DBNull.Value ? (Guid)row["OrderQTItemId"] : Guid.Empty;
+                                DateTime qtDate = row["QTDate"] != DBNull.Value ? Convert.ToDateTime(row["QTDate"]) : DateTime.MinValue;
+                                
+                                ListViewItem lvItem = lvwItems.Items.Add(orderQTItemId.ToString());
+                                lvItem.SubItems.Add(Common.DateTimeHelper.DateTimeToString(qtDate, false));
+                                lvItem.SubItems.Add(row["QTNumber"] != DBNull.Value ? row["QTNumber"].ToString() : "");
+                                lvItem.SubItems.Add(row["SupplierCode"] != DBNull.Value ? row["SupplierCode"].ToString() : "");
+                                lvItem.SubItems.Add(row["SupplierName"] != DBNull.Value ? row["SupplierName"].ToString() : "");
+                                lvItem.SubItems.Add(row["PackageCode"] != DBNull.Value ? row["PackageCode"].ToString() : "");
+                                lvItem.SubItems.Add(row["PackageName"] != DBNull.Value ? row["PackageName"].ToString() : "");
+                                lvItem.SubItems.Add(sampleQty.ToString("N0"));
 
                                 iCount++;
                             }
 
-                            TotalQty += reader.GetDecimal(7);
+                            TotalQty += sampleQty;
                         }
 
                         lvwItems.SelectedIndex = 0;

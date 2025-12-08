@@ -202,31 +202,86 @@ FROM [dbo].[vwCityList]
             this.lvwGroupList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSqlQueryString();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetCityList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                ListViewItem objItem = this.lvwGroupList.Items.Add(reader.GetString(5));  // Code
+                string cityCode = row["CityCode"] != DBNull.Value ? row["CityCode"].ToString() : "";
+                
+                ListViewItem objItem = this.lvwGroupList.Items.Add(cityCode);  // Code
                 #region Icon
                 objItem.SmallImage = new IconResourceHandle("16x16.table_doc_16.png");
                 objItem.LargeImage = new IconResourceHandle("32x32.table_doc_32.png");
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(4).ToString());     // Id
+                objItem.SubItems.Add(row["CityId"].ToString());     // Id
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(0));              // Country
-                objItem.SubItems.Add(reader.GetString(2));              // Province
-                objItem.SubItems.Add(reader.GetString(7));              // Name
-                objItem.SubItems.Add(reader.GetString(8));              // Name
-                objItem.SubItems.Add(reader.GetString(9));              // Name
+                objItem.SubItems.Add(row["CountryName"] != DBNull.Value ? row["CountryName"].ToString() : "");              // Country
+                objItem.SubItems.Add(row["ProvinceName"] != DBNull.Value ? row["ProvinceName"].ToString() : "");              // Province
+                objItem.SubItems.Add(row["CityName"] != DBNull.Value ? row["CityName"].ToString() : "");              // Name
+                objItem.SubItems.Add(row["CityName_Chs"] != DBNull.Value ? row["CityName_Chs"].ToString() : "");              // Name_Chs
+                objItem.SubItems.Add(row["CityName_Cht"] != DBNull.Value ? row["CityName_Cht"].ToString() : "");              // Name_Cht
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwGroupList.Sort();
         }
 
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            // Handle shortcut filtering
+            if (!(String.IsNullOrEmpty(_CurShortcut)))
+            {
+                switch (_CurShortcut)
+                {
+                    case "9":
+                        _CurSqlWhere = "WHERE ( SUBSTRING([CityCode], 1, 1) NOT BETWEEN N'A' AND N'Z' )";
+                        break;
+                    case "All":
+                        _CurSqlWhere = _BaseSqlWhere;
+                        break;
+                    default:
+                        _CurSqlWhere = String.Format("WHERE ( SUBSTRING([CityCode], 1, 1) = N'{0}' )", _CurShortcut);
+                        break;
+                }
+            }
+
+            string whereClause = _CurSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
+        }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            string orderBy = _CurSqlOrderBy;
+            
+            // Remove "ORDER BY" keyword if present
+            if (orderBy.TrimStart().StartsWith("ORDER BY ", StringComparison.OrdinalIgnoreCase))
+            {
+                orderBy = orderBy.Substring(orderBy.IndexOf("ORDER BY ", StringComparison.OrdinalIgnoreCase) + 9);
+            }
+            
+            return orderBy.Trim();
+        }
+
+        // Deprecated: Replaced by BuildWhereClause() and BuildOrderByClause() for ViewService
         private string BuildSqlQueryString()
         {
             StringBuilder sql = new StringBuilder();

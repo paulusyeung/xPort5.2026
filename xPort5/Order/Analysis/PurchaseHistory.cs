@@ -247,31 +247,33 @@ namespace xPort5.Order.Analysis
                 this.lvwList.Items.Clear();
 
                 int iCount = 1;
-                string sql = BuildSql();
+                string whereClause = BuildWhereClause();
+                
+                // Use ViewService instead of direct SQL query
+                DataSet ds = ViewService.Default.GetPurchaseHistory(whereClause, "SuppName,CustName,ArticleCode,PCNumber,ScheduledShipmentDate");
+                DataTable dt = ds.Tables[0];
 
-                SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
-                while (reader.Read())
+                foreach (DataRow row in dt.Rows)
                 {
-                    ListViewItem objItem = this.lvwList.Items.Add(reader.GetGuid(0).ToString());    //CustomerId
-                    objItem.SubItems.Add(reader.GetString(1));      //SuppName
-                    objItem.SubItems.Add(reader.GetString(2));      //PCNumber
-                    objItem.SubItems.Add(reader.GetString(3));      //CustName
-                    objItem.SubItems.Add(reader.GetString(4));      //CustRef
-                    objItem.SubItems.Add(reader.GetString(5));      //ArticleCode
-                    objItem.SubItems.Add(reader.GetString(6));      //ArtName
-                    objItem.SubItems.Add(reader.GetString(7));      //Packing
-                    objItem.SubItems.Add(reader.GetDecimal(8).ToString("#,##0"));        //ScheduledQty
-                    objItem.SubItems.Add(reader.GetString(9));                           //OrderedCny
-                    objItem.SubItems.Add(reader.GetDecimal(10).ToString("#,##0.0000"));  //OrderedPrice
-                    objItem.SubItems.Add(reader.GetString(11));                          //OrderedUnit
-                    objItem.SubItems.Add(reader.GetString(12));                          //FactoryCny
-                    objItem.SubItems.Add(reader.GetDecimal(13).ToString("#,##0.0000"));  //FactoryCost
-                    objItem.SubItems.Add(reader.GetString(14));                          //FactoryUnit
-                    objItem.SubItems.Add(reader.GetDateTime(15).ToString("dd MMM yyyy"));//ScheduledShipmentDate
+                    ListViewItem objItem = this.lvwList.Items.Add(row["CustomerId"].ToString());    //CustomerId
+                    objItem.SubItems.Add(row["SuppName"] != DBNull.Value ? row["SuppName"].ToString() : "");      //SuppName
+                    objItem.SubItems.Add(row["PCNumber"] != DBNull.Value ? row["PCNumber"].ToString() : "");      //PCNumber
+                    objItem.SubItems.Add(row["CustName"] != DBNull.Value ? row["CustName"].ToString() : "");      //CustName
+                    objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");      //CustRef
+                    objItem.SubItems.Add(row["ArticleCode"] != DBNull.Value ? row["ArticleCode"].ToString() : "");      //ArticleCode
+                    objItem.SubItems.Add(row["ArtName"] != DBNull.Value ? row["ArtName"].ToString() : "");      //ArtName
+                    objItem.SubItems.Add(row["Packing"] != DBNull.Value ? row["Packing"].ToString() : "");      //Packing
+                    objItem.SubItems.Add(row["ScheduledQty"] != DBNull.Value ? Convert.ToDecimal(row["ScheduledQty"]).ToString("#,##0") : "0");        //ScheduledQty
+                    objItem.SubItems.Add(row["OrderedCny"] != DBNull.Value ? row["OrderedCny"].ToString() : "");                           //OrderedCny
+                    objItem.SubItems.Add(row["OrderedPrice"] != DBNull.Value ? Convert.ToDecimal(row["OrderedPrice"]).ToString("#,##0.0000") : "0.0000");  //OrderedPrice
+                    objItem.SubItems.Add(row["OrderedUnit"] != DBNull.Value ? row["OrderedUnit"].ToString() : "");                          //OrderedUnit
+                    objItem.SubItems.Add(row["FactoryCny"] != DBNull.Value ? row["FactoryCny"].ToString() : "");                          //FactoryCny
+                    objItem.SubItems.Add(row["FactoryCost"] != DBNull.Value ? Convert.ToDecimal(row["FactoryCost"]).ToString("#,##0.0000") : "0.0000");  //FactoryCost
+                    objItem.SubItems.Add(row["FactoryUnit"] != DBNull.Value ? row["FactoryUnit"].ToString() : "");                          //FactoryUnit
+                    objItem.SubItems.Add(row["ScheduledShipmentDate"] != DBNull.Value ? Convert.ToDateTime(row["ScheduledShipmentDate"]).ToString("dd MMM yyyy") : "");//ScheduledShipmentDate
 
                     iCount++;
                 }
-                reader.Close();
             }
             else
             {
@@ -281,26 +283,24 @@ namespace xPort5.Order.Analysis
 
         private string BuildSql()
         {
-            string sql = string.Empty;
-            sql = @"
-SELECT	CustomerId, SuppName, PCNumber ,CustName, CustRef, ArticleCode ,ArtName ,Packing, ScheduledQty ,OrderedCny,
-		OrderedPrice, OrderedUnit, FactoryCny, FactoryCost, FactoryUnit, ScheduledShipmentDate 
-FROM	vwPurchaseHistory 
-WHERE	LEN(PCNumber) > 0 AND CONVERT(NVARCHAR(10),ScheduledShipmentDate,126)>='" + dtpFrom.Value.ToString("yyyy-MM-dd") + @"' 
-                          AND CONVERT(NVARCHAR(10),ScheduledShipmentDate,126)<='" + dtpTo.Value.ToString("yyyy-MM-dd") + @"'
-";
+            return BuildWhereClause();
+        }
+
+        private string BuildWhereClause()
+        {
+            string whereClause = "LEN(PCNumber) > 0 AND CONVERT(NVARCHAR(10),ScheduledShipmentDate,126)>='" + dtpFrom.Value.ToString("yyyy-MM-dd") + @"' 
+                           AND CONVERT(NVARCHAR(10),ScheduledShipmentDate,126)<='" + dtpTo.Value.ToString("yyyy-MM-dd") + @"'";
+            
             if (rbtnCustomer.Checked)
             {
-                sql = sql + " AND CustomerId IN(" + selectedList + ")";
+                whereClause = whereClause + " AND CustomerId IN(" + selectedList + ")";
             }
             if (rbtnSupplier.Checked)
             {
-                sql = sql + " AND SupplierId IN(" + selectedList + ")";
+                whereClause = whereClause + " AND SupplierId IN(" + selectedList + ")";
             }
 
-            sql += " ORDER BY SuppName,CustName,ArticleCode,PCNumber,ScheduledShipmentDate";
-
-            return sql;
+            return whereClause;
         }
 
         /// <summary>

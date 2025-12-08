@@ -211,16 +211,21 @@ SELECT TOP 100 PERCENT
             this.lvwGroupList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSqlQueryString();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetCustomerList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid customerId = reader.GetGuid(0);
+                Guid customerId = (Guid)row["CustomerId"];
 
-                ListViewItem objItem = this.lvwGroupList.Items.Add(reader.GetString(1));  // Code
+                ListViewItem objItem = this.lvwGroupList.Items.Add(row["CustomerCode"].ToString());  // Code
                 #region Icon
-                if (reader.GetBoolean(10))
+                bool blackListed = row["BlackListed"] != DBNull.Value && Convert.ToBoolean(row["BlackListed"]);
+                if (blackListed)
                 {   // black listed
                     objItem.SmallImage = new IconResourceHandle("16x16.customerwarning_16.png");
                     objItem.LargeImage = new IconResourceHandle("32x32.customerwarning_32.png");
@@ -231,7 +236,7 @@ SELECT TOP 100 PERCENT
                     objItem.LargeImage = new IconResourceHandle("32x32.customersingle_32.png");
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(0).ToString());     // Id
+                objItem.SubItems.Add(customerId.ToString());     // Id
                 #region contact icon
                 xPort5.EF6.CustomerContactCollection contacts = xPort5.EF6.CustomerContact.LoadCollection(String.Format("CustomerId = '{0}'", customerId.ToString()));
                 switch (contacts.Count)
@@ -263,22 +268,22 @@ SELECT TOP 100 PERCENT
                 }
                 #endregion
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(2));              // Name
-                objItem.SubItems.Add(reader.GetString(3));              // Name (Chs)
-                objItem.SubItems.Add(reader.GetString(4));              // Name (Cht)
-                objItem.SubItems.Add(reader.GetString(5));              // Region
-                objItem.SubItems.Add(reader.GetString(6));              // 
-                objItem.SubItems.Add(reader.GetString(7));              // 
-                objItem.SubItems.Add(reader.GetString(8));              // 
-                objItem.SubItems.Add(reader.GetString(9));              // 
+                objItem.SubItems.Add(row["CustomerName"] != DBNull.Value ? row["CustomerName"].ToString() : "");              // Name
+                objItem.SubItems.Add(row["CustomerName_Chs"] != DBNull.Value ? row["CustomerName_Chs"].ToString() : "");              // Name (Chs)
+                objItem.SubItems.Add(row["CustomerName_Cht"] != DBNull.Value ? row["CustomerName_Cht"].ToString() : "");              // Name (Cht)
+                objItem.SubItems.Add(row["RegionName"] != DBNull.Value ? row["RegionName"].ToString() : "");              // Region
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // 
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "");              // 
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // 
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : "");              // 
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwGroupList.Sort();
         }
 
+        // Deprecated: Replaced by BuildWhereClause() and BuildOrderByClause() for ViewService
         private string BuildSqlQueryString()
         {
             StringBuilder sql = new StringBuilder();
@@ -306,6 +311,55 @@ SELECT TOP 100 PERCENT
             sql.Append(_CurSqlOrderBy);
 
             return sql.ToString();
+        }
+
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            // Handle shortcut filtering
+            if (!(String.IsNullOrEmpty(_CurShortcut)))
+            {
+                switch (_CurShortcut)
+                {
+                    case "9":
+                        _CurSqlWhere = _BaseSqlWhere + " AND ( SUBSTRING([CustomerName], 1, 1) NOT BETWEEN N'A' AND N'Z' )";
+                        break;
+                    case "All":
+                        _CurSqlWhere = _BaseSqlWhere;
+                        break;
+                    default:
+                        _CurSqlWhere = _BaseSqlWhere + String.Format(" AND ( SUBSTRING([CustomerName], 1, 1) = N'{0}' )", _CurShortcut);
+                        break;
+                }
+            }
+
+            string whereClause = _CurSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
+        }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            string orderBy = _CurSqlOrderBy;
+            
+            // Remove "ORDER BY" keyword if present
+            if (orderBy.TrimStart().StartsWith("ORDER BY ", StringComparison.OrdinalIgnoreCase))
+            {
+                orderBy = orderBy.Substring(orderBy.IndexOf("ORDER BY ", StringComparison.OrdinalIgnoreCase) + 9);
+            }
+            
+            return orderBy.Trim();
         }
         #endregion
 

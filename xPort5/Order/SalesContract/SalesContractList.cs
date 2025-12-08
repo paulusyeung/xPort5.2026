@@ -375,16 +375,21 @@ FROM [dbo].[vwSalesContractList]
             this.lvwList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetSalesContractList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid orderId = reader.GetGuid(0);
+                Guid orderId = (Guid)row["OrderSCId"];
 
-                ListViewItem objItem = this.lvwList.Items.Add(reader.GetString(1));  // Number
+                ListViewItem objItem = this.lvwList.Items.Add(row["SCNumber"].ToString());  // Number
                 #region Icon
-                switch (reader.GetInt32(12))        // revision
+                int revision = Convert.ToInt32(row["Revision"]);
+                switch (revision)
                 {
                     case 0:
                         objItem.SmallImage = new IconResourceHandle("16x16.invoice16_0.png");
@@ -404,9 +409,10 @@ FROM [dbo].[vwSalesContractList]
                         break;
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(0).ToString());     // Id
+                objItem.SubItems.Add(orderId.ToString());     // Id
                 #region Status icon
-                switch (reader.GetInt32(6))     // Status
+                int status = Convert.ToInt32(row["Status"]);
+                switch (status)
                 {
                     case 0:
                         objItem.SubItems.Add(String.Empty);
@@ -420,18 +426,10 @@ FROM [dbo].[vwSalesContractList]
                 }
                 #endregion
                 #region Sample icon
-                switch (Convert.ToInt32(reader.GetInt32(13)))     // Sample
-                {
-                    case 0:
-                        objItem.SubItems.Add(String.Empty);
-                        break;
-                    default:
-                        objItem.SubItems.Add(new IconResourceHandle("16x16.flower_16.png").ToString());
-                        break;
-                }
+                objItem.SubItems.Add(String.Empty); // Placeholder for sample
                 #endregion
                 #region Attachment
-                if (xPort5.Controls.Utility.Resources.HasAttachment(reader.GetString(1))) // Attachment
+                if (xPort5.Controls.Utility.Resources.HasAttachment(row["SCNumber"].ToString())) // Attachment
                 {
                     objItem.SubItems.Add(new IconResourceHandle("16x16.ico_16_1001_d.gif").ToString());
                 }
@@ -441,21 +439,22 @@ FROM [dbo].[vwSalesContractList]
                 }
                 #endregion
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(2));              // SC Date
-                objItem.SubItems.Add(reader.GetString(3));              // Customer
-                objItem.SubItems.Add(reader.GetString(5));              // Remarks
+                objItem.SubItems.Add(row["SCDate"] != DBNull.Value ? Convert.ToDateTime(row["SCDate"]).ToString("yyyy-MM-dd") : "");              // SC Date
+                objItem.SubItems.Add(row["CustomerName"] != DBNull.Value ? row["CustomerName"].ToString() : "");              // Customer
+                objItem.SubItems.Add(row["Remarks"] != DBNull.Value ? row["Remarks"].ToString() : "");              // Remarks
 
-                objItem.SubItems.Add(reader.GetString(7));              // 
-                objItem.SubItems.Add(reader.GetString(8));              // 
-                objItem.SubItems.Add(reader.GetString(9));              // 
-                objItem.SubItems.Add(reader.GetString(10));             // 
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // 
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "");              // 
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // 
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : "");             // 
 
                 iCount++;
             }
-            reader.Close();
+            
             this.lvwList.Sort();        // 2012.04.18 paulus: 依照當前的 ListView.SortOrder 和 ListView.SortPosition 排序，使 UserPreference 有效
         }
 
+        // Deprecated: Replaced by BuildWhereClause() and BuildOrderByClause() for ViewService
         private string BuildSql()
         {
             StringBuilder sql = new StringBuilder();
@@ -465,6 +464,38 @@ FROM [dbo].[vwSalesContractList]
             sql.Append(_CurSqlOrderBy);
 
             return sql.ToString();
+        }
+
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            string whereClause = _CurSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
+        }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            string orderBy = _CurSqlOrderBy;
+            
+            // Remove "ORDER BY" keyword if present
+            if (orderBy.TrimStart().StartsWith("ORDER BY ", StringComparison.OrdinalIgnoreCase))
+            {
+                orderBy = orderBy.Substring(orderBy.IndexOf("ORDER BY ", StringComparison.OrdinalIgnoreCase) + 9);
+            }
+            
+            return orderBy.Trim();
         }
 
         private void DoLookup()

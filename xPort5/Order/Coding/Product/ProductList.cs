@@ -632,14 +632,18 @@ SELECT TOP 100 PERCENT
             this.lvwProductList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSqlQueryString();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetProductList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid productId = reader.GetGuid(0);
+                Guid productId = (Guid)row["ArticleId"];
 
-                ListViewItem objItem = this.lvwProductList.Items.Add(reader.GetString(2).ToString());  // Product Code
+                ListViewItem objItem = this.lvwProductList.Items.Add(row["ArticleCode"].ToString());  // Product Code
                 #region Product Image
                 if (File.Exists(xPort5.Controls.Utility.Resources.PictureFilePath(productId, xPort5.Controls.Utility.Product.KeyPicture(productId))))
                 {
@@ -652,9 +656,10 @@ SELECT TOP 100 PERCENT
                     objItem.LargeImage = new IconResourceHandle("32x32.pictureOff32.png");
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(0).ToString()); // Product Id (hidden column)
+                objItem.SubItems.Add(productId.ToString()); // Product Id (hidden column)
                 #region Status Icon
-                switch (reader.GetInt32(24))
+                int status = Convert.ToInt32(row["Status"]);
+                switch (status)
                 {
                     case (int)Common.Enums.Status.Draft:
                         objItem.SubItems.Add(new IconResourceHandle("16x16.flag_lightgrey.png").ToString());
@@ -700,29 +705,29 @@ SELECT TOP 100 PERCENT
                 }
                 #endregion
                 objItem.SubItems.Add(iCount.ToString());    // Line Number
-                objItem.SubItems.Add(reader.GetString(3));  // Product Name
-                objItem.SubItems.Add(reader.GetString(8));  // Category
-                objItem.SubItems.Add(reader.GetString(22)); // Color Pattern
-                objItem.SubItems.Add(reader.GetString(18)); // Origin
-                objItem.SubItems.Add(reader.GetString(21)); // Remarks
-                objItem.SubItems.Add(reader.GetString(25)); // Created On
-                objItem.SubItems.Add(reader.GetString(26)); // Created By
-                objItem.SubItems.Add(reader.GetString(27)); // Modified On
-                objItem.SubItems.Add(reader.GetString(28)); // Modified By
+                objItem.SubItems.Add(row["ArticleName"].ToString());  // Product Name
+                objItem.SubItems.Add(row["CategoryName"] != DBNull.Value ? row["CategoryName"].ToString() : "");  // Category
+                objItem.SubItems.Add(row["ColorPattern"] != DBNull.Value ? row["ColorPattern"].ToString() : ""); // Color Pattern
+                objItem.SubItems.Add(row["OriginName"] != DBNull.Value ? row["OriginName"].ToString() : ""); // Origin
+                objItem.SubItems.Add(row["Remarks"] != DBNull.Value ? row["Remarks"].ToString() : ""); // Remarks
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : ""); // Created On
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : ""); // Created By
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : ""); // Modified On
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : ""); // Modified By
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwProductList.Sort();
         }
 
-        private string BuildSqlQueryString()
+
+
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
         {
-            StringBuilder sql = new StringBuilder();
-
-
-            #region prepare the where clause
             if (!(String.IsNullOrEmpty(_CurShortcut)))
             {
                 switch (_CurShortcut)
@@ -738,25 +743,47 @@ SELECT TOP 100 PERCENT
                         break;
                 }
             }
-            #endregion
 
-            sql.Append(_BaseSqlSelect + Environment.NewLine);
-            sql.Append(_CurSqlWhere + Environment.NewLine);
-            sql.Append(_CurSqlOrderBy);
+            string whereClause = _CurSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
+        }
 
-            return sql.ToString();
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            string orderBy = _CurSqlOrderBy;
+            
+            // Remove "ORDER BY" keyword if present
+            if (orderBy.TrimStart().StartsWith("ORDER BY ", StringComparison.OrdinalIgnoreCase))
+            {
+                orderBy = orderBy.Substring(orderBy.IndexOf("ORDER BY ", StringComparison.OrdinalIgnoreCase) + 9);
+            }
+            
+            return orderBy.Trim();
         }
 
         private void BindImageList(Size imageSize, bool inDetail)
         {
             this.flpImageList.Controls.Clear();
 
-            string sql = BuildSqlQueryString();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetProductList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid productId = reader.GetGuid(0);
+                Guid productId = (Guid)row["ArticleId"];
                 //flpImageList.Controls.Add(GetImageListItem(imageSize, productId, inDetail));
 
                 ImagePanel imgItem = new ImagePanel(imageSize, productId, inDetail, System.Guid.Empty, System.Guid.Empty, string.Empty, this.lvwProductList.CheckBoxes, false);
@@ -764,7 +791,6 @@ SELECT TOP 100 PERCENT
 
                 flpImageList.Controls.Add(imgItem);
             }
-            reader.Close();
         }
 
         void imgItem_DoubleClick(object sender, EventArgs e)

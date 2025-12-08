@@ -368,44 +368,7 @@ namespace xPort5.Order.PurchaseContract.Items
         
         private void ShowItem()
         {
-            //            string sql = @"
-            //SELECT TOP 100 PERCENT
-            //        [OrderPCItemsId], 
-            //        [PCNumber], 
-            //        [ArticleCode],
-            //        [CurrencyCode], 
-            //        [FCLCost], 
-            //        [LCLCost], 
-            //        [UnitCost], 
-            //        [ShippingMark], 
-            //        [DateShipped], 
-            //        [QtyOrdered], 
-            //        [ShippedOn], 
-            //        [CustSchedule]
-            //FROM vwPurchaseContractItemList 
-            //WHERE OrderPCItemsId ='" + orderPCItemsId + @"'
-            // AND OrderQTCustShippingId = '" + OrderQTCustShippingId + @"'
-            // AND OrderQTSuppShippingId = '" + OrderQTSuppShippingId + "'";
 
-            //            SqlCommand cmd = new SqlCommand();
-            //            cmd.CommandText = sql;
-            //            cmd.CommandTimeout = Common.Config.CommandTimeOut;
-            //            cmd.CommandType = CommandType.Text;
-
-            //            SqlDataReader reader = SqlHelper.ExecuteReader(cmd);
-
-            //            int i = 0;
-            //            while (reader.Read())
-            //            {
-            //                txtProductCode.Text = reader.GetString(2);
-            //                txtShippingMark.Text = reader.GetString(7);
-            //                txtCurrency.Text = reader.GetString(3);
-            //                txtFCLCost.Text = "$" + reader.GetDecimal(4).ToString("##0.0000");
-            //                txtLCLCost.Text = "$" + reader.GetDecimal(5).ToString("##0.0000");
-            //                txtUnitCost.Text = "$" + reader.GetDecimal(6).ToString("##0.0000");
-
-            //                i++;
-            //            }
 
             if (_QtItemId != null && _QtItemId != System.Guid.Empty)
             {

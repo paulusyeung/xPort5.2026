@@ -78,24 +78,6 @@ namespace xPort5.Bot.Helper
         /// <returns></returns>
         public static bool CreateClient(int clientId, int userId)
         {
-            bool result = false;
-
-            // Create new stopwatch.
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            using (var ctx = new xPort5Entities())
-            {
-                var cuser = ctx.vwClientUserList.Where(x => x.ClientId == clientId && x.PrimaryUser == true).SingleOrDefault();
-                if (cuser != null)
-                {
-                    string group = clientId.ToString();
-                    string parentId = clientId.ToString(), parentPassword = cuser.UserPassword;
-                    string childId = cuser.Email, childPassword = cuser.UserPassword;
-                    string cups = "/cups", vps = "/vps", cip3 = "/cip3", plate = "/plate", blueprint = "/blueprint", film = "/film", thumbnail = "/thumbnail", tools = "/tools";
-
-                    try
-                    {
                         var p = new owncloudsharp.Client(CLOUDDISK_URL, CLOUDDISK_ADMIN, CLOUDDISK_ADMINPASSWORD);
 
                         #region Create primary user, group, child user

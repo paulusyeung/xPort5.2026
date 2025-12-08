@@ -236,6 +236,7 @@ namespace xPort5.Order.Invoice.Items
         }
 
 
+        // Deprecated: Replaced by direct ViewService call in BindList()
         private string BuildSql()
         {
             string sql = String.Format(@"
@@ -273,41 +274,35 @@ ORDER BY [LineNumber]
 
             int iCount = 1;
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = String.Format("[OrderINId] = '{0}'", _InvoiceId.ToString());
+            DataSet ds = ViewService.Default.GetInvoiceItemList(whereClause, "LineNumber");
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(3);
+                Guid itemId = (Guid)row["OrderINItemsId"];
                 OrderINItems item = OrderINItems.Load(itemId);
 
-                ListViewItem objItem = this.lvwItems.Items.Add(reader.GetString(8));  // Product Code
+                ListViewItem objItem = this.lvwItems.Items.Add(row["ArticleCode"].ToString());  // Product Code
                 #region Product Image
-                //if (cAddress.DefaultRec)
-                //{
                 objItem.SmallImage = new IconResourceHandle("16x16.pumpkin_16.png");
                 objItem.LargeImage = new IconResourceHandle("32x32.pumpkin_32.png");
-                //}
-                //else
-                //{
-                //    objItem.SmallImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //    objItem.LargeImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //}
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(3).ToString());     // Items Id
+                objItem.SubItems.Add(itemId.ToString());     // Items Id
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(5));              // Sales Contract Number
-                objItem.SubItems.Add(reader.GetString(13));             // Supplier
-                objItem.SubItems.Add(reader.GetString(11));             // Package
-                objItem.SubItems.Add(reader.GetString(14));             // Cust. Ref.
-                objItem.SubItems.Add(reader.GetString(9));              // Product Name
-                objItem.SubItems.Add(reader.GetDecimal(16).ToString("##0"));                // Qty
-                objItem.SubItems.Add(reader.GetString(17));                                 // Unit
-                objItem.SubItems.Add(reader.GetDecimal(15).ToString("#,##0.0000"));         // Factory Cost
-                objItem.SubItems.Add(reader.GetString(18));                                 // Currency
+                objItem.SubItems.Add(row["SCNumber"] != DBNull.Value ? row["SCNumber"].ToString() : "");              // Sales Contract Number
+                objItem.SubItems.Add(row["SupplierCode"] != DBNull.Value ? row["SupplierCode"].ToString() : "");             // Supplier
+                objItem.SubItems.Add(row["PackageName"] != DBNull.Value ? row["PackageName"].ToString() : "");             // Package
+                objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");             // Cust. Ref.
+                objItem.SubItems.Add(row["ArticleName"] != DBNull.Value ? row["ArticleName"].ToString() : "");              // Product Name
+                objItem.SubItems.Add(row["Inv_Qty"] != DBNull.Value ? Convert.ToDecimal(row["Inv_Qty"]).ToString("##0") : "0");                // Qty
+                objItem.SubItems.Add(row["Unit"] != DBNull.Value ? row["Unit"].ToString() : "");                                 // Unit
+                objItem.SubItems.Add(row["FactoryCost"] != DBNull.Value ? Convert.ToDecimal(row["FactoryCost"]).ToString("#,##0.0000") : "0.0000");         // Factory Cost
+                objItem.SubItems.Add(row["CurrencyCode"] != DBNull.Value ? row["CurrencyCode"].ToString() : "");                                 // Currency
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwItems.Sort();
         }

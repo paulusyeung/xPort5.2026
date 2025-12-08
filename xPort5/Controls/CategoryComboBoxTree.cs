@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 using Gizmox.WebGUI.Common;
@@ -58,70 +59,83 @@ namespace xPort5.Controls
 
         private void LoadTree(TreeNodeCollection target)
         {
-            string sql = @"
-SELECT DISTINCT [DeptId], [DeptName]
-FROM [dbo].[vwCategoryList]
-ORDER BY [DeptName]
-";
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            // Use ViewService instead of direct SQL query
+            DataSet ds = ViewService.Default.GetCategoryList("", "DeptName");
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            // Get distinct departments
+            var depts = dt.AsEnumerable()
+                .Select(row => new { 
+                    DeptId = row.Field<Guid>("DeptId"), 
+                    DeptName = row.Field<string>("DeptName") 
+                })
+                .Distinct()
+                .OrderBy(d => d.DeptName);
+
+            foreach (var dept in depts)
             {
                 TreeNode oNode = new TreeNode();
 
-                oNode.Tag = reader.GetGuid(0);
-                oNode.Label = reader.GetString(1).ToUpper();
+                oNode.Tag = dept.DeptId;
+                oNode.Label = dept.DeptName.ToUpper();
                 //oNode.Image = new IconResourceHandle("16x16.group.png");
                 //oNode.ExpandedImage = new IconResourceHandle("16x16.group.png");
                 oNode.IsExpanded = false;
 
                 target.Add(oNode);
-                LoadClass(oNode);
+                LoadClass(oNode, dt);
             }
         }
 
-        private void LoadClass(TreeNode oNodes)
+        private void LoadClass(TreeNode oNodes, DataTable dt)
         {
-            string sql = String.Format(@"
-SELECT DISTINCT [ClassId], [ClassName]
-  FROM [dbo].[vwCategoryList]
-  WHERE [DeptId] = '{0}'
-  ORDER BY [ClassName]
-", oNodes.Tag);
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            Guid deptId = (Guid)oNodes.Tag;
+            
+            // Filter classes for this department
+            var classes = dt.AsEnumerable()
+                .Where(row => row.Field<Guid>("DeptId") == deptId)
+                .Select(row => new { 
+                    ClassId = row.Field<Guid>("ClassId"), 
+                    ClassName = row.Field<string>("ClassName") 
+                })
+                .Distinct()
+                .OrderBy(c => c.ClassName);
 
-            while (reader.Read())
+            foreach (var cls in classes)
             {
                 TreeNode oNode = new TreeNode();
 
-                oNode.Tag = reader.GetGuid(0);
-                oNode.Label = reader.GetString(1).ToUpper();
+                oNode.Tag = cls.ClassId;
+                oNode.Label = cls.ClassName.ToUpper();
                 //oNode.Image = new IconResourceHandle("16x16.group.png");
                 //oNode.ExpandedImage = new IconResourceHandle("16x16.group.png");
                 oNode.IsExpanded = false;
 
                 oNodes.Nodes.Add(oNode);
-                LoadCategory(oNode);
+                LoadCategory(oNode, dt);
             }
         }
 
-        private void LoadCategory(TreeNode oNodes)
+        private void LoadCategory(TreeNode oNodes, DataTable dt)
         {
-            string sql = String.Format(@"
-SELECT [CategoryId]
-      ,ISNULL([CategoryName], '')
-FROM [dbo].[vwCategoryList]
-WHERE [DeptId] = '{0}' AND [ClassId] = '{1}'
-ORDER BY [CategoryName]
-", oNodes.Parent.Tag, oNodes.Tag);
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            Guid deptId = (Guid)oNodes.Parent.Tag;
+            Guid classId = (Guid)oNodes.Tag;
+            
+            // Filter categories for this department and class
+            var categories = dt.AsEnumerable()
+                .Where(row => row.Field<Guid>("DeptId") == deptId && row.Field<Guid>("ClassId") == classId)
+                .Select(row => new { 
+                    CategoryId = row.Field<Guid>("CategoryId"), 
+                    CategoryName = row.Field<string>("CategoryName") ?? "" 
+                })
+                .OrderBy(c => c.CategoryName);
 
-            while (reader.Read())
+            foreach (var category in categories)
             {
                 TreeNode oNode = new TreeNode();
 
-                oNode.Tag = reader.GetGuid(0);
-                oNode.Label = reader.GetString(1);
+                oNode.Tag = category.CategoryId;
+                oNode.Label = category.CategoryName;
                 //oNode.Image = new IconResourceHandle("16x16.group.png");
                 oNode.IsExpanded = false;
 

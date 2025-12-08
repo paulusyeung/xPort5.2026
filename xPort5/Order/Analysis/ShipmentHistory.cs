@@ -80,55 +80,52 @@ namespace xPort5.Order.Analysis
 
         private string BindSql()
         {
-            string sql = string.Empty;
-            sql = @"
-SELECT OrderQTItemId, ArticleCode, SupplierCode ,PackageCode ,CustRef, SuppRef, CustName,
-	   SuppName, SCNumber, ScheduledDate, ScheduledQty, Unit, ShippedQty, OSQty, SKU 
-FROM vwShipmentHistory 
-";
+            string whereClause = "";
+            
             if (this.txtArticleCode.Text.Trim().Length > 0)
             {
-                sql = sql + " WHERE ArticleCode LIKE '%" + txtArticleCode.Text + "%'";
+                whereClause = "ArticleCode LIKE '%" + txtArticleCode.Text + "%'";
             }
             if (this.txtCustArticleCode.Text.Trim().Length > 0)
             {
-                sql = sql + " WHERE CustRef LIKE '%" + txtCustArticleCode.Text + "%'";
+                whereClause = "CustRef LIKE '%" + txtCustArticleCode.Text + "%'";
             }
             if (this.txtSupplierCode.Text.Trim().Length > 0)
             {
-                sql = sql + " WHERE SuppRef LIKE '%" + txtSupplierCode.Text + "%'";
+                whereClause = "SuppRef LIKE '%" + txtSupplierCode.Text + "%'";
             }
 
-            sql += " ORDER BY ArticleCode,ScheduledDate,SCNumber";
-
-            return sql;
+            return whereClause;
         }
         private void BindList()
         {
             this.lvwList.Items.Clear();
             int iCount = 1;
-            string sql = BindSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
-            while (reader.Read())
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BindSql();
+            DataSet ds = ViewService.Default.GetShipmentHistory(whereClause, "ArticleCode,ScheduledDate,SCNumber");
+            DataTable dt = ds.Tables[0];
+            
+            foreach (DataRow row in dt.Rows)
             {
-                ListViewItem objItem = this.lvwList.Items.Add(reader.GetGuid(0).ToString()); //OrderQTItemId
-                objItem.SubItems.Add(reader.GetString(1));          //ArticleCode
-                objItem.SubItems.Add(reader.GetString(2));          //SupplierCode
-                objItem.SubItems.Add(reader.GetString(3));          //PackageCode
-                objItem.SubItems.Add(reader.GetString(4));          //CustRef
-                objItem.SubItems.Add(reader.GetString(5));          //SuppRef
-                objItem.SubItems.Add(reader.GetString(6));          //CustName
-                objItem.SubItems.Add(reader.GetString(7));          //SuppName
-                objItem.SubItems.Add(reader.GetString(8));          //SCNumber
-                objItem.SubItems.Add(reader.GetDateTime(9).ToString("dd MMM yyyy"));    //ScheduledDate
-                objItem.SubItems.Add(reader.GetDecimal(10).ToString("#,##0.00"));       //ScheduledQty
-                objItem.SubItems.Add(reader.GetString(11));                             //Unit
-                objItem.SubItems.Add(reader.GetDecimal(10).ToString("#,##0.00"));       //ShippedQty
-                objItem.SubItems.Add(reader.GetDecimal(10).ToString("#,##0.00"));       //OSQty
+                ListViewItem objItem = this.lvwList.Items.Add(row["OrderQTItemId"].ToString()); //OrderQTItemId
+                objItem.SubItems.Add(row["ArticleCode"] != DBNull.Value ? row["ArticleCode"].ToString() : "");          //ArticleCode
+                objItem.SubItems.Add(row["SupplierCode"] != DBNull.Value ? row["SupplierCode"].ToString() : "");          //SupplierCode
+                objItem.SubItems.Add(row["PackageCode"] != DBNull.Value ? row["PackageCode"].ToString() : "");          //PackageCode
+                objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");          //CustRef
+                objItem.SubItems.Add(row["SuppRef"] != DBNull.Value ? row["SuppRef"].ToString() : "");          //SuppRef
+                objItem.SubItems.Add(row["CustName"] != DBNull.Value ? row["CustName"].ToString() : "");          //CustName
+                objItem.SubItems.Add(row["SuppName"] != DBNull.Value ? row["SuppName"].ToString() : "");          //SuppName
+                objItem.SubItems.Add(row["SCNumber"] != DBNull.Value ? row["SCNumber"].ToString() : "");          //SCNumber
+                objItem.SubItems.Add(row["ScheduledDate"] != DBNull.Value ? Convert.ToDateTime(row["ScheduledDate"]).ToString("dd MMM yyyy") : "");    //ScheduledDate
+                objItem.SubItems.Add(row["ScheduledQty"] != DBNull.Value ? Convert.ToDecimal(row["ScheduledQty"]).ToString("#,##0.00") : "0.00");       //ScheduledQty
+                objItem.SubItems.Add(row["Unit"] != DBNull.Value ? row["Unit"].ToString() : "");                             //Unit
+                objItem.SubItems.Add(row["ShippedQty"] != DBNull.Value ? Convert.ToDecimal(row["ShippedQty"]).ToString("#,##0.00") : "0.00");       //ShippedQty
+                objItem.SubItems.Add(row["OSQty"] != DBNull.Value ? Convert.ToDecimal(row["OSQty"]).ToString("#,##0.00") : "0.00");       //OSQty
 
                 iCount++;
             }
-            reader.Close();
         }
 
         private void btnFind_Click(object sender, EventArgs e)

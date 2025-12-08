@@ -207,14 +207,21 @@ FROM [dbo].[vwUserList]
             this.lvwUserList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSqlQueryString();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetUserList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                ListViewItem objItem = this.lvwUserList.Items.Add(reader.GetString(2));  // User Alias
+                string alias = row["Alias"] != DBNull.Value ? row["Alias"].ToString() : "";
+                int userType = row["UserType"] != DBNull.Value ? Convert.ToInt32(row["UserType"]) : 0;
+                
+                ListViewItem objItem = this.lvwUserList.Items.Add(alias);  // User Alias
                 #region User Icon
-                switch (reader.GetInt32(1))
+                switch (userType)
                 {
                     case (int)Common.Enums.UserType.Supplier:
                         objItem.SmallImage = new IconResourceHandle("16x16.suppliersingle_16.gif");
@@ -226,7 +233,7 @@ FROM [dbo].[vwUserList]
                         break;
                     case (int)Common.Enums.UserType.Staff:
                     default:
-                        string createdBy = reader.GetString(7);
+                        string createdBy = row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "";
                         if ((createdBy == String.Empty) || (createdBy == System.Guid.Empty.ToString()))
                         {
                             objItem.SmallImage = new IconResourceHandle("16x16.staff16_key.png");
@@ -240,11 +247,11 @@ FROM [dbo].[vwUserList]
                         break;
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(0).ToString());     // UserId
+                objItem.SubItems.Add(row["UserSid"].ToString());     // UserId
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetInt32(1).ToString());
+                objItem.SubItems.Add(userType.ToString());
                 #region User Type
-                switch (reader.GetInt32(1))
+                switch (userType)
                 {
                     case (int)Common.Enums.UserType.Supplier:
                         objItem.SubItems.Add(oDict.GetWord(Common.Enums.UserType.Supplier.ToString("g")));
@@ -258,21 +265,70 @@ FROM [dbo].[vwUserList]
                         break;
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetString(3));              // Login Name
-                objItem.SubItems.Add(reader.GetString(4));              // Login Password
-                objItem.SubItems.Add(reader.GetString(5));              // User Full Name
-                objItem.SubItems.Add(reader.GetString(6));              // Created On
-                objItem.SubItems.Add(reader.GetString(7));              // Created By
-                objItem.SubItems.Add(reader.GetString(8));              // Modified On
-                objItem.SubItems.Add(reader.GetString(9));              // Modified By
+                objItem.SubItems.Add(row["LoginName"] != DBNull.Value ? row["LoginName"].ToString() : "");              // Login Name
+                objItem.SubItems.Add(row["LoginPassword"] != DBNull.Value ? row["LoginPassword"].ToString() : "");              // Login Password
+                objItem.SubItems.Add(row["FullName"] != DBNull.Value ? row["FullName"].ToString() : "");              // User Full Name
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // Created On
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "");              // Created By
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // Modified On
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : "");              // Modified By
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwUserList.Sort();
         }
 
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            // Handle shortcut filtering
+            if (!(String.IsNullOrEmpty(_CurShortcut)))
+            {
+                switch (_CurShortcut)
+                {
+                    case "9":
+                        _CurSqlWhere = _BaseSqlWhere + " AND ( SUBSTRING([Alias], 1, 1) NOT BETWEEN N'A' AND N'Z' )";
+                        break;
+                    case "All":
+                        _CurSqlWhere = _BaseSqlWhere;
+                        break;
+                    default:
+                        _CurSqlWhere = _BaseSqlWhere + String.Format(" AND ( SUBSTRING([Alias], 1, 1) = N'{0}' )", _CurShortcut);
+                        break;
+                }
+            }
+
+            string whereClause = _CurSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
+        }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            string orderBy = _CurSqlOrderBy;
+            
+            // Remove "ORDER BY" keyword if present
+            if (orderBy.TrimStart().StartsWith("ORDER BY ", StringComparison.OrdinalIgnoreCase))
+            {
+                orderBy = orderBy.Substring(orderBy.IndexOf("ORDER BY ", StringComparison.OrdinalIgnoreCase) + 9);
+            }
+            
+            return orderBy.Trim();
+        }
+
+        // Deprecated: Replaced by BuildWhereClause() and BuildOrderByClause() for ViewService
         private string BuildSqlQueryString()
         {
             StringBuilder sql = new StringBuilder();

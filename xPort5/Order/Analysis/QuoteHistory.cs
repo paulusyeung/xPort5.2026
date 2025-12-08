@@ -102,28 +102,24 @@ namespace xPort5.Order.Analysis
 
         private string BindSql()
         {
-            string sql = string.Empty;
-            sql = @" SELECT OrderQTItemId ,ArticleCode ,SupplierCode ,PackageCode ,CustomerName,
-                            CustRef ,QTDate ,QTNumber ,Margin ,PriceType ,Amount ,CurrencyCode,
-                            FactoryCost ,CurrencyUsed ,InnerBox ,OuterBox ,CUFT ,Unit ,SKU
-                     FROM vwQuoteHistory ";
+            string whereClause = "";
 
             if (this.txtArticleCode.Text.Trim().Length > 0)
             {
-                sql = sql + " WHERE ArticleCode LIKE '%" + txtArticleCode.Text + "%'";
+                whereClause = "ArticleCode LIKE '%" + txtArticleCode.Text + "%'";
             }
 
             if (this.txtCustArticleCode.Text.Trim().Length > 0)
             {
-                sql = sql + " WHERE CustRef LIKE '%" + txtCustArticleCode.Text + "%'";
+                whereClause = "CustRef LIKE '%" + txtCustArticleCode.Text + "%'";
             }
 
             if (this.txtSupplierCode.Text.Trim().Length > 0)
             {
-                sql = sql + " WHERE SupplierCode LIKE '%" + txtSupplierCode.Text + "%'";
+                whereClause = "SupplierCode LIKE '%" + txtSupplierCode.Text + "%'";
             }
 
-            return sql;
+            return whereClause;
         }
 
         private void BindList()
@@ -131,34 +127,36 @@ namespace xPort5.Order.Analysis
             this.lvwList.Items.Clear();
 
             int iCount = 1;
-            string sql = BindSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BindSql();
+            DataSet ds = ViewService.Default.GetQuoteHistory(whereClause, "");
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                ListViewItem objItem = this.lvwList.Items.Add(reader.GetGuid(0).ToString()); //OrderQTItemId
-                objItem.SubItems.Add(reader.GetString(1));          //ArticleCode
-                objItem.SubItems.Add(reader.GetString(2));          //SupplierCode
-                objItem.SubItems.Add(reader.GetString(3));          //PackageCode
-                objItem.SubItems.Add(reader.GetString(4));          //CustomerName
-                objItem.SubItems.Add(reader.GetString(5));          //CustRef
-                objItem.SubItems.Add(reader.GetDateTime(6).ToString("dd MMM yyyy"));    //QTDate
-                objItem.SubItems.Add(reader.GetString(7));                              //QTNumber
-                objItem.SubItems.Add(reader.GetDecimal(8).ToString("N2"));              //Margin
-                objItem.SubItems.Add(reader.GetString(9));                              //PriceType
-                objItem.SubItems.Add(reader.GetDecimal(10).ToString("#,##0.0000"));     //Amount
-                objItem.SubItems.Add(reader.GetString(11));                             //CurrencyCode
-                objItem.SubItems.Add(reader.GetDecimal(12).ToString("#,##0.0000"));     //FactoryCost
-                objItem.SubItems.Add(reader.GetString(13));                             //CurrencyUsed
-                objItem.SubItems.Add(reader.GetDecimal(14).ToString("##0.00"));         //InnerBox
-                objItem.SubItems.Add(reader.GetDecimal(15).ToString("##0.00"));         //OuterBox
-                objItem.SubItems.Add(reader.GetDecimal(16).ToString("#,##0.0000"));     //CUFT
-                objItem.SubItems.Add(reader.GetString(17));                             //Unit
-                objItem.SubItems.Add(reader.GetString(18));                             //SKU
+                ListViewItem objItem = this.lvwList.Items.Add(row["OrderQTItemId"].ToString()); //OrderQTItemId
+                objItem.SubItems.Add(row["ArticleCode"] != DBNull.Value ? row["ArticleCode"].ToString() : "");          //ArticleCode
+                objItem.SubItems.Add(row["SupplierCode"] != DBNull.Value ? row["SupplierCode"].ToString() : "");          //SupplierCode
+                objItem.SubItems.Add(row["PackageCode"] != DBNull.Value ? row["PackageCode"].ToString() : "");          //PackageCode
+                objItem.SubItems.Add(row["CustomerName"] != DBNull.Value ? row["CustomerName"].ToString() : "");          //CustomerName
+                objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");          //CustRef
+                objItem.SubItems.Add(row["QTDate"] != DBNull.Value ? Convert.ToDateTime(row["QTDate"]).ToString("dd MMM yyyy") : "");    //QTDate
+                objItem.SubItems.Add(row["QTNumber"] != DBNull.Value ? row["QTNumber"].ToString() : "");                              //QTNumber
+                objItem.SubItems.Add(row["Margin"] != DBNull.Value ? Convert.ToDecimal(row["Margin"]).ToString("N2") : "0.00");              //Margin
+                objItem.SubItems.Add(row["PriceType"] != DBNull.Value ? row["PriceType"].ToString() : "");                              //PriceType
+                objItem.SubItems.Add(row["Amount"] != DBNull.Value ? Convert.ToDecimal(row["Amount"]).ToString("#,##0.0000") : "0.0000");     //Amount
+                objItem.SubItems.Add(row["CurrencyCode"] != DBNull.Value ? row["CurrencyCode"].ToString() : "");                             //CurrencyCode
+                objItem.SubItems.Add(row["FactoryCost"] != DBNull.Value ? Convert.ToDecimal(row["FactoryCost"]).ToString("#,##0.0000") : "0.0000");     //FactoryCost
+                objItem.SubItems.Add(row["CurrencyUsed"] != DBNull.Value ? row["CurrencyUsed"].ToString() : "");                             //CurrencyUsed
+                objItem.SubItems.Add(row["InnerBox"] != DBNull.Value ? Convert.ToDecimal(row["InnerBox"]).ToString("##0.00") : "0.00");         //InnerBox
+                objItem.SubItems.Add(row["OuterBox"] != DBNull.Value ? Convert.ToDecimal(row["OuterBox"]).ToString("##0.00") : "0.00");         //OuterBox
+                objItem.SubItems.Add(row["CUFT"] != DBNull.Value ? Convert.ToDecimal(row["CUFT"]).ToString("#,##0.0000") : "0.0000");     //CUFT
+                objItem.SubItems.Add(row["Unit"] != DBNull.Value ? row["Unit"].ToString() : "");                             //Unit
+                objItem.SubItems.Add(row["SKU"] != DBNull.Value ? row["SKU"].ToString() : "");                             //SKU
 
                 iCount++;
             }
-            reader.Close();
         }
 
         private void btnFind_Click(object sender, EventArgs e)

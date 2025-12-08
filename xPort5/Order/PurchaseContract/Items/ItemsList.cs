@@ -231,35 +231,23 @@ namespace xPort5.Order.PurchaseContract.Items
             //this.ansItems.ButtonClick += new ToolBarButtonClickEventHandler(ansItem_ButtonClick);
         }
 
-        private string BuildSql()
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
         {
-            string sql = string.Format(@"
-SELECT TOP 100 PERCENT
-       [OrderPCId]          
-      ,[PCNumber]
-      ,[OrderPCItemsId]
-      ,[PCDate]
-      ,[LineNumber]
-      ,[ArticleId]         
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[PackageId]
-      ,[PackageCode]
-      ,[PackageName]
-      ,[CustRef]
-      ,[PriceType]
-      ,[FactoryCost]
-      ,[Qty]
-      ,[Unit]               
-      ,[SuppRef]
-      ,[CurrencyCode]
-FROM [dbo].[vwPurchaseContractItemList]
-WHERE [OrderPCId] = '{0}'
-ORDER BY [LineNumber]
-", orderPCId.ToString());
-
-            return sql;
+            return string.Format("[OrderPCId] = '{0}'", orderPCId.ToString());
         }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            return "[LineNumber]";
+        }
+
+
 
         private void BindList()
         {
@@ -267,42 +255,35 @@ ORDER BY [LineNumber]
 
             int iCount = 1;
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetPurchaseContractItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(2);
-                OrderPCItems item = OrderPCItems.Load(itemId);
+                Guid itemId = row["OrderPCItemsId"] != DBNull.Value ? (Guid)row["OrderPCItemsId"] : Guid.Empty;
+                string articleCode = row["ArticleCode"] != DBNull.Value ? row["ArticleCode"].ToString() : "";
 
-                ListViewItem objItem = this.lvwItems.Items.Add(reader.GetString(6));   //Article Code
+                ListViewItem objItem = this.lvwItems.Items.Add(articleCode);   //Article Code
                 #region Product Image
-                //if (cAddress.DefaultRec)
-                //{
                 objItem.SmallImage = new IconResourceHandle("16x16.pumpkin_16.png");
                 objItem.LargeImage = new IconResourceHandle("32x32.pumpkin_32.png");
-                //}
-                //else
-                //{
-                //    objItem.SmallImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //    objItem.LargeImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //}
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(2).ToString()); //OrderPCItemsId
-                //objItem.SubItems.Add(reader.GetGuid(18).ToString());
-                //objItem.SubItems.Add(reader.GetGuid(19).ToString());
+                objItem.SubItems.Add(itemId.ToString()); //OrderPCItemsId
                 objItem.SubItems.Add(iCount.ToString());            //Line Number
-                objItem.SubItems.Add(reader.GetString(10));          //PackageCode
-                objItem.SubItems.Add(reader.GetString(11));         //CustRef
-                objItem.SubItems.Add(reader.GetString(16));         //SuppRef
-                objItem.SubItems.Add(reader.GetString(7));          //ArticleName
-                objItem.SubItems.Add(reader.GetDecimal(14).ToString("#,##0"));         //Qty
-                objItem.SubItems.Add(reader.GetString(15));         //Unit
-                objItem.SubItems.Add("$" + reader.GetDecimal(13).ToString("#,##0.0000"));        //FactoryCost
-                objItem.SubItems.Add(reader.GetString(17));         //CurrencyCode
+                objItem.SubItems.Add(row["PackageCode"] != DBNull.Value ? row["PackageCode"].ToString() : "");          //PackageCode
+                objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");         //CustRef
+                objItem.SubItems.Add(row["SuppRef"] != DBNull.Value ? row["SuppRef"].ToString() : "");         //SuppRef
+                objItem.SubItems.Add(row["ArticleName"] != DBNull.Value ? row["ArticleName"].ToString() : "");          //ArticleName
+                objItem.SubItems.Add(row["Qty"] != DBNull.Value ? Convert.ToDecimal(row["Qty"]).ToString("#,##0") : "0");         //Qty
+                objItem.SubItems.Add(row["Unit"] != DBNull.Value ? row["Unit"].ToString() : "");         //Unit
+                objItem.SubItems.Add("$" + (row["FactoryCost"] != DBNull.Value ? Convert.ToDecimal(row["FactoryCost"]).ToString("#,##0.0000") : "0.0000"));        //FactoryCost
+                objItem.SubItems.Add(row["CurrencyCode"] != DBNull.Value ? row["CurrencyCode"].ToString() : "");         //CurrencyCode
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwItems.Sort();
         }
@@ -311,19 +292,22 @@ ORDER BY [LineNumber]
         {
             this.flpImageList.Controls.Clear();
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetPurchaseContractItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(2);
-                Guid articleId = reader.GetGuid(5);
+                Guid itemId = row["OrderPCItemsId"] != DBNull.Value ? (Guid)row["OrderPCItemsId"] : Guid.Empty;
+                Guid articleId = row["ArticleId"] != DBNull.Value ? (Guid)row["ArticleId"] : Guid.Empty;
 
                 ImagePanel imgItem = new ImagePanel(imageSize, articleId, inDetail, itemId, System.Guid.Empty, string.Empty, lvwItems.CheckBoxes, false);
                 imgItem.DoubleClick += new EventHandler(imgPane_DoubleClick);
 
                 flpImageList.Controls.Add(imgItem);
             }
-            reader.Close();
         }
 
         void imgPane_DoubleClick(object sender, EventArgs e)

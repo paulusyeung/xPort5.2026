@@ -12,6 +12,11 @@ namespace xPort5.Controls.Reporting.XR
 {
     public class DataSource
     {
+        /// <summary>
+        /// Retrieves invoice details for a specific invoice ID
+        /// TODO: Migrate to ViewService when vwInvoiceDetails is converted to LINQ
+        /// Note: vwInvoiceDetails may differ from vwInvoiceItemList - verify before migration
+        /// </summary>
         public static DataTable Invoice(int invoiceId)
         {
             string sql = @"
@@ -49,23 +54,9 @@ ORDER BY [INDetailsId];
         }
         public static DataTable InvoiceCharges(String invoiceNumber)
         {
-            string sql = @"
-SELECT TOP 100 PERCENT
-       [OrderINId]
-      ,[INNumber]
-      ,[OrderINChargeId]
-      ,[ChargeId]
-      ,[Description]
-      ,[Amount]
-FROM [dbo].[vwRptInvoice_Charges]
-WHERE	[INNumber] = '" + invoiceNumber + @"'
-;
-";
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = "[INNumber] = '" + invoiceNumber + "'";
+            DataSet ds = ViewService.Default.GetRptInvoiceCharges(whereClause, "");
+            return ds.Tables[0];
         }
         public static DataTable ProductList(string sql)
         {
@@ -77,46 +68,15 @@ WHERE	[INNumber] = '" + invoiceNumber + @"'
         }
         public static DataTable ProductListGeneral(string productId)
         {
-            string sql = String.Format(@"
-SELECT TOP 100 PERCENT
-       [ArticleId]
-      ,[SKU]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[ArticleName_Chs]
-      ,[ArticleName_Cht]
-      ,[CategoryId]
-      ,ISNULL([CategoryCode], '') AS 'CategoryCode'
-      ,ISNULL([CategoryName], '') AS 'CategoryName'
-      ,ISNULL([CategoryName_Chs], '') AS 'CategoryName_Chs'
-      ,ISNULL([CategoryName_Cht], '') AS 'CategoryName_Cht'
-      ,[AgeGradingId]
-      ,ISNULL([AgeGradingCode], '') AS 'AgeGradingCode'
-      ,ISNULL([AgeGradingName], '') AS 'AgeGradingName'
-      ,ISNULL([AgeGradingName_Chs], '') AS 'AgeGradingName_Chs'
-      ,ISNULL([AgeGradingName_Cht], '') AS 'AgeGradingName_Cht'
-      ,[OriginId]
-      ,ISNULL([OriginCode], '') AS 'OriginCode'
-      ,ISNULL([OriginName], '') AS 'OriginName'
-      ,ISNULL([OriginName_Chs], '') As 'OriginName_Chs'
-      ,ISNULL([OriginName_Cht], '') AS 'OriginName_Cht'
-      ,[Remarks]
-      ,[ColorPattern]
-      ,[Barcode]
-      ,[Status]
-      ,CONVERT(NVARCHAR(16), [CreatedOn], 120) AS 'CreatedOn'
-      ,[CreatedBy]
-      ,CONVERT(NVARCHAR(16), [ModifiedOn], 120) AS 'ModifiedOn'
-      ,[ModifiedBy]
-FROM [dbo].[vwProductList]
-WHERE [ArticleId] = '{0}'
-", productId);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            // Use ViewService instead of direct SQL query
+            string whereClause = String.Format("[ArticleId] = '{0}'", productId);
+            DataSet ds = ViewService.Default.GetProductList(whereClause, "");
+            return ds.Tables[0];
         }
+        /// <summary>
+        /// Retrieves product packing information for a specific product
+        /// TODO: Migrate to ViewService when vwProductPackage is converted to LINQ
+        /// </summary>
         public static DataTable ProductListPacking(string productId)
         {
             string sql = String.Format(@"
@@ -156,6 +116,10 @@ ORDER BY [PackageName], [DefaultRec] DESC
                 return dataset.Tables[0];
             }
         }
+        /// <summary>
+        /// Retrieves product supplier information for a specific product
+        /// TODO: Migrate to ViewService when vwProductSupplier is converted to LINQ
+        /// </summary>
         public static DataTable ProductListSupplier(string productId)
         {
             string sql = String.Format(@"
@@ -187,56 +151,9 @@ ORDER BY [SupplierName]
 
         public static DataTable PriceList(string QTNumber)
         {
-            string sql = String.Format(@"
-SELECT [QTNumber]
-      ,[QTDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-      ,[PayTerms]
-      ,[CurrencyUsed]
-      ,[Remarks]
-      ,[Remarks2]
-      ,[Remarks3]
-      ,[QTLineNo]
-      ,[CustRef]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[AgeGrading]
-      ,[Package]
-      ,[Particular]
-      ,[Carton]
-      ,[Qty]
-      ,[Unit]
-      ,[UnitAmt]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[PackageUnit]
-      ,[CUFT]
-      ,[ShippingMark]
-      ,[SampleQty]
-      ,[SuppRef]
-      ,[SupplierName]
-      ,[ArticleId]
-      ,[ColorPattern]
-  FROM [dbo].[vwRptPriceList]
-WHERE [QTNumber] = '{0}'
-ORDER BY [ArticleCode]
-", QTNumber);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[QTNumber] = '{0}'", QTNumber);
+            DataSet ds = ViewService.Default.GetRptPriceList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         #region SalesContract
@@ -248,63 +165,9 @@ ORDER BY [ArticleCode]
         /// <returns></returns>
         public static DataTable SalesContract(string SCNumber)
         {
-            string sql = String.Format(@"
-SELECT DISTINCT [SCNumber]
-      ,[SCLineNo]
-      ,[QTNumber]
-      ,[QTLineNo]
-      ,[CustRef]
-      ,[ArticleId]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[AgeGrading]
-      ,[ColorPattern]
-      ,[Package]
-      ,[Particular]
-      ,[Carton]
-      ,[Qty]
-      ,[Unit]
-      ,[UnitAmt]
-      ,[CurrencyUsed]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[PackageUnit]
-      ,[CUFT]
-      ,[SCDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-      ,[YourOrderNo]
-      ,[YourRef]
-      ,[Carrier]
-      ,[PayTerms]
-      ,[LoadingPort]
-      ,[Origin]
-      ,[Remarks]
-      ,[Remarks2]
-      ,[Remarks3]
-      ,[ShippingMark]
-      ,[DischargePort]
-      ,[Destination]
-      ,[PricingTerms]
-  FROM [dbo].[vwRptSalesContractList]
-WHERE [SCNumber] = '{0}'
-ORDER BY [ArticleCode]
-", SCNumber);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[SCNumber] = '{0}'", SCNumber);
+            DataSet ds = ViewService.Default.GetRptSalesContractList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         /// <summary>
@@ -314,63 +177,9 @@ ORDER BY [ArticleCode]
         /// <returns></returns>
         public static DataTable SalesContractByLineNumber(string SCNumber)
         {
-            string sql = String.Format(@"
-SELECT DISTINCT [SCNumber]
-      ,[SCLineNo]
-      ,[QTNumber]
-      ,[QTLineNo]
-      ,[CustRef]
-      ,[ArticleId]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[AgeGrading]
-      ,[ColorPattern]
-      ,[Package]
-      ,[Particular]
-      ,[Carton]
-      ,[Qty]
-      ,[Unit]
-      ,[UnitAmt]
-      ,[CurrencyUsed]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[PackageUnit]
-      ,[CUFT]
-      ,[SCDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-      ,[YourOrderNo]
-      ,[YourRef]
-      ,[Carrier]
-      ,[PayTerms]
-      ,[LoadingPort]
-      ,[Origin]
-      ,[Remarks]
-      ,[Remarks2]
-      ,[Remarks3]
-      ,[ShippingMark]
-      ,[DischargePort]
-      ,[Destination]
-      ,[PricingTerms]
-  FROM [dbo].[vwRptSalesContractList]
-WHERE [SCNumber] = '{0}'
-ORDER BY [SCLineNo]
-", SCNumber);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[SCNumber] = '{0}'", SCNumber);
+            DataSet ds = ViewService.Default.GetRptSalesContractList(whereClause, "[SCLineNo]");
+            return ds.Tables[0];
         }
 
         #endregion
@@ -384,54 +193,9 @@ ORDER BY [SCLineNo]
         /// <returns></returns>
         public static DataTable ProformaInvoice(string SCNumber)
         {
-            string sql = String.Format(@"
-SELECT DISTINCT [SCNumber]
-      ,[SCLineNo]
-      ,[CustRef]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[Package]
-      ,[Carton]
-      ,[Qty]
-      ,[Unit]
-      ,[UnitAmt]
-      ,[CurrencyUsed]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[PackageUnit]
-      ,[CUFT]
-      ,[SCDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[YourOrderNo]
-      ,[YourRef]
-      ,[Carrier]
-      ,[PayTerms]
-      ,[LoadingPort]
-      ,[Destination]
-      ,[Origin]
-      ,[PricingTerms]
-      ,[DischargePort]
-      ,[ShippingMark]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-  FROM [dbo].[vwRptProformaInvoiceList]
-WHERE [SCNumber] = '{0}'
-ORDER BY [ArticleCode]
-", SCNumber);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[SCNumber] = '{0}'", SCNumber);
+            DataSet ds = ViewService.Default.GetRptProformaInvoiceList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         /// <summary>
@@ -441,54 +205,9 @@ ORDER BY [ArticleCode]
         /// <returns></returns>
         public static DataTable ProformaInvoiceByLineNumber(string SCNumber)
         {
-            string sql = String.Format(@"
-SELECT DISTINCT [SCNumber]
-      ,[SCLineNo]
-      ,[CustRef]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[Package]
-      ,[Carton]
-      ,[Qty]
-      ,[Unit]
-      ,[UnitAmt]
-      ,[CurrencyUsed]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[PackageUnit]
-      ,[CUFT]
-      ,[SCDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[YourOrderNo]
-      ,[YourRef]
-      ,[Carrier]
-      ,[PayTerms]
-      ,[LoadingPort]
-      ,[Destination]
-      ,[Origin]
-      ,[PricingTerms]
-      ,[DischargePort]
-      ,[ShippingMark]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-  FROM [dbo].[vwRptProformaInvoiceList]
-WHERE [SCNumber] = '{0}'
-ORDER BY [SCLineNo]
-", SCNumber);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[SCNumber] = '{0}'", SCNumber);
+            DataSet ds = ViewService.Default.GetRptProformaInvoiceList(whereClause, "[SCLineNo]");
+            return ds.Tables[0];
         }
         #endregion
 
@@ -501,63 +220,9 @@ ORDER BY [SCLineNo]
         /// <returns></returns>
         public static DataTable PurchaseContract(string PCNumber)
         {
-        string sql = String.Format(@"
-SELECT DISTINCT [PCNumber]
-      ,[PCLineNo]
-      ,[PCDate]
-      ,[QTNumber]
-      ,[QTLineNo]
-      ,[ArticleId]
-      ,[ArticleCode]
-      ,[CustRef]
-      ,[SuppRef]
-      ,[ArtName]
-      ,[Package]
-      ,[AgeGrading]
-      ,[ColorPattern]
-      ,[Particular]
-      ,[Carton]
-      ,[OrderedQty]
-      ,[OrderedUnit]
-      ,[UnitCost]
-      ,[CostCny]
-      ,[SuppName]
-      ,[SuppAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-      ,[YourRef]
-      ,[Carrier]
-      ,[PayTerms]
-      ,[PricingTerms]
-      ,[LoadingPort]
-      ,[DischargePort]
-      ,[Destination]
-      ,[Origin]
-      ,[Remarks]
-      ,[Remarks2]
-      ,[Remarks3]
-      ,[PackUnit]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[CUFT]
-      ,[ShippingMark]
-  FROM [dbo].[vwRptPurchaseContractList]
-WHERE [PCNumber] = '{0}'
-ORDER BY [ArticleCode]
-", PCNumber);
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[PCNumber] = '{0}'", PCNumber);
+            DataSet ds = ViewService.Default.GetRptPurchaseContractList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         #endregion
@@ -571,64 +236,9 @@ ORDER BY [ArticleCode]
         /// <returns></returns>
         public static DataTable Invoice(string INNumber)
         {
-            string sql = String.Format(@"
-SELECT DISTINCT [INNumber]
-      ,[INLineNo]
-      ,[QTNumber]
-      ,[QTLineNo]
-      ,[YourOrderNo]
-      ,[SCNumber]
-      ,[CustRef]
-      ,[ArticleId]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[AgeGrading]
-      ,[ColorPattern]
-      ,[Particular]
-      ,[Package]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[CUFT]
-      ,[UoM]
-      ,[InvoiceQty]
-      ,[Unit]
-      ,[UnitAmount]
-      ,[CurrencyUsed]
-      ,[INDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-      ,[YourRef]
-      ,[Carrier]
-      ,[DepartureDate]
-      ,[Remarks]
-      ,[Remarks2]
-      ,[Remarks3]
-      ,[PayTerms]
-      ,[PricingTerms]
-      ,[LoadingPort]
-      ,[DischargePort]
-      ,[Destination]
-      ,[Origin]
-  FROM [dbo].[vwRptInvoiceList]
-WHERE [INNumber] in ({0})
-ORDER BY [ArticleCode]
-", INNumber);
-
-            DataSet ds = new DataSet();
-            using (ds = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return ds.Tables[0];
-            }
+            string whereClause = String.Format("[INNumber] in ({0})", INNumber);
+            DataSet ds = ViewService.Default.GetRptInvoiceList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         #endregion
@@ -642,71 +252,9 @@ ORDER BY [ArticleCode]
         /// <returns></returns>
         public static DataTable PackingList(string INNumber)
         { 
-            string sql = String.Format(@"
-SELECT [INNumber]
-      ,[INLineNo]
-      ,[QTNumber]
-      ,[QTLineNo]
-      ,[YourOrderNo]
-      ,[SCNumber]
-      ,[CustRef]
-      ,[ArticleCode]
-      ,[ArtName]
-      ,[AgeGrading]
-      ,[ColorPattern]
-      ,[Particular]
-      ,[Package]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[CUFT]
-      ,[UoM]
-      ,[InvoiceQty]
-      ,[Unit]
-      ,[UnitAmount]
-      ,[CurrencyUsed]
-      ,[INDate]
-      ,[CustName]
-      ,[CustAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-      ,[YourRef]
-      ,[Carrier]
-      ,[DepartureDate]
-      ,[Remarks]
-      ,[Remarks2]
-      ,[Remarks3]
-      ,[PayTerms]
-      ,[PricingTerms]
-      ,[LoadingPort]
-      ,[DischargePort]
-      ,[Destination]
-      ,[Origin]
-      ,[SizeLength_in]
-      ,[SizeWidth_in]
-      ,[SizeHeight_in]
-      ,[SizeLength_cm]
-      ,[SizeWidth_cm]
-      ,[SizeHeight_cm]
-      ,[WeightNet_kg]
-      ,[WeightGross_kg]
-      ,[ShippingMark]
-  FROM [dbo].[vwRptInvoiceList]
-WHERE [INNumber] in ({0})
-ORDER BY [ArticleCode]
-", INNumber);
-            DataSet ds = new DataSet();
-            using (ds = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return ds.Tables[0];
-            }
+            string whereClause = String.Format("[INNumber] in ({0})", INNumber);
+            DataSet ds = ViewService.Default.GetRptInvoiceList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         #endregion
@@ -715,37 +263,9 @@ ORDER BY [ArticleCode]
 
         public static DataTable ShipmentAdvise(string INNumber)
         {
-            string sql = String.Format(@"
-SELECT [CustName]
-      ,[ShipmentDate]
-      ,[Carrier]
-      ,[FromPort]
-      ,[ToPort]
-      ,[INNumber]
-      ,[INLine]
-      ,[SCNumber]
-      ,[CustRef]
-      ,[OurRef]
-      ,[InvoicedQty]
-      ,[UoM]
-      ,[Carton]
-      ,[Amount]
-      ,[CurrencyUsed]
-      ,[PricingTerms]
-      ,[FactoryUnit]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[CUFT]
-  FROM [dbo].[vwRptShipmentAdviseList]
-WHERE [INNumber] in ({0})
-ORDER BY [OurRef]
-", INNumber);
-
-            DataSet ds = new DataSet();
-            using (ds = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return ds.Tables[0];
-            }
+            string whereClause = String.Format("[INNumber] in ({0})", INNumber);
+            DataSet ds = ViewService.Default.GetRptShipmentAdviseList(whereClause, "[OurRef]");
+            return ds.Tables[0];
         }
 
         #endregion
@@ -759,62 +279,9 @@ ORDER BY [OurRef]
         /// <returns></returns>
         public static DataTable PreOrderList(string PLNumber)
         {
-            string sql = String.Format(@"
-SELECT [PLNumber]
-      ,[PLDate]
-      ,[Revision]
-      ,[CustName]
-      ,[PLLineNo]
-      ,[QTNumber]
-      ,[QTLineNo]
-      ,[SKU]
-      ,[ArticleId]
-      ,[ArticleCode]
-      ,[SupplierCode]
-      ,[SuppName]
-      ,[Package]
-      ,[ArtName]
-      ,[AgeGrading]
-      ,[ColorPattern]
-      ,[Particular]
-      ,[CustRef]
-      ,[OrderedQty]
-      ,[OrderedCny]
-      ,[OrderedUnit]
-      ,[QuotedUnitAmt]
-      ,[FactoryCost]
-      ,[Margin]
-      ,[FCL]
-      ,[LCL]
-      ,[SuppRef]
-      ,[FactoryCny]
-      ,[FCLCost]
-      ,[LCLCost]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[PackingUnit]
-      ,[CUFT]
-      ,[CustAddr]
-      ,[Phone1_Label]
-      ,[Phone1_Text]
-      ,[Phone2_Label]
-      ,[Phone2_Text]
-      ,[Phone3_Label]
-      ,[Phone3_Text]
-      ,[Phone4_Label]
-      ,[Phone4_Text]
-      ,[Phone5_Label]
-      ,[Phone5_Text]
-  FROM [dbo].[vwRptPreOrderList]
-WHERE [PLNumber] = '{0}'
-ORDER BY [ArticleCode]
-", PLNumber);
-
-            DataSet ds = new DataSet();
-            using (ds = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return ds.Tables[0];
-            }
+            string whereClause = String.Format("[PLNumber] = '{0}'", PLNumber);
+            DataSet ds = ViewService.Default.GetRptPreOrderList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         #endregion
@@ -822,90 +289,30 @@ ORDER BY [ArticleCode]
 
         public static DataTable SalesContractShipment(string scNumber,string lineNumber)
         {
-            string sql = String.Format(@"
-SELECT TOP 1000 [SCNumber]
-      ,[LineNumber]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[ShippedOn]
-      ,[QtyOrdered]
-      ,[QtyShipped]
-      ,[Status]
-FROM [dbo].[vwRptSalesContractShipmentList]
-WHERE [LineNumber] = '{0}' AND SCNumber='{1}'
-ORDER BY [ShippedOn]", lineNumber, scNumber);
-
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[LineNumber] = '{0}' AND SCNumber='{1}'", lineNumber, scNumber);
+            DataSet ds = ViewService.Default.GetRptSalesContractShipmentList(whereClause, "[ShippedOn]");
+            return ds.Tables[0];
         }
 
         public static DataTable PurchaseContractShipment(string pcNumber,string lineNumber)
         {
-            string sql = String.Format(@"
-SELECT TOP 1000 [PCNumber]
-      ,[LineNumber]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[DateShipped]
-      ,[QtyOrdered]
-      ,[QtyShipped]
-      ,[Status]
-FROM [dbo].[vwRptPurchaseContractShipmentList]
-WHERE [LineNumber] = '{0}' AND PCNumber='{1}'
-ORDER BY [ArticleCode]", lineNumber, pcNumber);
-
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[LineNumber] = '{0}' AND PCNumber='{1}'", lineNumber, pcNumber);
+            DataSet ds = ViewService.Default.GetRptPurchaseContractShipmentList(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
 
         public static DataTable PreOrderListCustShipment(string plNumber, string lineNumber)
         {
-            string sql = String.Format(@"
-SELECT TOP 1000 [PLNumber]
-      ,[LineNumber]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[ShippedOn]
-      ,[QtyOrdered]
-      ,[QtyShipped]
-      ,[Status]
-FROM [dbo].[vwRptPreOrderList_CustShipment]
-WHERE [LineNumber] = '{0}' AND PLNumber='{1}'
-ORDER BY [ShippedOn]", lineNumber, plNumber);
-
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[LineNumber] = '{0}' AND PLNumber='{1}'", lineNumber, plNumber);
+            DataSet ds = ViewService.Default.GetRptPreOrderListCustShipment(whereClause, "[ShippedOn]");
+            return ds.Tables[0];
         }
 
         public static DataTable PreOrderListSuppShipment(string plNumber, string lineNumber)
         {
-            string sql = String.Format(@"
-SELECT TOP 1000 [PLNumber]
-      ,[LineNumber]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[DateShipped]
-      ,[QtyOrdered]
-      ,[QtyShipped]
-      ,[Status]
-FROM [dbo].[vwRptPreOrderList_SuppShipment]
-WHERE [LineNumber] = '{0}' AND PLNumber='{1}'
-ORDER BY [ArticleCode]", lineNumber, plNumber);
-
-            DataSet dataset = new DataSet();
-            using (dataset = SqlHelper.Default.ExecuteDataSet(CommandType.Text, sql))
-            {
-                return dataset.Tables[0];
-            }
+            string whereClause = String.Format("[LineNumber] = '{0}' AND PLNumber='{1}'", lineNumber, plNumber);
+            DataSet ds = ViewService.Default.GetRptPreOrderListSuppShipment(whereClause, "[ArticleCode]");
+            return ds.Tables[0];
         }
     }
 }

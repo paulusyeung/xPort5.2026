@@ -76,34 +76,35 @@ namespace xPort5.Order.PreOrder
 
         #endregion
 
-        private string BuildSql()
-        {
-            string sql = String.Format(@"
-SELECT DISTINCT [SupplierId]
-      ,[SupplierCode]
-      ,[SupplierName]
-FROM [dbo].[vwPreOrderItemList]
-WHERE [OrderPLId] = '{0}'
-ORDER BY [SupplierCode]
-", _OrderPLId.ToString());
-
-            return sql;
-        }
-
         private void BindList()
         {
             this.lvwSupplierList.Items.Clear();
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Refactored to use ViewService
+            string whereClause = string.Format("[OrderPLId] = '{0}'", _OrderPLId.ToString());
+            DataSet ds = ViewService.Default.GetPreOrderItemList(whereClause, "");
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            // Perform Distinct selection for Supplier info in memory
+            var suppliers = dt.AsEnumerable()
+                .Select(row => new
+                {
+                    SupplierId = row["SupplierId"] != DBNull.Value ? (Guid)row["SupplierId"] : Guid.Empty,
+                    SupplierCode = row["SupplierCode"] != DBNull.Value ? row["SupplierCode"].ToString() : string.Empty,
+                    SupplierName = row["SupplierName"] != DBNull.Value ? row["SupplierName"].ToString() : string.Empty
+                })
+                .Where(x => x.SupplierId != Guid.Empty)
+                .Distinct()
+                .OrderBy(x => x.SupplierCode)
+                .ToList();
+
+            foreach (var supp in suppliers)
             {
-                ListViewItem objItem = this.lvwSupplierList.Items.Add(reader.GetGuid(0).ToString());  // Id
-                objItem.SubItems.Add(reader.GetString(1));             // code
-                objItem.SubItems.Add(reader.GetString(2));             // name
+                ListViewItem objItem = this.lvwSupplierList.Items.Add(supp.SupplierId.ToString());  // Id
+                objItem.SubItems.Add(supp.SupplierCode);             // code
+                objItem.SubItems.Add(supp.SupplierName);             // name
                 objItem.SubItems.Add(string.Empty);
             }
-            reader.Close();
         }
 
         private void ShowItem()
@@ -302,33 +303,33 @@ ORDER BY [SupplierCode]
 
         private void GeneratePurchaseContractItems(Guid contractId, Guid salesContractId, Guid supplierId)
         {
-            string sql = String.Format(@"
-SELECT OrderSCItemsId, LineNumber
-FROM [dbo].[vwSalesContractItemList]
-WHERE [OrderSCId] = '{0}' AND [SupplierId] = '{1}'
-ORDER BY [LineNumber]
-", salesContractId.ToString()
- , supplierId.ToString());
+            string whereClause = string.Format("[OrderSCId] = '{0}' AND [SupplierId] = '{1}'", salesContractId.ToString(), supplierId.ToString());
+            string orderBy = "[LineNumber]";
+
+            DataSet ds = ViewService.Default.GetSalesContractItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
             int iCount = 1;
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
-
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                xPort5.EF6.OrderSCItems srcItem = OrderSCItems.Load(reader.GetGuid(0));
-                if (srcItem != null)
+                if (row["OrderSCItemsId"] != DBNull.Value)
                 {
-                    xPort5.EF6.OrderPCItems destItem = new OrderPCItems();
-                    destItem.OrderPCId = contractId;
-                    destItem.LineNumber = iCount;
-                    destItem.OrderSCItemsId = srcItem.OrderSCItemsId;
-                    destItem.Qty = 0;
-                    destItem.QtyIN = 0;
-                    destItem.QtyOUT = 0;
-                    destItem.Save();
+                    Guid scItemId = (Guid)row["OrderSCItemsId"];
+                    xPort5.EF6.OrderSCItems srcItem = OrderSCItems.Load(scItemId);
+                    if (srcItem != null)
+                    {
+                        xPort5.EF6.OrderPCItems destItem = new OrderPCItems();
+                        destItem.OrderPCId = contractId;
+                        destItem.LineNumber = iCount;
+                        destItem.OrderSCItemsId = srcItem.OrderSCItemsId;
+                        destItem.Qty = 0;
+                        destItem.QtyIN = 0;
+                        destItem.QtyOUT = 0;
+                        destItem.Save();
 
-                    iCount++;
+                        iCount++;
+                    }
                 }
             }
         }

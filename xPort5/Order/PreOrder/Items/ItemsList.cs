@@ -241,62 +241,23 @@ namespace xPort5.Order.PreOrder.Items
             //            this.ansItems.ButtonClick += new ToolBarButtonClickEventHandler(ansItem_ButtonClick);
         }
 
-        private string BuildSql()
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
         {
-            string sql = String.Format(@"
-SELECT TOP 100 PERCENT
-       [OrderPLId]          -- 0
-      ,[PLNumber]
-      ,[PLDate]
-      ,[OrderPLItemsId]
-      ,[LineNumber]
-      ,[ArticleId]          -- 5
-      ,[SKU]
-      ,[ArticleCode]
-      ,[ArticleName]
-      ,[ArticleName_Chs]
-      ,[ArticleName_Cht]    -- 10
-      ,[PackageId]
-      ,[PackageCode]
-      ,[PackageName]
-      ,[PackageName_Chs]
-      ,[PackageName_Cht]    -- 15
-      ,[SupplierId]
-      ,[SupplierCode]
-      ,[SupplierName]
-      ,[SupplierName_Chs]
-      ,[SupplierName_Cht]   -- 20
-      ,[Particular]
-      ,[CustRef]
-      ,[PriceType]
-      ,[FactoryCost]
-      ,[Margin]             -- 25
-      ,[FCL]
-      ,[LCL]
-      ,[SampleQty]
-      ,[Qty]
-      ,[Unit]               -- 30
-      ,[Amount]
-      ,[Carton]
-      ,[GLAccount]
-      ,[RefDocNo]
-      ,[ShippingMark]       -- 35
-      ,[QtyIN]
-      ,[QtyOUT]
-      ,[SuppRef]
-      ,[CurrencyCode]
-      ,[FCLCost]            -- 40
-      ,[LCLCost]
-      ,[InnerBox]
-      ,[OuterBox]
-      ,[CUFT]
-FROM [dbo].[vwPreOrderItemList]
-WHERE [OrderPLId] = '{0}'
-ORDER BY [LineNumber]
-", _OrderPLId.ToString());
-
-            return sql;
+            return String.Format("[OrderPLId] = '{0}'", _OrderPLId.ToString());
         }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            return "[LineNumber]";
+        }
+
+
 
         private void BindList()
         {
@@ -304,51 +265,48 @@ ORDER BY [LineNumber]
 
             int iCount = 1;
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetPreOrderItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(3);
-                OrderQTItems item = OrderQTItems.Load(itemId);
+                Guid itemId = row["OrderPLItemsId"] != DBNull.Value ? (Guid)row["OrderPLItemsId"] : Guid.Empty;
+                string articleCode = row["ArticleCode"] != DBNull.Value ? row["ArticleCode"].ToString() : "";
 
-                ListViewItem objItem = this.lvwItems.Items.Add(reader.GetString(7));  // Product Code
+                ListViewItem objItem = this.lvwItems.Items.Add(articleCode);  // Product Code
                 #region Product Image
-                //if (cAddress.DefaultRec)
-                //{
                 objItem.SmallImage = new IconResourceHandle("16x16.pumpkin_16.png");
                 objItem.LargeImage = new IconResourceHandle("32x32.pumpkin_32.png");
-                //}
-                //else
-                //{
-                //    objItem.SmallImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //    objItem.LargeImage = new IconResourceHandle("16x16.addresssingle_16.png");
-                //}
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(3).ToString());     // Items Id
+                objItem.SubItems.Add(itemId.ToString());     // Items Id
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(xPort5.Controls.Utility.Supplier.GetSupplierName(reader.GetGuid(16)));             // Supplier
-                objItem.SubItems.Add(reader.GetString(13));             // Package
-                objItem.SubItems.Add(reader.GetString(8));              // Product Name
-                objItem.SubItems.Add(reader.GetString(21));             // Particular
-                objItem.SubItems.Add(reader.GetString(22));             // Cust. Ref.
-                objItem.SubItems.Add(reader.GetDecimal(28).ToString("##0"));                // Sample Qty
-                objItem.SubItems.Add(reader.GetDecimal(24).ToString("#,##0.0000"));         // Factory Cost
-                objItem.SubItems.Add(reader.GetDecimal(25).ToString("##0.00"));             // Margin
-                objItem.SubItems.Add(reader.GetDecimal(26).ToString("#,##0.0000"));         // FCL Amount
-                objItem.SubItems.Add(reader.GetDecimal(27).ToString("#,##0.0000"));         // LCL Amount
-                objItem.SubItems.Add(reader.GetString(38));                                 // Supplier Ref.
-                objItem.SubItems.Add(reader.GetString(39));                                 // Currency
-                objItem.SubItems.Add(reader.GetDecimal(40).ToString("#,##0.0000"));         // FCL Cost
-                objItem.SubItems.Add(reader.GetDecimal(41).ToString("#,##0.0000"));         // LCL Cost
-                objItem.SubItems.Add(reader.GetDecimal(42).ToString("##0.00"));             // Inner Box
-                objItem.SubItems.Add(reader.GetDecimal(43).ToString("##0.00"));             // Outer Box
-                objItem.SubItems.Add(reader.GetString(30));                                 // Unit
-                objItem.SubItems.Add(reader.GetDecimal(44).ToString("##0.00"));             // CUFT
-                objItem.SubItems.Add(reader.GetDecimal(31).ToString("#,##0.0000"));         // Amount
+                
+                Guid supplierId = row["SupplierId"] != DBNull.Value ? (Guid)row["SupplierId"] : Guid.Empty;
+                objItem.SubItems.Add(xPort5.Controls.Utility.Supplier.GetSupplierName(supplierId));             // Supplier
+                objItem.SubItems.Add(row["PackageName"] != DBNull.Value ? row["PackageName"].ToString() : "");             // Package
+                objItem.SubItems.Add(row["ArticleName"] != DBNull.Value ? row["ArticleName"].ToString() : "");              // Product Name
+                objItem.SubItems.Add(row["Particular"] != DBNull.Value ? row["Particular"].ToString() : "");             // Particular
+                objItem.SubItems.Add(row["CustRef"] != DBNull.Value ? row["CustRef"].ToString() : "");             // Cust. Ref.
+                objItem.SubItems.Add(row["SampleQty"] != DBNull.Value ? Convert.ToDecimal(row["SampleQty"]).ToString("##0") : "0");                // Sample Qty
+                objItem.SubItems.Add(row["FactoryCost"] != DBNull.Value ? Convert.ToDecimal(row["FactoryCost"]).ToString("#,##0.0000") : "0.0000");         // Factory Cost
+                objItem.SubItems.Add(row["Margin"] != DBNull.Value ? Convert.ToDecimal(row["Margin"]).ToString("##0.00") : "0.00");             // Margin
+                objItem.SubItems.Add(row["FCL"] != DBNull.Value ? Convert.ToDecimal(row["FCL"]).ToString("#,##0.0000") : "0.0000");         // FCL Amount
+                objItem.SubItems.Add(row["LCL"] != DBNull.Value ? Convert.ToDecimal(row["LCL"]).ToString("#,##0.0000") : "0.0000");         // LCL Amount
+                objItem.SubItems.Add(row["SuppRef"] != DBNull.Value ? row["SuppRef"].ToString() : "");                                 // Supplier Ref.
+                objItem.SubItems.Add(row["CurrencyCode"] != DBNull.Value ? row["CurrencyCode"].ToString() : "");                                 // Currency
+                objItem.SubItems.Add(row["FCLCost"] != DBNull.Value ? Convert.ToDecimal(row["FCLCost"]).ToString("#,##0.0000") : "0.0000");         // FCL Cost
+                objItem.SubItems.Add(row["LCLCost"] != DBNull.Value ? Convert.ToDecimal(row["LCLCost"]).ToString("#,##0.0000") : "0.0000");         // LCL Cost
+                objItem.SubItems.Add(row["InnerBox"] != DBNull.Value ? Convert.ToDecimal(row["InnerBox"]).ToString("##0.00") : "0.00");             // Inner Box
+                objItem.SubItems.Add(row["OuterBox"] != DBNull.Value ? Convert.ToDecimal(row["OuterBox"]).ToString("##0.00") : "0.00");             // Outer Box
+                objItem.SubItems.Add(row["Unit"] != DBNull.Value ? row["Unit"].ToString() : "");                                 // Unit
+                objItem.SubItems.Add(row["CUFT"] != DBNull.Value ? Convert.ToDecimal(row["CUFT"]).ToString("##0.00") : "0.00");             // CUFT
+                objItem.SubItems.Add(row["Amount"] != DBNull.Value ? Convert.ToDecimal(row["Amount"]).ToString("#,##0.0000") : "0.0000");         // Amount
 
                 iCount++;
             }
-            reader.Close();
 
             this.lvwItems.Sort();
         }
@@ -358,18 +316,21 @@ ORDER BY [LineNumber]
         {
             this.flpImageList.Controls.Clear();
 
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, BuildSql());
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetPreOrderItemList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid itemId = reader.GetGuid(3);
-                Guid articleId = reader.GetGuid(5);
+                Guid itemId = row["OrderPLItemsId"] != DBNull.Value ? (Guid)row["OrderPLItemsId"] : Guid.Empty;
+                Guid articleId = row["ArticleId"] != DBNull.Value ? (Guid)row["ArticleId"] : Guid.Empty;
 
                 ImagePanel imgItem = new ImagePanel(imageSize, articleId, inDetail, itemId, System.Guid.Empty, string.Empty, lvwItems.CheckBoxes, false);
                 imgItem.DoubleClick += new EventHandler(imgItem_DoubleClick);
                 flpImageList.Controls.Add(imgItem);
             }
-            reader.Close();
         }
 
         void imgItem_DoubleClick(object sender, EventArgs e)

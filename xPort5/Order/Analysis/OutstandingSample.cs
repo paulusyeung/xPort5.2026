@@ -31,13 +31,10 @@ namespace xPort5.Order.Analysis
             SetCaptions();
             SetAttributes();
             LoadTreeViewList();
-            BuildSql();
-
-            baseSqlSelect = @"SELECT CustomerId, CustName, CustRef, ArticleCode, ArtName,  
-                                    Amount, SampleQty, Unit, SupplierName, QTNumber     
-                              FROM  vwOSSample";
-            baseSqlWhere = " WHERE (SampleQty <> 0) AND (QtyOUT < SampleQty) ";
-            baseSqlOrder = " ORDER BY CustName, ArticleCode";
+            
+            // ViewService handles selection and ordering
+            baseSqlWhere = " (SampleQty <> 0) AND (QtyOUT < SampleQty) ";
+            baseSqlOrder = "CustName, ArticleCode";
             curSqlWhere = baseSqlWhere;
 
             this.tabOSSample.SelectedIndex = 1;
@@ -84,16 +81,6 @@ namespace xPort5.Order.Analysis
             xPort5.Controls.Utility.TreeViewControl.LoadCustomer(this.tvList.Nodes);
         }
 
-        private string BuildSql()
-        {
-            StringBuilder sql = new StringBuilder();
-            sql.Append(baseSqlSelect + Environment.NewLine);
-            sql.Append(curSqlWhere + Environment.NewLine);
-            sql.Append(baseSqlOrder + Environment.NewLine);
-
-            return sql.ToString();
-        }
-
         /// <summary>
         /// Bind Date to ListView
         /// </summary>
@@ -102,25 +89,41 @@ namespace xPort5.Order.Analysis
             this.lvwList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
-
-            while (reader.Read())
+            
+            // Refactored to use ViewService
+            string whereClause = curSqlWhere;
+            // Remove "WHERE" keyword if present (ViewService expects just the condition)
+            // Actually ViewService.ApplyDynamicWhere handles it, but let's be clean.
+            // My previous variable naming was baseSqlWhere which included " WHERE ".
+            // I'll strip it here just in case.
+            if (!string.IsNullOrWhiteSpace(whereClause))
             {
-                ListViewItem objItems = this.lvwList.Items.Add(reader.GetGuid(0).ToString());  //CustomerId
-                objItems.SubItems.Add(reader.GetString(1));                           //Customer                          
-                objItems.SubItems.Add(reader.GetString(2));                           //CustRef
-                objItems.SubItems.Add(reader.GetString(3));                           //ArticleCode
-                objItems.SubItems.Add(reader.GetString(4));                           //ArticleName
-                objItems.SubItems.Add(reader.GetDecimal(5).ToString("#,##0.0000"));   //UnitPrice
-                objItems.SubItems.Add(reader.GetDecimal(6).ToString("##0.00"));       //SampleQty
-                objItems.SubItems.Add(reader.GetString(7));                           //Unit
-                objItems.SubItems.Add(reader.GetString(8));                           //Supplier
-                objItems.SubItems.Add(reader.GetString(9));                           //PriceListNo
+               whereClause = whereClause.Replace("WHERE ", "").Trim();
+            }
+
+            DataSet ds = ViewService.Default.GetSampleItemRecord(whereClause, baseSqlOrder);
+            DataTable dt = ds.Tables[0];
+
+            foreach (DataRow row in dt.Rows)
+            {
+                ListViewItem objItems = this.lvwList.Items.Add(row["CustomerId"].ToString());  //CustomerId
+                objItems.SubItems.Add(row["CustName"].ToString());                           //Customer                          
+                objItems.SubItems.Add(row["CustRef"].ToString());                           //CustRef
+                objItems.SubItems.Add(row["ArticleCode"].ToString());                           //ArticleCode
+                objItems.SubItems.Add(row["ArtName"].ToString());                           //ArticleName
+                
+                decimal amount = row["Amount"] != DBNull.Value ? (decimal)row["Amount"] : 0;
+                objItems.SubItems.Add(amount.ToString("#,##0.0000"));   //UnitPrice
+                
+                decimal sampleQty = row["SampleQty"] != DBNull.Value ? (decimal)row["SampleQty"] : 0;
+                objItems.SubItems.Add(sampleQty.ToString("##0.00"));       //SampleQty
+                
+                objItems.SubItems.Add(row["Unit"].ToString());                           //Unit
+                objItems.SubItems.Add(row["SupplierName"].ToString());                           //Supplier
+                objItems.SubItems.Add(row["QTNumber"].ToString());                           //PriceListNo
 
                 iCount++;
             }
-            reader.Close();
         }
 
         private void btnFind_Click(object sender, EventArgs e)

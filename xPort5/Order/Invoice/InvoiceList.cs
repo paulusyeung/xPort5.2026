@@ -376,14 +376,18 @@ SELECT TOP 100 Percent
             this.lvwList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            DataSet ds = ViewService.Default.GetInvoiceList(whereClause, "");
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                ListViewItem objItem = this.lvwList.Items.Add(reader.GetString(1));    //INNumber
+                ListViewItem objItem = this.lvwList.Items.Add(row["INNumber"].ToString());    //INNumber
                 #region Icon
-                switch (reader.GetInt32(11))        // revision
+                int revision = Convert.ToInt32(row["Revision"]);
+                switch (revision)
                 {
                     case 0:
                         objItem.SmallImage = new IconResourceHandle("16x16.invoice16_0.png");
@@ -403,9 +407,10 @@ SELECT TOP 100 Percent
                         break;
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(0).ToString());     //Id
+                objItem.SubItems.Add(row["OrderINId"].ToString());     //Id
                 #region Status icon
-                switch (reader.GetInt32(4))     // Status
+                int status = Convert.ToInt32(row["Status"]);
+                switch (status)
                 {
                     case 0:
                         objItem.SubItems.Add(String.Empty);
@@ -419,18 +424,11 @@ SELECT TOP 100 Percent
                 }
                 #endregion
                 #region Sample icon
-                switch (Convert.ToInt32(reader.GetInt32(15)))     // TotalQty
-                {
-                    case 0:
-                        objItem.SubItems.Add(String.Empty);
-                        break;
-                    default:
-                        objItem.SubItems.Add(new IconResourceHandle("16x16.flower_16.png").ToString());
-                        break;
-                }
+                // Note: TotalQty column (index 15) was hardcoded as 0 in original SQL, so always empty
+                objItem.SubItems.Add(String.Empty);
                 #endregion
                 #region Attachment
-                if (xPort5.Controls.Utility.Resources.HasAttachment(reader.GetString(1))) // Attachment
+                if (xPort5.Controls.Utility.Resources.HasAttachment(row["INNumber"].ToString())) // Attachment
                 {
                     objItem.SubItems.Add(new IconResourceHandle("16x16.ico_16_1001_d.gif").ToString());
                 }
@@ -440,19 +438,20 @@ SELECT TOP 100 Percent
                 }
                 #endregion
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(5));              // CustomerName
-                objItem.SubItems.Add(reader.GetString(6));              // Remarks
-                objItem.SubItems.Add(reader.GetString(7));              // CreatedOn
-                objItem.SubItems.Add(reader.GetString(8));              // CreatedBy
-                objItem.SubItems.Add(reader.GetString(9));              // ModifiedOn
-                objItem.SubItems.Add(reader.GetString(10));             // ModifiedBy
+                objItem.SubItems.Add(row["CustomerName"] != DBNull.Value ? row["CustomerName"].ToString() : "");              // CustomerName
+                objItem.SubItems.Add(row["Remarks"] != DBNull.Value ? row["Remarks"].ToString() : "");              // Remarks
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // CreatedOn
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "");              // CreatedBy
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // ModifiedOn
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : "");             // ModifiedBy
 
                 iCount++;
             }
-            reader.Close();
+            
             this.lvwList.Sort();        // 2012.04.18 paulus: 依照當前的 ListView.SortOrder 和 ListView.SortPosition 排序，使 UserPreference 有效
         }
 
+        // Deprecated: Replaced by BuildWhereClause() for ViewService
         private string BuildSql()
         {
             StringBuilder sql = new StringBuilder();
@@ -460,6 +459,22 @@ SELECT TOP 100 Percent
             sql.Append(curSqlWhere + Environment.NewLine);
 
             return sql.ToString();
+        }
+
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            string whereClause = curSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
         }
 
         private void DoLookup()

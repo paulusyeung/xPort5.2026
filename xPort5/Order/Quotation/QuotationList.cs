@@ -366,16 +366,21 @@ FROM [dbo].[vwOrderQTList]
             this.lvwList.Items.Clear();
 
             int iCount = 1;
-            string sql = BuildSql();
-            SqlDataReader reader = SqlHelper.Default.ExecuteReader(CommandType.Text, sql);
+            
+            // Use ViewService instead of direct SQL query
+            string whereClause = BuildWhereClause();
+            string orderBy = BuildOrderByClause();
+            DataSet ds = ViewService.Default.GetQuotationList(whereClause, orderBy);
+            DataTable dt = ds.Tables[0];
 
-            while (reader.Read())
+            foreach (DataRow row in dt.Rows)
             {
-                Guid orderId = reader.GetGuid(0);
+                Guid orderId = (Guid)row["OrderQTId"];
 
-                ListViewItem objItem = this.lvwList.Items.Add(reader.GetString(1));  // Number
+                ListViewItem objItem = this.lvwList.Items.Add(row["QTNumber"].ToString());  // Number
                 #region Icon
-                switch (reader.GetInt32(12))        // revision
+                int revision = Convert.ToInt32(row["Revision"]);
+                switch (revision)
                 {
                     case 0:
                         objItem.SmallImage = new IconResourceHandle("16x16.invoice16_0.png");
@@ -395,9 +400,10 @@ FROM [dbo].[vwOrderQTList]
                         break;
                 }
                 #endregion
-                objItem.SubItems.Add(reader.GetGuid(0).ToString());     // Id
+                objItem.SubItems.Add(orderId.ToString());     // Id
                 #region Status icon
-                switch (reader.GetInt32(6))     // Status
+                int status = Convert.ToInt32(row["Status"]);
+                switch (status)
                 {
                     case 0:
                         objItem.SubItems.Add(String.Empty);
@@ -411,7 +417,8 @@ FROM [dbo].[vwOrderQTList]
                 }
                 #endregion
                 #region Sample icon
-                switch (Convert.ToInt32(reader.GetDecimal(13)))     // Sample
+                decimal sampleQty = row["SampleQty"] != DBNull.Value ? Convert.ToDecimal(row["SampleQty"]) : 0;
+                switch (Convert.ToInt32(sampleQty))
                 {
                     case 0:
                         objItem.SubItems.Add(String.Empty);
@@ -422,7 +429,7 @@ FROM [dbo].[vwOrderQTList]
                 }
                 #endregion
                 #region Attachment
-                if (xPort5.Controls.Utility.Resources.HasAttachment(reader.GetString(1))) // Attachment
+                if (xPort5.Controls.Utility.Resources.HasAttachment(row["QTNumber"].ToString())) // Attachment
                 {
                     objItem.SubItems.Add(new IconResourceHandle("16x16.ico_16_1001_d.gif").ToString());
                 }
@@ -432,21 +439,22 @@ FROM [dbo].[vwOrderQTList]
                 }
                 #endregion
                 objItem.SubItems.Add(iCount.ToString());                // Line Number
-                objItem.SubItems.Add(reader.GetString(2));              // QT Date
-                objItem.SubItems.Add(reader.GetString(3));              // Customer
-                objItem.SubItems.Add(reader.GetString(5));              // Remarks
+                objItem.SubItems.Add(row["QTDate"] != DBNull.Value ? Convert.ToDateTime(row["QTDate"]).ToString("yyyy-MM-dd") : "");              // QT Date
+                objItem.SubItems.Add(row["CustomerName"] != DBNull.Value ? row["CustomerName"].ToString() : "");              // Customer
+                objItem.SubItems.Add(row["Remarks"] != DBNull.Value ? row["Remarks"].ToString() : "");              // Remarks
 
-                objItem.SubItems.Add(reader.GetString(7));              // 
-                objItem.SubItems.Add(reader.GetString(8));              // 
-                objItem.SubItems.Add(reader.GetString(9));              // 
-                objItem.SubItems.Add(reader.GetString(10));             // 
+                objItem.SubItems.Add(row["CreatedOn"] != DBNull.Value ? Convert.ToDateTime(row["CreatedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // 
+                objItem.SubItems.Add(row["CreatedBy"] != DBNull.Value ? row["CreatedBy"].ToString() : "");              // 
+                objItem.SubItems.Add(row["ModifiedOn"] != DBNull.Value ? Convert.ToDateTime(row["ModifiedOn"]).ToString("yyyy-MM-dd HH:mm") : "");              // 
+                objItem.SubItems.Add(row["ModifiedBy"] != DBNull.Value ? row["ModifiedBy"].ToString() : "");             // 
 
                 iCount++;
             }
-            reader.Close();
+            
             this.lvwList.Sort();        // 2012.04.18 paulus: 依照當前的 ListView.SortOrder 和 ListView.SortPosition 排序，使 UserPreference 有效
         }
 
+        // Deprecated: Replaced by BuildWhereClause() and BuildOrderByClause() for ViewService
         private string BuildSql()
         {
             StringBuilder sql = new StringBuilder();
@@ -456,6 +464,38 @@ FROM [dbo].[vwOrderQTList]
             sql.Append(_CurSqlOrderBy);
 
             return sql.ToString();
+        }
+
+        /// <summary>
+        /// Builds WHERE clause for ViewService (without "WHERE" keyword)
+        /// </summary>
+        private string BuildWhereClause()
+        {
+            string whereClause = _CurSqlWhere;
+            
+            // Remove "WHERE" keyword if present
+            if (whereClause.TrimStart().StartsWith("WHERE ", StringComparison.OrdinalIgnoreCase))
+            {
+                whereClause = whereClause.Substring(whereClause.IndexOf("WHERE ", StringComparison.OrdinalIgnoreCase) + 6);
+            }
+            
+            return whereClause.Trim();
+        }
+
+        /// <summary>
+        /// Builds ORDER BY clause for ViewService (without "ORDER BY" keyword)
+        /// </summary>
+        private string BuildOrderByClause()
+        {
+            string orderBy = _CurSqlOrderBy;
+            
+            // Remove "ORDER BY" keyword if present
+            if (orderBy.TrimStart().StartsWith("ORDER BY ", StringComparison.OrdinalIgnoreCase))
+            {
+                orderBy = orderBy.Substring(orderBy.IndexOf("ORDER BY ", StringComparison.OrdinalIgnoreCase) + 9);
+            }
+            
+            return orderBy.Trim();
         }
 
         private void DoLookup()

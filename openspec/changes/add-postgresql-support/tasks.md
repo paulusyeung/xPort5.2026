@@ -1,54 +1,54 @@
 ## 1. Schema Analysis and DDL Generation
-- [ ] 1.1 Analyze MS SQL Server schema from `database/xPort5_MSSQL_script.sql`
-- [ ] 1.2 Identify all tables, columns, data types, constraints, and indexes
-- [ ] 1.3 Map MS SQL Server data types to PostgreSQL equivalents
-  - [ ] uniqueidentifier → uuid
-  - [ ] datetime → timestamp
-  - [ ] nvarchar → varchar (with proper encoding)
-  - [ ] varchar → varchar
-  - [ ] decimal → numeric
-  - [ ] money → numeric(19,4)
-  - [ ] bit → boolean
-  - [ ] int → integer
-- [ ] 1.4 Generate PostgreSQL CREATE TABLE statements preserving table and column names
-- [ ] 1.5 Generate PostgreSQL CREATE INDEX statements
-- [ ] 1.6 Generate PostgreSQL FOREIGN KEY constraints
-- [ ] 1.7 Generate PostgreSQL PRIMARY KEY constraints
-- [ ] 1.8 Generate PostgreSQL CHECK constraints
-- [ ] 1.9 Generate PostgreSQL DEFAULT constraints
+- [x] 1.1 Analyze MS SQL Server schema from `database/xPort5_MSSQL_script.sql`
+- [x] 1.2 Identify all tables, columns, data types, constraints, and indexes
+- [x] 1.3 Map MS SQL Server data types to PostgreSQL equivalents
+  - [x] uniqueidentifier → uuid
+  - [x] datetime → timestamp
+  - [x] nvarchar → varchar (with proper encoding)
+  - [x] varchar → varchar
+  - [x] decimal → numeric
+  - [x] money → numeric(19,4)
+  - [x] bit → boolean
+  - [x] int → integer
+- [x] 1.4 Generate PostgreSQL CREATE TABLE statements preserving table and column names
+- [x] 1.5 Generate PostgreSQL CREATE INDEX statements
+- [x] 1.6 Generate PostgreSQL FOREIGN KEY constraints
+- [x] 1.7 Generate PostgreSQL PRIMARY KEY constraints
+- [x] 1.8 Generate PostgreSQL CHECK constraints
+- [x] 1.9 Generate PostgreSQL DEFAULT constraints
 
 ## 2. View Migration
-- [ ] 2.1 Extract all CREATE VIEW statements from MS SQL Server script
-- [ ] 2.2 Identify views that use MS SQL Server-specific syntax
-- [ ] 2.3 Convert compatible views to PostgreSQL syntax
-  - [ ] Replace MS SQL Server functions with PostgreSQL equivalents
-  - [ ] Handle TOP → LIMIT conversions
-  - [ ] Handle ISNULL → COALESCE conversions
-  - [ ] Handle GETDATE() → CURRENT_TIMESTAMP conversions
-- [ ] 2.4 Document views that cannot be migrated (if any)
-- [ ] 2.5 Generate PostgreSQL CREATE VIEW statements
+- [x] 2.1 Extract all CREATE VIEW statements from MS SQL Server script
+- [x] 2.2 Identify views that use MS SQL Server-specific syntax
+- [x] 2.3 Convert compatible views to PostgreSQL syntax
+  - [x] Replace MS SQL Server functions with PostgreSQL equivalents
+  - [x] Handle TOP → LIMIT conversions
+  - [x] Handle ISNULL → COALESCE conversions
+  - [x] Handle GETDATE() → CURRENT_TIMESTAMP conversions
+- [x] 2.4 Document views that cannot be migrated (if any)
+- [x] 2.5 Generate PostgreSQL CREATE VIEW statements
 
 ## 3. Python Data Migration Tool
-- [ ] 3.1 Create `xPort5.Pgsql` project directory structure
-- [ ] 3.2 Set up Python project with requirements.txt
-  - [ ] pyodbc (MS SQL Server connection)
-  - [ ] psycopg2 (PostgreSQL connection)
-  - [ ] python-dotenv (configuration management)
-- [ ] 3.3 Create configuration module for database connections
-- [ ] 3.4 Create schema extraction module (MS SQL Server → PostgreSQL DDL)
-- [ ] 3.5 Create data extraction module (read from MS SQL Server)
-- [ ] 3.6 Create data transformation module (type conversions, data cleaning)
-- [ ] 3.7 Create data import module (write to PostgreSQL)
-- [ ] 3.8 Implement referential integrity handling (foreign key order)
-- [ ] 3.9 Implement batch processing for large tables
-- [ ] 3.10 Implement progress reporting and logging
-- [ ] 3.11 Implement data validation (row counts, checksums)
-- [ ] 3.12 Create main migration script with command-line interface
+- [x] 3.1 Create `xPort5.Pgsql` project directory structure
+- [x] 3.2 Set up Python project with requirements.txt
+  - [x] pyodbc (MS SQL Server connection)
+  - [x] psycopg2 (PostgreSQL connection)
+  - [x] python-dotenv (configuration management)
+- [x] 3.3 Create configuration module for database connections
+- [x] 3.4 Create schema extraction module (MS SQL Server → PostgreSQL DDL)
+- [x] 3.5 Create data extraction module (read from MS SQL Server)
+- [x] 3.6 Create data transformation module (type conversions, data cleaning)
+- [x] 3.7 Create data import module (write to PostgreSQL)
+- [x] 3.8 Implement referential integrity handling (foreign key order)
+- [x] 3.9 Implement batch processing for large tables
+- [x] 3.10 Implement progress reporting and logging
+- [x] 3.11 Implement data validation (row counts, checksums)
+- [x] 3.12 Create main migration script with command-line interface
 
 ## 4. Entity Framework Configuration
-- [ ] 4.1 Add Npgsql.EntityFramework NuGet package to xPort5.EF6 project
-- [ ] 4.2 Update `App.config` and `Web.config` with Npgsql provider configuration
-- [ ] 4.3 Update connection string format for PostgreSQL
+- [x] 4.1 Add Npgsql.EntityFramework NuGet package to xPort5.EF6 project (documented in POSTGRESQL_CONFIGURATION.md)
+- [x] 4.2 Update `App.config` and `Web.config` with Npgsql provider configuration
+- [x] 4.3 Update connection string format for PostgreSQL
 - [ ] 4.4 Test EF6 DbContext initialization with PostgreSQL connection
 - [ ] 4.5 Verify entity mapping works correctly with PostgreSQL
 

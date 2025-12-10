@@ -1,0 +1,6 @@
+pyodbc>=4.0.39
+psycopg2-binary>=2.9.9,<2.9.10  # Note: Version 2.9.10 doesn't have Windows wheels for Python 3.8
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+chardet>=5.0.0  # For encoding detection in schema conversion
+

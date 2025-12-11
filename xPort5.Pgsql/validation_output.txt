@@ -1,0 +1,27 @@
+================================================================================
+PostgreSQL Views Detailed Validation
+================================================================================
+Database: xport5
+Host: 192.168.12.146
+SQL File: schema\xport5_pgsql_views.sql
+================================================================================
+
+Traceback (most recent call last):
+  File "scripts\validate_views_detailed.py", line 43, in validate_views_detailed
+    print("\u2705 Connected to PostgreSQL database\n")
+  File "C:\Python38\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "scripts\validate_views_detailed.py", line 155, in <module>
+    main()
+  File "scripts\validate_views_detailed.py", line 144, in main
+    success = validate_views_detailed(str(sql_file))
+  File "scripts\validate_views_detailed.py", line 45, in validate_views_detailed
+    print(f"\u274c ERROR connecting to database: {e}")
+  File "C:\Python38\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>

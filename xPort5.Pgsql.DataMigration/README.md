@@ -1,11 +1,11 @@
-# xPort5.Pgsql - PostgreSQL Migration Tools
+# xPort5.Pgsql.DataMigration - PostgreSQL Migration Tools
 
 This project contains tools and scripts to migrate the xPort5 database from MS SQL Server to PostgreSQL.
 
 ## Project Structure
 
 ```
-xPort5.Pgsql/
+xPort5.Pgsql.DataMigration/
 ├── migration/          # Python data migration scripts
 ├── schema/             # PostgreSQL DDL scripts
 ├── scripts/            # Utility scripts
@@ -53,9 +53,9 @@ python scripts/convert_schema.py database/xPort5_MSSQL_script.sql schema/xPort5_
 The migration script has been enhanced to handle schema case-sensitivity differences (MSSQL CamelCase -> PostgreSQL lowercase) and provides options for handling table dependencies.
 
 **Basic Usage:**
-Navigate to the `xPort5.Pgsql` directory:
+Navigate to the `xPort5.Pgsql.DataMigration` directory:
 ```bash
-cd xPort5.Pgsql
+cd xPort5.Pgsql.DataMigration
 ```
 
 Migrate all tables (converting names to lowercase):
